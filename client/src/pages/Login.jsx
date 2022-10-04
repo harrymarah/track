@@ -73,7 +73,7 @@ const Login = () => {
       </Title>
       <Tagline>the streaming chat app</Tagline>
       <Text>login with spotify to get started</Text>
-      <LoginBtn href="/auth/spotify">
+      <LoginBtn href="http://localhost:3001/auth/spotify">
         login with <SpotifyLogo />
       </LoginBtn>
       <Link>learn more</Link>
