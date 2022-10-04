@@ -5,12 +5,21 @@ const app = express()
 const querystring = require('query-string')
 const passport = require('passport')
 const SpotifyStrategy = require('passport-spotify').Strategy
+const session = require('express-session')
 
 const client_id = process.env.SPOTIFY_CLIENT_ID
 const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET
 const port = 3001
 const User = {}
+
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: true,
+    secret: 'bla bla bla',
+  })
+)
 
 passport.serializeUser(function (user, done) {
   done(null, user)
@@ -28,8 +37,8 @@ passport.use(
       callbackURL: redirect_uri,
     },
     function (accessToken, refreshToken, expires_in, profile, done) {
-      User.findOrCreate({ spotifyId: profile.id }, function (err, user) {
-        return done(err, user)
+      process.nextTick(function () {
+        return done(null, profile)
       })
     }
   )
@@ -37,6 +46,10 @@ passport.use(
 
 app.get('/', (req, res) => {
   res.send('home page')
+})
+
+app.get('/testing', (req, res) => {
+  res.send('test page')
 })
 
 app.get('/auth/spotify', passport.authenticate('spotify'))
@@ -55,5 +68,3 @@ app.get(
 app.listen(port, () => {
   console.log(`Server connection successful, listening on port ${port}`)
 })
-
-console.log(redirect_uri)
