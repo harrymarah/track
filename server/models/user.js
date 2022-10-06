@@ -7,6 +7,7 @@ const UserSchema = new Schema({
   email: String,
   accessToken: String,
   refreshToken: String,
+  accessTokenExpiresIn: Date,
 })
 
 module.exports = mongoose.model('User', UserSchema)

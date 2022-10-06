@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import Login from './pages/Login'
@@ -23,6 +23,18 @@ const GlobalStyle = createGlobalStyle`
 `
 
 function App() {
+  const [token, setToken] = useState()
+
+  useEffect(() => {
+    async function getToken() {
+      const response = await fetch('/auth/token')
+      const json = await response.json()
+      setToken(json.access_token)
+      console.log(token)
+    }
+    getToken()
+  })
+
   return (
     <>
       <GlobalStyle />

@@ -8,6 +8,8 @@ const SpotifyStrategy = require('passport-spotify').Strategy
 const session = require('express-session')
 const mongoose = require('mongoose')
 const User = require('./models/user')
+const cors = require('cors')
+const { findOneAndUpdate } = require('./models/user')
 
 const client_id = process.env.SPOTIFY_CLIENT_ID
 const redirect_uri = process.env.SPOTIFY_REDIRECT_URI
@@ -41,8 +43,10 @@ passport.deserializeUser((id, done) => {
   })
 })
 
+app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(express.json())
 
 passport.use(
   new SpotifyStrategy(
@@ -52,8 +56,7 @@ passport.use(
       callbackURL: redirect_uri,
     },
     async (accessToken, refreshToken, expires_in, profile, done) => {
-      console.log(profile)
-
+      console.log(expires_in)
       const spotifyId = profile.id
       const name = profile.displayName
       const email = profile.emails[0].value
@@ -61,6 +64,10 @@ passport.use(
       const existingUser = await User.findOne({ spotifyId: profile.id })
 
       if (existingUser) {
+        existingUser.accessToken = accessToken
+        existingUser.refreshToken = refreshToken
+        existingUser.accessTokenExpiresIn = Date.now() + expires_in * 1000
+        await existingUser.save()
         return done(null, existingUser)
       }
 
@@ -70,6 +77,7 @@ passport.use(
         email,
         accessToken,
         refreshToken,
+        accessTokenExpiresIn: Date.now() + expires_in * 1000,
       }).save()
 
       done(null, user)
@@ -77,13 +85,15 @@ passport.use(
   )
 )
 
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user
-  next()
-})
-
 app.get('/', (req, res) => {
   res.send('home page')
+})
+
+app.get('/auth/proxytest', (req, res) => {
+  console.log('route hit!!!')
+  res.json({
+    response: 'thisisworking!',
+  })
 })
 
 app.get(
@@ -97,6 +107,17 @@ app.get(
   })
 )
 
+app.get('/auth/token', async (req, res) => {
+  const user = await User.findOne({ spotifyId: req.user?.spotifyId })
+  if (user) {
+    return res.json({
+      access_token: user.accessToken,
+    })
+  } else {
+    return { access_token: null }
+  }
+})
+
 app.get(
   '/auth/spotify/callback',
   passport.authenticate('spotify', {
@@ -107,9 +128,15 @@ app.get(
   }
 )
 
-app.get('/logout', function (req, res) {
-  req.logout()
-  res.redirect('/')
+app.post('/logout', async (req, res, next) => {
+  const user = await User.findOneAndUpdate(
+    { spotifyId: req.user.spotifyId },
+    { accessToken: null, refreshToken: null, accessTokenExpiresIn: null }
+  )
+  req.logout((e) => {
+    if (e) return next(e)
+    res.redirect('http://localhost:3000/login')
+  })
 })
 
 app.listen(port, () => {
