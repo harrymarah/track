@@ -109,6 +109,8 @@ app.get(
 
 app.get('/auth/token', async (req, res) => {
   const user = await User.findOne({ spotifyId: req.user?.spotifyId })
+  console.log('access token requested')
+  console.log(user.accessToken)
   if (user) {
     return res.json({
       access_token: user.accessToken,

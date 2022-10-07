@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
 import Login from './pages/Login'
 import Home from './pages/Home'
+import PrivateRoutes from './utils/PrivateRoutes'
+import { AuthContext } from './context/AuthContext'
 import './App.css'
 
 const GlobalStyle = createGlobalStyle`
@@ -22,26 +24,71 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
+const ACTIONS = {
+  UPDATE_TOKEN: 'update token',
+  SET_IS_LOGGED_IN: 'set is logged in',
+  SET_IS_LOADING: 'set is loading',
+}
+
+const reducer = (auth, action) => {
+  switch (action.type) {
+    case ACTIONS.UPDATE_TOKEN:
+      return { ...auth, token: action.payload }
+    case ACTIONS.SET_IS_LOGGED_IN:
+      return { ...auth, isLoggedIn: action.payload }
+    case ACTIONS.SET_IS_LOADING:
+      return { ...auth, isLoading: action.payload }
+    default:
+      return auth
+  }
+}
+
 function App() {
-  const [token, setToken] = useState()
+  const [auth, dispatch] = useReducer(reducer, {
+    token: null,
+    isLoggedIn: false,
+    isLoading: false,
+  })
+
+  console.log(auth.token, auth.isLoading, auth.isLoading)
 
   useEffect(() => {
+    dispatch({ action: ACTIONS.SET_IS_LOADING, payload: true })
     async function getToken() {
       const response = await fetch('/auth/token')
       const json = await response.json()
-      setToken(json.access_token)
-      console.log(token)
+      if (json) {
+        dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
+        dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: json.access_token })
+      }
     }
     getToken()
-  })
+    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
+  }, [])
+
+  useEffect(() => {
+    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
+    if (auth.token) {
+      dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
+    } else {
+      dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
+    }
+    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
+  }, [auth.token])
 
   return (
     <>
       <GlobalStyle />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <AuthContext.Provider value={auth}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          {/* <Route exact path="/" element={<Home />} /> */}
+
+          <Route element={<PrivateRoutes />}>
+            <Route exact path="/" element={<Home />} />
+          </Route>
+        </Routes>
+      </AuthContext.Provider>
     </>
   )
 }
