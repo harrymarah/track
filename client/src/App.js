@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { createGlobalStyle } from 'styled-components'
+import { useCookies } from 'react-cookie'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import PrivateRoutes from './utils/PrivateRoutes'
@@ -44,36 +45,47 @@ const reducer = (auth, action) => {
 }
 
 function App() {
-  const [auth, dispatch] = useReducer(reducer, {
-    token: null,
-    isLoggedIn: false,
-    isLoading: false,
+  const [cookies, setCookie] = useCookies(['isAuthenticated'])
+
+  setCookie('isAuthenticated', true, {
+    maxAge: 60 * 60 * 24 * 7,
+    path: '/',
   })
 
-  console.log(auth.token, auth.isLoading, auth.isLoading)
+  const [auth, dispatch] = useReducer(reducer, {
+    token: 'token',
+    isLoggedIn: Boolean(cookies.isAuthenticated) || false,
+    isLoading: true,
+  })
+
+  console.log(auth.token, auth.isLoggedIn, auth.isLoading)
 
   useEffect(() => {
-    dispatch({ action: ACTIONS.SET_IS_LOADING, payload: true })
+    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
     async function getToken() {
       const response = await fetch('/auth/token')
       const json = await response.json()
       if (json) {
         dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
         dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: json.access_token })
+      } else {
+        console.log('null baby')
+        dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: null })
       }
     }
     getToken()
-    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
   }, [])
 
   useEffect(() => {
-    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
-    if (auth.token) {
-      dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
-    } else {
-      dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
-    }
-    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
+    setTimeout(() => {
+      console.log(!!auth.token)
+      if (auth.token) {
+        dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
+      } else {
+        dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
+      }
+      dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
+    }, 3000)
   }, [auth.token])
 
   return (
