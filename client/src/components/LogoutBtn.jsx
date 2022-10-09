@@ -15,7 +15,7 @@ const Button = styled.button`
 
 const LogoutBtn = () => {
   return (
-    <form method="POST" action="/logout">
+    <form method="POST" action="/auth/logout">
       <Button type="submit">logout</Button>
     </form>
   )

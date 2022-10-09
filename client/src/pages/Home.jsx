@@ -1,7 +1,7 @@
 import React from 'react'
-import BottomNavbar from '../features/BottomNavbar'
-import LogoutBtn from '../features/LogoutBtn'
-import ClosedMusicControl from '../features/ClosedMusicControl'
+import BottomNavbar from '../components/BottomNavbar'
+import LogoutBtn from '../components/LogoutBtn'
+import ClosedMusicControl from '../components/ClosedMusicControl'
 
 const Home = () => {
   return (
