@@ -2,14 +2,14 @@ import React from 'react'
 import BottomNavbar from '../layouts/BottomNavbar'
 import ClosedMusicControl from '../layouts/ClosedMusicControl'
 
-const Home = () => {
+const Playlists = () => {
   return (
     <div>
-      <h1>Home page</h1>
+      <h1>Playlists</h1>
       <ClosedMusicControl />
       <BottomNavbar />
     </div>
   )
 }
 
-export default Home
+export default Playlists

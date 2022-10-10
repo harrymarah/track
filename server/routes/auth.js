@@ -22,7 +22,7 @@ router.get('/token', async (req, res) => {
       access_token: user.accessToken,
     })
   } else {
-    return { access_token: null }
+    return res.json({ access_token: null })
   }
 })
 

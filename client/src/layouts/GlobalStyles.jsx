@@ -12,8 +12,9 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--dark-blue);
-    color: var(--light);
+    background-color: var(--light);
+    color: var(--black);
+    box-sizing: border-box;
   }
 `
 export default GlobalStyle

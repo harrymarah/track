@@ -1,15 +1,17 @@
 import React from 'react'
 import BottomNavbar from '../layouts/BottomNavbar'
 import ClosedMusicControl from '../layouts/ClosedMusicControl'
+import LogoutBtn from '../components/LogoutBtn'
 
-const Home = () => {
+const Settings = () => {
   return (
     <div>
-      <h1>Home page</h1>
+      <h1>Settings</h1>
+      <LogoutBtn />
       <ClosedMusicControl />
       <BottomNavbar />
     </div>
   )
 }
 
-export default Home
+export default Settings

@@ -4,6 +4,10 @@ import { useCookies } from 'react-cookie'
 
 import Login from './pages/Login'
 import Home from './pages/Home'
+import Messages from './pages/Messages'
+import Playlists from './pages/Playlists'
+import Search from './pages/Search'
+import Settings from './pages/Settings'
 import GlobalStyle from './layouts/GlobalStyles'
 import PrivateRoutes from './utils/PrivateRoutes'
 import { AuthContext } from './context/AuthContext'
@@ -24,8 +28,8 @@ function App() {
     dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
     async function getToken() {
       const response = await fetch('/auth/token')
-      console.log(response)
       const json = await response.json()
+      console.log(json)
       if (json) {
         setCookie('isAuthenticated', true, {
           maxAge: 60 * 60 * 24 * 7,
@@ -60,6 +64,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route element={<PrivateRoutes />}>
             <Route exact path="/" element={<Home />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/playlists" element={<Playlists />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>
       </AuthContext.Provider>
