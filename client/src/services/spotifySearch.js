@@ -9,12 +9,10 @@ const spotifySearch = async (query, token) => {
     },
     params: {
       q: query,
-      type: 'artist,track',
+      type: 'track,artist,album,playlist',
+      include_external: 'audio',
     },
   }
-  //   axios(config).then((response) => {
-  //     return response.data
-  //   })
   const { data } = await axios(config)
   return data
 }

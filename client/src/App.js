@@ -29,7 +29,6 @@ function App() {
     async function getToken() {
       const response = await fetch('/auth/token')
       const json = await response.json()
-      console.log(json)
       if (json) {
         setCookie('isAuthenticated', true, {
           maxAge: 60 * 60 * 24 * 7,
@@ -43,7 +42,7 @@ function App() {
     }
     getToken()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [auth.token])
 
   useEffect(() => {
     setTimeout(() => {
@@ -55,7 +54,6 @@ function App() {
       dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
     }, 3000)
   }, [auth.token])
-
   return (
     <>
       <GlobalStyle />
@@ -67,7 +65,10 @@ function App() {
             <Route path="/messages" element={<Messages />} />
             <Route path="/playlists" element={<Playlists />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route
+              path="/settings"
+              element={<Settings setCookie={setCookie} />}
+            />
           </Route>
         </Routes>
       </AuthContext.Provider>

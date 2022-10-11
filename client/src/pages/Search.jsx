@@ -4,14 +4,10 @@ import Wrapper from '../layouts/Wrapper'
 import BottomNavbar from '../layouts/BottomNavbar'
 import ClosedMusicControl from '../layouts/ClosedMusicControl'
 import SearchBar from '../components/SearchBar'
-
-const Results = styled.div`
-  overflow-y: scroll;
-  width: 100%;
-  height: 100%;
-`
+import ResultsContainer from '../features/search/ResultsContainer'
 
 const Heading = styled.h1`
+  font-size: 2rem;
   margin: 0;
 `
 
@@ -21,11 +17,8 @@ const Search = () => {
     <>
       <Wrapper>
         <Heading>Search</Heading>
-        <SearchBar
-          searchResults={searchResults}
-          updateSearchResults={updateSearchResults}
-        />
-        <Results />
+        <SearchBar updateSearchResults={updateSearchResults} />
+        <ResultsContainer searchResults={searchResults} />
       </Wrapper>
       <ClosedMusicControl />
       <BottomNavbar />

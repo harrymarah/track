@@ -22,6 +22,7 @@ const SearchBar = ({ updateSearchResults }) => {
   const handleSearch = async (e) => {
     e.preventDefault()
     const results = await spotifySearch(searchTerm, auth.token)
+    console.log(results.tracks.items[0])
     updateSearchResults(results)
   }
 

@@ -43,7 +43,7 @@ router.post('/logout', async (req, res, next) => {
   )
   req.logout((e) => {
     if (e) return next(e)
-    res.redirect('http://localhost:3000/login')
+    res.json({ message: 'ok' })
   })
 })
 
