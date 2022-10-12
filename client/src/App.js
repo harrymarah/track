@@ -45,14 +45,12 @@ function App() {
   }, [auth.token])
 
   useEffect(() => {
-    setTimeout(() => {
-      if (auth.token) {
-        dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
-      } else {
-        dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
-      }
-      dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
-    }, 3000)
+    if (auth.token) {
+      dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
+    } else {
+      dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
+    }
+    dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
   }, [auth.token])
   return (
     <>
