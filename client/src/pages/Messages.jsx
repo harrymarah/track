@@ -1,13 +1,13 @@
 import React from 'react'
 import BottomNavbar from '../layouts/BottomNavbar'
-import ClosedMusicControl from '../layouts/ClosedMusicControl'
+import MusicControl from '../layouts/MusicControl'
 
 const Messages = () => {
   return (
     <div>
       <h1>Messages</h1>
       <i className="fa-solid fa-pen-to-square"></i>
-      <ClosedMusicControl />
+      <MusicControl />
       <BottomNavbar />
     </div>
   )

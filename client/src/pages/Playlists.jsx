@@ -1,12 +1,12 @@
 import React from 'react'
 import BottomNavbar from '../layouts/BottomNavbar'
-import ClosedMusicControl from '../layouts/ClosedMusicControl'
+import MusicControl from '../layouts/MusicControl'
 
 const Playlists = () => {
   return (
     <div>
       <h1>Playlists</h1>
-      <ClosedMusicControl />
+      <MusicControl />
       <BottomNavbar />
     </div>
   )

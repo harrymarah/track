@@ -1,19 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-
-const getArtists = (artistsArr) => {
-  if (!artistsArr) return
-  let allArtists = []
-  artistsArr.forEach((artist) => {
-    allArtists.push(artist.name)
-  })
-  return allArtists.join(', ')
-}
+import getArtists from './getArtists'
 
 const SingleResultContainer = styled.li`
   width: 95%;
-  height: 70px;
-  background-color: rgba(1, 22, 56, 0.1);
+  height: 60px;
+  background-color: rgba(230, 241, 255, 0.04);
   margin: 5px auto;
   padding: 0.3rem 0.5rem;
   border-radius: 8px;
@@ -38,7 +30,7 @@ const AlbumName = styled.div`
   margin-bottom: 2px;
 `
 
-const SearchResult = ({ searchResults }) => {
+const TrackResult = ({ searchResults }) => {
   return (
     <SingleResultContainer>
       <TrackName>{searchResults.name}</TrackName>
@@ -48,4 +40,4 @@ const SearchResult = ({ searchResults }) => {
   )
 }
 
-export default SearchResult
+export default TrackResult

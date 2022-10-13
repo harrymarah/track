@@ -12,8 +12,8 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--light);
-    color: var(--black);
+    background-color: var(--dark-blue);
+    color: var(--light);
     box-sizing: border-box;
   }
 `

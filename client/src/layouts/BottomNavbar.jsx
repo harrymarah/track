@@ -4,21 +4,25 @@ import { NavLink } from 'react-router-dom'
 
 const NavBar = styled.div`
   display: flex;
-  background-color: var(--light);
+  background-color: rgba(0, 0, 0, 0.3);
+  // background-color: rgba(230, 241, 255, 0.1);
+  backdrop-filter: blur(5px);
   height: 60px;
   width: calc(100vw - 2rem);
   position: fixed;
   bottom: 0;
   justify-content: space-between;
   padding: 0 1rem;
+  z-index: 10;
 `
 
 const NavBarLink = styled(NavLink)`
-  color: ${(props) => (props.isActive ? 'var(--bright)' : 'var(--dark-blue);')};
+  color: ${(props) => (props.isActive ? 'var(--bright)' : 'var(--light);')};
   height: 100%;
   font-size: 2rem;
   line-height: 60px;
   cursor: pointer;
+  z-index: 10;
 `
 
 const BottomNavbar = () => {

@@ -31,6 +31,8 @@ app.get('/', (req, res) => {
   res.send('home page')
 })
 
-app.listen(parseInt(server.port), () => {
-  console.log(`Server connection successful, listening on port ${server.port}`)
+app.listen(parseInt(server.port, server.host), () => {
+  console.log(
+    `Server connection successful, listening at ${server.host}:${server.port}`
+  )
 })

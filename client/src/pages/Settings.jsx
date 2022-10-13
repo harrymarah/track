@@ -1,6 +1,6 @@
 import React from 'react'
 import BottomNavbar from '../layouts/BottomNavbar'
-import ClosedMusicControl from '../layouts/ClosedMusicControl'
+import MusicControl from '../layouts/MusicControl'
 import LogoutBtn from '../components/LogoutBtn'
 
 const Settings = ({ setCookie }) => {
@@ -8,7 +8,7 @@ const Settings = ({ setCookie }) => {
     <div>
       <h1>Settings</h1>
       <LogoutBtn setCookie={setCookie} />
-      <ClosedMusicControl />
+      <MusicControl />
       <BottomNavbar />
     </div>
   )
