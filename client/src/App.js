@@ -8,10 +8,16 @@ import Messages from './pages/Messages'
 import Playlists from './pages/Playlists'
 import Search from './pages/Search'
 import Settings from './pages/Settings'
+
 import GlobalStyle from './layouts/GlobalStyles'
-import PrivateRoutes from './utils/PrivateRoutes'
+
 import { AuthContext } from './context/AuthContext'
+
+import PrivateRoutes from './utils/PrivateRoutes'
 import { ACTIONS, reducer } from './utils/AuthReducer'
+import getToken from './utils/getToken'
+import axiosInterceptor from './utils/axiosInterceptor'
+
 import './App.css'
 
 function App() {
@@ -22,27 +28,15 @@ function App() {
     token: 'token',
     isLoggedIn: Boolean(cookies.isAuthenticated) || false,
     isLoading: true,
+    expiresAt: Date.now(),
   })
 
   useEffect(() => {
+    axiosInterceptor(auth.expiresAt, getToken, setCookie, dispatch)
     dispatch({ type: ACTIONS.SET_IS_LOADING, payload: true })
-    async function getToken() {
-      const response = await fetch('/auth/token')
-      const json = await response.json()
-      if (json) {
-        setCookie('isAuthenticated', true, {
-          maxAge: 60 * 60 * 24 * 7,
-          path: '/',
-        })
-        dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
-        dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: json.access_token })
-      } else {
-        dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: null })
-      }
-    }
-    getToken()
+    getToken(setCookie, dispatch)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.token])
+  }, [])
 
   useEffect(() => {
     if (auth.token) {
@@ -52,6 +46,7 @@ function App() {
     }
     dispatch({ type: ACTIONS.SET_IS_LOADING, payload: false })
   }, [auth.token])
+
   return (
     <>
       <GlobalStyle />

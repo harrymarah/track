@@ -12,6 +12,8 @@ export const reducer = (auth, action) => {
       return { ...auth, isLoggedIn: action.payload }
     case ACTIONS.SET_IS_LOADING:
       return { ...auth, isLoading: action.payload }
+    case ACTIONS.SET_TOKEN_EXPIRY:
+      return { ...auth, expiresAt: action.payload }
     default:
       return auth
   }

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
-import spotifySearch from '../services/spotifySearch'
-import { AuthContext } from '../context/AuthContext'
+import spotifySearch from '../../services/spotifySearch'
+import { AuthContext } from '../../context/AuthContext'
 
 const Input = styled.input`
   padding: 0.5em;
@@ -22,7 +22,6 @@ const SearchBar = ({ updateSearchResults }) => {
   const handleSearch = async (e) => {
     e.preventDefault()
     const results = await spotifySearch(searchTerm, auth.token)
-    console.log(results.tracks.items[0])
     updateSearchResults(results)
   }
 
