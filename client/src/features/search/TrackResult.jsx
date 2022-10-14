@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 import getArtists from './getArtists'
+import { AuthContext } from '../../context/AuthContext'
+
+import qs from 'qs'
 
 const SingleResultContainer = styled.li`
   width: 95%;
@@ -30,9 +34,46 @@ const AlbumName = styled.div`
   margin-bottom: 2px;
 `
 
-const TrackResult = ({ searchResults }) => {
+const playSong = (uri, token) => {
+  const setPlayback = (token) => {
+    const data = qs.stringify({
+      device_ids: ['13afbe1e9d046d761b13f9694a616fbc7fccc994'],
+      play: true,
+    })
+    const config = {
+      method: 'put',
+      url: 'https://api.spotify.com/v1/me/player',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: data,
+    }
+    axios(config).catch((e) => console.log(e.response.data.error))
+  }
+  setPlayback(token)
+  const config = {
+    method: 'put',
+    url: 'https://api.spotify.com/v1/me/player/play',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    query: {
+      device_id: '13afbe1e9d046d761b13f9694a616fbc7fccc994',
+    },
+    body: {
+      'context-uri': uri,
+      position_ms: 0,
+    },
+  }
+  axios(config).catch((e) => console.log(e.response.data.error))
+}
+
+const TrackResult = ({ searchResults, uri }) => {
+  const auth = useContext(AuthContext)
   return (
-    <SingleResultContainer>
+    <SingleResultContainer onClick={(e) => playSong(uri, auth.token)}>
       <TrackName>{searchResults.name}</TrackName>
       <ArtistName>{getArtists(searchResults.artists)}</ArtistName>
       <AlbumName>{searchResults.album.name}</AlbumName>

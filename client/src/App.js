@@ -2,6 +2,8 @@ import React, { useEffect, useReducer } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
+import WebPlayback from './components/WebPlayback'
+
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Messages from './pages/Messages'
@@ -51,6 +53,7 @@ function App() {
     <>
       <GlobalStyle />
       <AuthContext.Provider value={auth}>
+        {auth.isLoggedIn ? <WebPlayback /> : ''}
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<PrivateRoutes />}>

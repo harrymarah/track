@@ -1,6 +1,6 @@
 import React from 'react'
 import BottomNavbar from '../layouts/BottomNavbar'
-import MusicControl from '../layouts/MusicControl'
+import MusicControl from '../features/player/MusicControl'
 import LogoutBtn from '../components/LogoutBtn'
 
 const Settings = ({ setCookie }) => {

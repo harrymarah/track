@@ -36,7 +36,13 @@ const ResultsContainer = ({ searchResults }) => {
   }
   if (searchResults) {
     allResults.trackResults = searchResults.tracks.items.map((resultData) => {
-      return <TrackResult key={resultData.id} searchResults={resultData} />
+      return (
+        <TrackResult
+          key={resultData.id}
+          uri={resultData.uri}
+          searchResults={resultData}
+        />
+      )
     })
     allResults.artistResults = searchResults.artists.items.map((resultData) => {
       return (
@@ -51,7 +57,7 @@ const ResultsContainer = ({ searchResults }) => {
         return <PlaylistResult key={resultData.id} searchResults={resultData} />
       }
     )
-    console.log(searchResults.albums.items[0].images)
+    console.log(searchResults.tracks.items[0])
   }
   return (
     <Results>
