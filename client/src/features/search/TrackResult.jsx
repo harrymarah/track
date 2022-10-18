@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 import getArtists from './getArtists'
 import { AuthContext } from '../../context/AuthContext'
-
-import qs from 'qs'
+import setPlayback from '../../utils/setPlayback'
 
 const SingleResultContainer = styled.li`
   width: 95%;
@@ -15,7 +14,6 @@ const SingleResultContainer = styled.li`
   border-radius: 8px;
   overflow: hidden;
 `
-
 const TrackName = styled.div`
   font-weight: 600;
   font-size: 1.1rem;
@@ -35,23 +33,8 @@ const AlbumName = styled.div`
 `
 
 const playSong = (uri, token) => {
-  const setPlayback = (token) => {
-    const data = qs.stringify({
-      device_ids: ['13afbe1e9d046d761b13f9694a616fbc7fccc994'],
-      play: true,
-    })
-    const config = {
-      method: 'put',
-      url: 'https://api.spotify.com/v1/me/player',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      data: data,
-    }
-    axios(config).catch((e) => console.log(e.response.data.error))
-  }
-  setPlayback(token)
+  setPlayback()
+  const body = JSON.stringify({ uris: [uri], position_ms: 0 })
   const config = {
     method: 'put',
     url: 'https://api.spotify.com/v1/me/player/play',
@@ -60,12 +43,9 @@ const playSong = (uri, token) => {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     query: {
-      device_id: '13afbe1e9d046d761b13f9694a616fbc7fccc994',
+      device_id: sessionStorage.getItem('deviceId'),
     },
-    body: {
-      'context-uri': uri,
-      position_ms: 0,
-    },
+    body: body,
   }
   axios(config).catch((e) => console.log(e.response.data.error))
 }

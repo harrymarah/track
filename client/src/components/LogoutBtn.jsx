@@ -24,7 +24,7 @@ const LogoutBtn = ({ setCookie }) => {
       .then((response) => {
         if (response.data.message === 'ok') {
           setCookie('isAuthenticated', false, {
-            maxAge: 60 * 60 * 24 * 7,
+            maxAge: 60 * 60 * 2,
             path: '/',
           })
         }

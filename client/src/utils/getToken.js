@@ -3,9 +3,10 @@ import { ACTIONS } from './AuthReducer'
 const getToken = async (setCookie, dispatch) => {
   const response = await fetch('/auth/token')
   const json = await response.json()
-  if (json) {
+  if (json.access_token) {
     setCookie('isAuthenticated', true, {
-      maxAge: 60 * 60 * 24 * 7,
+      // cookie set to two hours, change back to one week when deploying
+      maxAge: 60 * 60 * 2,
       path: '/',
     })
     dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: true })
@@ -13,6 +14,7 @@ const getToken = async (setCookie, dispatch) => {
     dispatch({ type: ACTIONS.SET_TOKEN_EXPIRY, payload: json.expires_in })
   } else {
     dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: null })
+    dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
   }
 }
 
