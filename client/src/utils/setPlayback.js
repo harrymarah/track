@@ -1,21 +1,28 @@
 import axios from 'axios'
 
-const setPlayback = () => {
-  const data = JSON.stringify({
-    device_ids: [sessionStorage.getItem('deviceId')],
-    play: true,
-  })
-  console.log(data)
-  const config = {
-    method: 'put',
-    url: 'https://api.spotify.com/v1/me/player',
-    headers: {
-      Authorization: `Bearer BQBqBNgWilsRjdnNYsS5_TyDqZFTLcsoMJZJ-E63dmdwzzdV1BM18tewRErFPdVprDbEIt-Ia-KkAWHu1VTWvsGdwwC6YHzcvrPW8I1Ix9b0gqsPMOWQ9oOYY2IgHZRJKiDuTtJvotTtuRKe9yvZcuSUBwBTQkX7ubL3nAYtNxOPFXIF72k6PfLZ_P1fDuX0piPI0SVq6G4oHA`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    data: data,
+const setPlayback = async (token, callback = () => {}) => {
+  console.log('setting playback!')
+  try {
+    const data = JSON.stringify({
+      device_ids: [sessionStorage.getItem('deviceId')],
+      play: true,
+    })
+    const config = {
+      method: 'put',
+      url: 'https://api.spotify.com/v1/me/player',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: data,
+    }
+    await axios(config)
+    if (typeof callback === 'function') {
+      callback()
+    }
+  } catch (error) {
+    console.error(error)
   }
-  axios(config).catch((e) => console.log(e.response.data.error))
 }
 
 export default setPlayback

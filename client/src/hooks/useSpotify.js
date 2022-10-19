@@ -13,9 +13,8 @@ const useSpotify = (auth) => {
 
     document.body.appendChild(script)
 
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log(auth.token)
-      const player = new window.Spotify.Player({
+    window.onSpotifyWebPlaybackSDKReady = async () => {
+      const player = await new window.Spotify.Player({
         name: 'track',
         getOAuthToken: (cb) => {
           cb(auth.token)
@@ -23,7 +22,6 @@ const useSpotify = (auth) => {
       })
 
       setWebPlayer(player)
-      console.log(webPlayer)
     }
   }, [auth])
 

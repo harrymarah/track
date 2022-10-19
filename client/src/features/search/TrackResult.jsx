@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
 import getArtists from './getArtists'
 import { AuthContext } from '../../context/AuthContext'
 import setPlayback from '../../utils/setPlayback'
+import playSong from '../../utils/playSong'
 
 const SingleResultContainer = styled.li`
   width: 95%;
@@ -32,28 +32,16 @@ const AlbumName = styled.div`
   margin-bottom: 2px;
 `
 
-const playSong = (uri, token) => {
-  setPlayback()
-  const body = JSON.stringify({ uris: [uri], position_ms: 0 })
-  const config = {
-    method: 'put',
-    url: 'https://api.spotify.com/v1/me/player/play',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    query: {
-      device_id: sessionStorage.getItem('deviceId'),
-    },
-    body: body,
-  }
-  axios(config).catch((e) => console.log(e.response.data.error))
+const handleClick = (uri, token) => {
+  setPlayback(token, playSong(uri, token))
 }
 
-const TrackResult = ({ searchResults, uri }) => {
+const TrackResult = ({ searchResults }) => {
   const auth = useContext(AuthContext)
   return (
-    <SingleResultContainer onClick={(e) => playSong(uri, auth.token)}>
+    <SingleResultContainer
+      onClick={(e) => handleClick(searchResults.uri, auth.token)}
+    >
       <TrackName>{searchResults.name}</TrackName>
       <ArtistName>{getArtists(searchResults.artists)}</ArtistName>
       <AlbumName>{searchResults.album.name}</AlbumName>
