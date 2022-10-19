@@ -9,6 +9,7 @@ const Results = styled.ul`
   overflow-y: scroll;
   width: 100%;
   height: calc(100% - 140px);
+  // height: 250px;
   padding-bottom: 72px;
 `
 const ResultsHeading = styled.div`
