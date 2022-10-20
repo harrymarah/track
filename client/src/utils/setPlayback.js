@@ -1,8 +1,11 @@
 import axios from 'axios'
+import getDevice from './getDevice'
 
 const setPlayback = async (token, callback = () => {}) => {
-  console.log('setting playback!')
   try {
+    const device = await getDevice(token)
+    if (device.id === sessionStorage.getItem('deviceId')) return
+
     const data = JSON.stringify({
       device_ids: [sessionStorage.getItem('deviceId')],
       play: true,

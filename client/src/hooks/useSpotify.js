@@ -7,6 +7,7 @@ const useSpotify = (auth) => {
     if (!auth.isLoggedIn || auth.token === 'token' || webPlayer !== undefined)
       return
     console.log('use spotify use effect #1 running')
+    console.log(window.Spotify)
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
     script.async = true

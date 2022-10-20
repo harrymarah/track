@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import styled from 'styled-components'
 import getArtists from './getArtists'
 import { AuthContext } from '../../context/AuthContext'
@@ -36,11 +36,26 @@ const handleClick = (uri, token) => {
   setPlayback(token, playSong(uri, token))
 }
 
+const handleEvent = (e) => {
+  if (e.type === 'mousedown') {
+    e.currentTarget.style.backgroundColor = 'rgba(156, 255, 217, 0.3)'
+  } else if (e.type === 'mouseup') {
+    const target = e.currentTarget
+    setTimeout(() => {
+      target.style.backgroundColor = 'rgba(230, 241, 255, 0.04)'
+    }, 50)
+  }
+}
+
 const TrackResult = ({ searchResults }) => {
+  const resultRef = useRef()
   const auth = useContext(AuthContext)
   return (
     <SingleResultContainer
+      ref={resultRef}
       onClick={(e) => handleClick(searchResults.uri, auth.token)}
+      onMouseDown={handleEvent}
+      onMouseUp={handleEvent}
     >
       <TrackName>{searchResults.name}</TrackName>
       <ArtistName>{getArtists(searchResults.artists)}</ArtistName>

@@ -2,6 +2,9 @@ require('dotenv').config()
 
 const express = require('express')
 const app = express()
+const https = require('https')
+const http = require('http')
+const fs = require('fs')
 const connectDB = require('./config/db')
 const passport = require('passport')
 require('./config/passport')(passport)
@@ -36,3 +39,29 @@ app.listen(parseInt(server.port, server.host), () => {
     `Server connection successful, listening at ${server.host}:${server.port}`
   )
 })
+
+// app.enable('trust proxy')
+// app.use(function (req, res, next) {
+//   if (!req.secure) {
+//     res.redirect('https://' + req.headers.host + req.url)
+//   }
+//   next()
+// })
+//
+// const options = {
+//   key: fs.readFileSync(`./certificates/${server.host}-key.pem`),
+//   cert: fs.readFileSync(`./certificates/${server.host}.pem`),
+// }
+
+// https
+//   .createServer(options, function (req, res) {
+//     res.writeHead(200)
+//   })
+//   .listen(parseInt(server.port), server.host, () => {
+//     console.log(
+//       `Server connection successful, listening at ${server.host}:${server.port}`
+//     )
+//   })
+//
+// ADD TO CLIENT PACKAGE.JSON IF HOSTING ON NETWORK
+// "start": "HTTPS=true SSL_CRT_FILE=./certificates/192.168.1.19.pem SSL_KEY_FILE=./certificates/192.168.1.19-key.pem react-scripts start",

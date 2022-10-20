@@ -13,6 +13,7 @@ const Input = styled.input`
   border: none;
   border-radius: 3px;
   width: 95%;
+  cursor: pointer;
 `
 
 const SearchBar = ({ updateSearchResults }) => {

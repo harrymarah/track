@@ -6,6 +6,8 @@ module.exports = (app) => {
     createProxyMiddleware({
       target: process.env.REACT_APP_SERVER_URL,
       changeOrigin: true,
+      // uncomment when hosting on network
+      // secure: false,
     })
   )
 }

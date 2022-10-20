@@ -23,7 +23,7 @@ const MusicControlContainer = styled.div`
 `
 const ControlContainer = styled.div`
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: 17px;
   height: 160px;
   display: flex;
