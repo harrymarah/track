@@ -1,7 +1,7 @@
-import React, { useContext, useRef } from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import getArtists from './getArtists'
-import { AuthContext } from '../../context/AuthContext'
+import useAuth from '../../context/AuthContext'
 import setPlayback from '../../utils/setPlayback'
 import playSong from '../../utils/playSong'
 
@@ -49,11 +49,11 @@ const handleEvent = (e) => {
 
 const TrackResult = ({ searchResults }) => {
   const resultRef = useRef()
-  const auth = useContext(AuthContext)
+  const { token } = useAuth()
   return (
     <SingleResultContainer
       ref={resultRef}
-      onClick={(e) => handleClick(searchResults.uri, auth.token)}
+      onClick={(e) => handleClick(searchResults.uri, token)}
       onMouseDown={handleEvent}
       onMouseUp={handleEvent}
     >

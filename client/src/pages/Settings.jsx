@@ -3,11 +3,11 @@ import BottomNavbar from '../layouts/BottomNavbar'
 import MusicControl from '../features/player/MusicControl'
 import LogoutBtn from '../components/LogoutBtn'
 
-const Settings = ({ setCookie }) => {
+const Settings = () => {
   return (
     <div>
       <h1>Settings</h1>
-      <LogoutBtn setCookie={setCookie} />
+      <LogoutBtn />
       <MusicControl />
       <BottomNavbar />
     </div>

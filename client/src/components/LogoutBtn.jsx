@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
+import useAuth from '../context/AuthContext'
 
 const Button = styled.button`
   background-color: #b50505;
@@ -15,7 +17,9 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-const LogoutBtn = ({ setCookie }) => {
+const LogoutBtn = () => {
+  const [cookies, setCookie] = useCookies(['isAuthenticated'])
+  const { updateToken } = useAuth()
   const navigate = useNavigate()
   const handleLogout = (e) => {
     e.preventDefault()
@@ -27,6 +31,8 @@ const LogoutBtn = ({ setCookie }) => {
             maxAge: 60 * 60 * 2,
             path: '/',
           })
+          sessionStorage.clear()
+          updateToken(null)
         }
       })
       .finally(navigate('/login'))

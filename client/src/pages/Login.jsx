@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   padding: 1rem;
   background-color: var(--dark-blue);
   color: var(--light);
+  line-height: 1.3;
 `
 
 const Title = styled.h1`
@@ -37,6 +38,7 @@ const Tagline = styled.h2`
 
 const Text = styled.p`
   margin: 0;
+  line-height: 1.2;
 `
 
 const LoginBtn = styled.a`
@@ -45,6 +47,7 @@ const LoginBtn = styled.a`
   background-color: var(--light);
   border-radius: 50px;
   text-align: center;
+  text-decoration: none;
   padding: 1rem;
   width: 50%;
   align-self: center;
@@ -56,7 +59,7 @@ const LoginBtn = styled.a`
 
 const SpotifyLogo = styled(Logo)`
   background-image: url(${spotifyLogo});
-  width: 80px;
+  height: 25px;
   margin-bottom: -6px;
 `
 

@@ -4,7 +4,7 @@ import getDevice from './getDevice'
 const setPlayback = async (token, callback = () => {}) => {
   try {
     const device = await getDevice(token)
-    if (device.id === sessionStorage.getItem('deviceId')) return
+    if (device?.id === sessionStorage.getItem('deviceId')) return
 
     const data = JSON.stringify({
       device_ids: [sessionStorage.getItem('deviceId')],

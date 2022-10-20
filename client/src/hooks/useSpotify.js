@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
+import useAuth from '../context/AuthContext'
 
-const useSpotify = (auth) => {
+const useSpotify = () => {
   const [webPlayer, setWebPlayer] = useState(undefined)
+  const { auth, token, isLoggedIn } = useAuth()
 
   useEffect(() => {
-    if (!auth.isLoggedIn || auth.token === 'token' || webPlayer !== undefined)
-      return
+    if (!isLoggedIn || token === 'token' || webPlayer !== undefined) return
     console.log('use spotify use effect #1 running')
     console.log(window.Spotify)
     const script = document.createElement('script')

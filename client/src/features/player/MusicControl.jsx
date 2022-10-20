@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useReducer, useRef } from 'react'
 import styled from 'styled-components'
 import { Swipeable } from 'react-touch'
 import PlayPause from './PlayPause'
@@ -49,6 +49,20 @@ const PlayerControls = styled.div`
 
 const MusicControl = () => {
   const musicControlRef = useRef()
+  // const [playbackInfo, dispatch] = useReducer(playbackReducer, {
+  //   currentTrack: null,
+  //   songId: '',
+  //   albumId: '',
+  //   artistId: '',
+  //   isPaused: true,
+  //   songDuration: 0,
+  //   songPosition: 0,
+  //   nextTracks: [],
+  //   prevTracks: [],
+  //   uri: '',
+  //   artwork: ''
+
+  // })
 
   const handleSwipe = (direction) => {
     if (direction === 'down') {
