@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import useSpotify from './hooks/useSpotify'
 import useToken from './hooks/useToken'
 import useInterceptor from './hooks/useInterceptor'
 
-import useAuth from './context/AuthContext'
+import usePlayer from './context/PlayerContext'
 
 import Login from './pages/Login'
 import Home from './pages/Home'
@@ -21,12 +21,15 @@ import PrivateRoutes from './utils/PrivateRoutes'
 import './App.css'
 
 function App() {
-  const { setIsLoading } = useAuth()
-  // setIsLoading(true)
+  const { setWebPlayer } = usePlayer()
+
   useToken()
   useInterceptor()
-  useSpotify()
-  // setIsLoading(false)
+  const { spotifyWebPlayer } = useSpotify()
+
+  useEffect(() => {
+    setWebPlayer(spotifyWebPlayer)
+  }, [spotifyWebPlayer])
 
   return (
     <>

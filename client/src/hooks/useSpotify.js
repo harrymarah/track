@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react'
 import useAuth from '../context/AuthContext'
 
 const useSpotify = () => {
-  const [webPlayer, setWebPlayer] = useState(undefined)
+  const [spotifyWebPlayer, setSpotifyWebPlayer] = useState(undefined)
   const { auth, token, isLoggedIn } = useAuth()
 
   useEffect(() => {
-    if (!isLoggedIn || token === 'token' || webPlayer !== undefined) return
-    console.log('use spotify use effect #1 running')
-    console.log(window.Spotify)
+    if (!isLoggedIn || token === 'token' || spotifyWebPlayer !== undefined)
+      return
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
     script.async = true
@@ -23,48 +22,48 @@ const useSpotify = () => {
         },
       })
 
-      setWebPlayer(player)
+      setSpotifyWebPlayer(player)
     }
   }, [auth])
 
   useEffect(() => {
-    if (!auth.isLoggedIn || !webPlayer) return
+    if (!auth.isLoggedIn || !spotifyWebPlayer) return
 
-    webPlayer.addListener('initialization_error', ({ message }) => {
+    spotifyWebPlayer.addListener('initialization_error', ({ message }) => {
       console.error(message)
     })
-    webPlayer.addListener('authentication_error', ({ message }) => {
+    spotifyWebPlayer.addListener('authentication_error', ({ message }) => {
       console.error(message)
     })
-    webPlayer.addListener('account_error', ({ message }) => {
+    spotifyWebPlayer.addListener('account_error', ({ message }) => {
       console.error(message)
     })
-    webPlayer.addListener('playback_error', ({ message }) => {
+    spotifyWebPlayer.addListener('playback_error', ({ message }) => {
       console.error(message)
     })
 
-    webPlayer.addListener('player_state_changed', (state) => {
+    spotifyWebPlayer.addListener('player_state_changed', (state) => {
       console.log(state)
     })
 
-    webPlayer.addListener('ready', ({ device_id }) => {
+    spotifyWebPlayer.addListener('ready', ({ device_id }) => {
       sessionStorage.setItem('deviceId', device_id)
       console.log('Ready with Device ID', device_id)
     })
 
-    webPlayer.addListener('not_ready', ({ device_id }) => {
+    spotifyWebPlayer.addListener('not_ready', ({ device_id }) => {
       console.log('Device ID has gone offline', device_id)
     })
 
-    webPlayer.connect()
+    spotifyWebPlayer.connect()
 
     return () =>
       (window.onSpotifyWebPlaybackSDKReady = () => {
-        webPlayer.disconnect()
+        spotifyWebPlayer.disconnect()
       })
-  }, [webPlayer])
+  }, [spotifyWebPlayer])
 
-  return { webPlayer, setWebPlayer }
+  return { spotifyWebPlayer, setSpotifyWebPlayer }
 }
 
 export default useSpotify

@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import usePlayer from '../../context/PlayerContext'
+import useUpdatePLayerState from '../../hooks/useUpdatePlayerState'
 
 const PlayPauseBtn = styled.div`
   background-color: var(--bright);
@@ -17,11 +19,28 @@ const Icon = styled.i`
   font-size: 40px;
 `
 
-const iconClassNames = ['fa-solid', 'fa-play']
+let iconClassNames = ['fa-solid', 'fa-play']
 
 const PlayPause = () => {
+  const { webPlayer, isPaused, setIsPaused } = usePlayer()
+  const { updatePlayerState } = useUpdatePLayerState()
+
+  const setIcon = (isPaused) => {
+    if (isPaused) {
+      iconClassNames = ['fa-solid', 'fa-play']
+    } else {
+      iconClassNames = ['fa-solid', 'fa-pause']
+    }
+  }
+
+  const handleClick = async () => {
+    setIcon(!isPaused)
+    await setIsPaused(!isPaused)
+    await webPlayer.togglePlay()
+    await updatePlayerState()
+  }
   return (
-    <PlayPauseBtn>
+    <PlayPauseBtn onClick={handleClick}>
       <Icon className={iconClassNames}></Icon>
     </PlayPauseBtn>
   )

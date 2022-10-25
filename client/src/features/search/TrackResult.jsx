@@ -2,8 +2,11 @@ import React, { useRef } from 'react'
 import styled from 'styled-components'
 import getArtists from './getArtists'
 import useAuth from '../../context/AuthContext'
-import setPlayback from '../../utils/setPlayback'
-import playSong from '../../utils/playSong'
+// import setPlayback from '../../utils/setPlayback'
+
+import useUpdatePlayerState from '../../hooks/useUpdatePlayerState'
+import usePlaySong from '../../hooks/usePlaySong'
+import useSetPlayback from '../../hooks/useSetPlayback'
 
 const SingleResultContainer = styled.li`
   width: 95%;
@@ -32,10 +35,6 @@ const AlbumName = styled.div`
   margin-bottom: 2px;
 `
 
-const handleClick = (uri, token) => {
-  setPlayback(token, playSong(uri, token))
-}
-
 const handleEvent = (e) => {
   if (e.type === 'mousedown') {
     e.currentTarget.style.backgroundColor = 'rgba(156, 255, 217, 0.3)'
@@ -48,6 +47,14 @@ const handleEvent = (e) => {
 }
 
 const TrackResult = ({ searchResults }) => {
+  const { playSong } = usePlaySong()
+  const { updatePlayerState } = useUpdatePlayerState()
+  const { setPlayback } = useSetPlayback()
+  const handleClick = async (uri, token) => {
+    await setPlayback(token)
+    await playSong(uri, token)
+    await updatePlayerState()
+  }
   const resultRef = useRef()
   const { token } = useAuth()
   return (

@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import usePlayer from '../../context/PlayerContext'
+import getArtists from '../search/getArtists'
 
 const DetailsContainer = styled.div`
   margin-top: 7px;
@@ -13,12 +15,14 @@ const ArtistName = styled.span`
 `
 
 const TrackDetails = () => {
+  const { playback, currentTrack, albumName, artistArr } = usePlayer()
+  console.log(playback)
   return (
     <DetailsContainer>
-      <TrackName>Re-Wired</TrackName>&nbsp;&ndash;&nbsp;
-      <AlbumName>Velociraptor!</AlbumName>
+      <TrackName>{currentTrack}</TrackName>&nbsp;&ndash;&nbsp;
+      <AlbumName>{albumName}</AlbumName>
       &nbsp;&ndash;&nbsp;
-      <ArtistName>Kasabian</ArtistName>
+      <ArtistName>{getArtists(artistArr)}</ArtistName>
     </DetailsContainer>
   )
 }

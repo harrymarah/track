@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import useAuth from '../context/AuthContext'
+import usePlayer from '../context/PlayerContext'
 
 const Button = styled.button`
   background-color: #b50505;
@@ -20,6 +21,7 @@ const Button = styled.button`
 const LogoutBtn = () => {
   const [cookies, setCookie] = useCookies(['isAuthenticated'])
   const { updateToken } = useAuth()
+  const { webPlayer, setWebPlayer } = usePlayer()
   const navigate = useNavigate()
   const handleLogout = (e) => {
     e.preventDefault()
@@ -33,6 +35,8 @@ const LogoutBtn = () => {
           })
           sessionStorage.clear()
           updateToken(null)
+          webPlayer.disconnect()
+          setWebPlayer(undefined)
         }
       })
       .finally(navigate('/login'))

@@ -6,16 +6,19 @@ import reportWebVitals from './reportWebVitals'
 import { BrowserRouter } from 'react-router-dom'
 import { CookiesProvider } from 'react-cookie'
 import { AuthProvider } from './context/AuthContext'
+import { PlayerProvider } from './context/PlayerContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <CookiesProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </CookiesProvider>
+      <PlayerProvider>
+        <CookiesProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </CookiesProvider>
+      </PlayerProvider>
     </AuthProvider>
   </React.StrictMode>
 )
