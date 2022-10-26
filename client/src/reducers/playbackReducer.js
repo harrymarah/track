@@ -17,6 +17,7 @@ export const initialState = {
 
 export const ACTIONS = {
   SET_WEB_PLAYER: 'set spotify SDK web player',
+  RESET_ALL_BUT_WEB_PLAYER: 'reset state expect for web player',
   SET_CURRENT_TRACK: 'set current track',
   SET_SONG_ID: 'set song ID',
   SET_ALBUM_NAME: 'set album name',
@@ -36,6 +37,9 @@ const playbackReducer = (player, action) => {
   switch (action.type) {
     case ACTIONS.SET_WEB_PLAYER:
       return { ...player, webPlayer: action.payload }
+    case ACTIONS.RESET_ALL_BUT_WEB_PLAYER:
+      const webPlayer = player.webPlayer
+      return { ...initialState, webPlayer: webPlayer }
     case ACTIONS.SET_CURRENT_TRACK:
       return { ...player, currentTrack: action.payload }
     case ACTIONS.SET_SONG_ID:

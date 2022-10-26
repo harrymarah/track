@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import usePlayer from '../../context/PlayerContext'
+import useUpdatePLayerState from '../../hooks/useUpdatePlayerState'
 
 const Icon = styled.i`
   color: var(--light);
@@ -8,7 +10,14 @@ const Icon = styled.i`
 const iconClassNames = ['fa-solid', 'fa-forward']
 
 const NextTrack = () => {
-  return <Icon className={iconClassNames} />
+  const { webPlayer } = usePlayer()
+  const { updatePlayerState } = useUpdatePLayerState()
+
+  const playNextSong = async () => {
+    await webPlayer.nextTrack()
+    updatePlayerState()
+  }
+  return <Icon onClick={playNextSong} className={iconClassNames} />
 }
 
 export default NextTrack

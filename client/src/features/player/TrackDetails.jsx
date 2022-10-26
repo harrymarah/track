@@ -15,8 +15,7 @@ const ArtistName = styled.span`
 `
 
 const TrackDetails = () => {
-  const { playback, currentTrack, albumName, artistArr } = usePlayer()
-  console.log(playback)
+  const { currentTrack, albumName, artistArr } = usePlayer()
   return (
     <DetailsContainer>
       <TrackName>{currentTrack}</TrackName>&nbsp;&ndash;&nbsp;

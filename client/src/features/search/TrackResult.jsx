@@ -53,7 +53,7 @@ const TrackResult = ({ searchResults }) => {
   const handleClick = async (uri, token) => {
     await setPlayback(token)
     await playSong(uri, token)
-    await updatePlayerState()
+    updatePlayerState()
   }
   const resultRef = useRef()
   const { token } = useAuth()

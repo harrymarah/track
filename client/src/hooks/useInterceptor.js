@@ -2,6 +2,7 @@ import useAuth from '../context/AuthContext'
 import axios from 'axios'
 
 const useInterceptor = async () => {
+  // console.count('useInterceptor')
   const { expiresAt, updateToken, updateTokenExpiry } = useAuth()
   const getRefreshToken = async () => {
     // if we have a token, and it's not equal to 'token' (the default value), and the token isn't going to expire in the next 5 mins, then break out of this code

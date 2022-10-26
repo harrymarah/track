@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import usePlayer from '../../context/PlayerContext'
 import useUpdatePLayerState from '../../hooks/useUpdatePlayerState'
@@ -25,6 +25,10 @@ const PlayPause = () => {
   const { webPlayer, isPaused, setIsPaused } = usePlayer()
   const { updatePlayerState } = useUpdatePLayerState()
 
+  useEffect(() => {
+    setIcon(isPaused)
+  }, [isPaused])
+
   const setIcon = (isPaused) => {
     if (isPaused) {
       iconClassNames = ['fa-solid', 'fa-play']
@@ -34,10 +38,11 @@ const PlayPause = () => {
   }
 
   const handleClick = async () => {
-    setIcon(!isPaused)
-    await setIsPaused(!isPaused)
     await webPlayer.togglePlay()
-    await updatePlayerState()
+    updatePlayerState()
+    //don't understand why the below code works but it does
+    setIcon(!isPaused)
+    setIsPaused(!isPaused)
   }
   return (
     <PlayPauseBtn onClick={handleClick}>

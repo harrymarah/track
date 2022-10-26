@@ -2,7 +2,8 @@ import axios from 'axios'
 import usePlayer from '../context/PlayerContext'
 
 const usePlaySong = () => {
-  const { setIsPaused } = usePlayer()
+  // console.count('usePlaySong')
+  const { setIsPaused, setSongPosition } = usePlayer()
   const playSong = async (uri, token) => {
     try {
       const data = JSON.stringify({
@@ -21,6 +22,7 @@ const usePlaySong = () => {
         data: data,
       }
       await axios(config)
+      setSongPosition(0)
       setIsPaused(false)
     } catch (error) {
       console.error(error)

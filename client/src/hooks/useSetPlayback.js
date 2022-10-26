@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const useSetPlayback = () => {
+  // console.count('useSetPlayback')
   const getDevice = async (token) => {
     try {
       const config = {

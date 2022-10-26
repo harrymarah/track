@@ -12,6 +12,9 @@ export const PlayerProvider = ({ children }) => {
   const setWebPlayer = (player) => {
     dispatch({ type: ACTIONS.SET_WEB_PLAYER, payload: player })
   }
+  const resetAllButWebPlayer = () => {
+    dispatch({ type: ACTIONS.RESET_ALL_BUT_WEB_PLAYER })
+  }
   const updateSong = (trackName) => {
     dispatch({ type: ACTIONS.SET_CURRENT_TRACK, payload: trackName })
   }
@@ -69,6 +72,7 @@ export const PlayerProvider = ({ children }) => {
     uri: playback.uri,
     artwork: playback.artwork,
     setWebPlayer,
+    resetAllButWebPlayer,
     updateSong,
     updateSongId,
     updateAlbumName,

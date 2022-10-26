@@ -3,6 +3,7 @@ import useAuth from '../context/AuthContext'
 import { useCookies } from 'react-cookie'
 
 const useToken = async () => {
+  // console.count('useToken')
   const [cookies, setCookie] = useCookies(['isAuthenticated'])
   const {
     token,
