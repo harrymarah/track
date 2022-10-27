@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import usePlayer from '../../context/PlayerContext'
+import useUpdatePlayerState from '../../hooks/useUpdatePlayerState'
+import { useDrag } from '@use-gesture/react'
+import { useSpring, animated } from '@react-spring/web'
 
 const TrackTimeBar = styled.div`
   background-color: var(--light);
@@ -8,17 +11,18 @@ const TrackTimeBar = styled.div`
   width: 70%;
   border-radius: 8px;
   position: relative;
+  display: flex;
+  align-items: center;
 `
 const TrackTimeIndicator = styled.div`
   position: absolute;
   background-color: ${(props) =>
     props.beingDragged ? 'var(--bright)' : 'var(--black)'};
-  height: ${(props) => (props.beingDragged ? '15px' : '9px')};
-  width: ${(props) => (props.beingDragged ? '15px' : '9px')};
-  border-radius: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  left: ${(props) => props.location};
+  height: 9px;
+  width: 9px;
+  border-radius: 20px;
+  transition: all 0.2s;
+  left: ${(props) => props.location}px;
 `
 const TrackTimeContainer = styled.div`
   width: 100%;
@@ -53,21 +57,20 @@ const msToTime = (miliseconds) => {
 }
 
 const TrackProgress = () => {
-  const { songDuration, songPosition, isPaused, currentTrack } = usePlayer()
+  const { updatePlayerState } = useUpdatePlayerState()
+  const { webPlayer, songDuration, songPosition, isPaused, currentTrack } =
+    usePlayer()
   const [timerDisplay, setTimerDisplay] = useState(0)
   const [timeIndicatorPosition, setTimeIndicatorPosition] = useState(0)
-  useEffect(() => {
-    setTimerDisplay(songPosition)
-    setTimeIndicatorPosition((songPosition / songDuration) * 97)
-  }, [songPosition, currentTrack])
-
   const timerState = {
     isPaused,
     songDuration,
     songPosition,
     updateTime: performance.now(),
   }
-
+  let interval = useRef()
+  const trackTimeBarRef = useRef()
+  const trackTimeIndicatorRef = useRef()
   const getSongPosition = () => {
     if (timerState.isPaused)
       return timerState.songPosition ? timerState.songPosition : 0
@@ -79,7 +82,10 @@ const TrackProgress = () => {
     setTimeIndicatorPosition((position / timerState.songDuration) * 97)
   }
 
-  let interval = useRef()
+  useEffect(() => {
+    setTimerDisplay(songPosition)
+    setTimeIndicatorPosition((songPosition / songDuration) * 97)
+  }, [songPosition, currentTrack])
 
   useEffect(() => {
     if (!isPaused) {
@@ -91,11 +97,44 @@ const TrackProgress = () => {
     }
   }, [isPaused])
 
+  const [{ x }, api] = useSpring(() => ({ x: 0 }))
+  const bind = useDrag(
+    ({ offset: [x], active, offset, last }) => {
+      api.start({ x, immediate: active })
+      if (active) {
+        trackTimeIndicatorRef.current.style.backgroundColor = 'var(--bright)'
+        trackTimeIndicatorRef.current.style.height = '20px'
+        trackTimeIndicatorRef.current.style.width = '20px'
+      } else {
+        trackTimeIndicatorRef.current.style.backgroundColor = 'var(--black)'
+        trackTimeIndicatorRef.current.style.height = '9px'
+        trackTimeIndicatorRef.current.style.width = '9px'
+      }
+      if (last) {
+        console.log(offset[0])
+        const { left, right } = trackTimeBarRef.current.getBoundingClientRect()
+        const newPosition = (songDuration / (right - left)) * (offset[0] - left)
+        console.log(msToTime(newPosition))
+        console.log(msToTime(songDuration))
+        webPlayer.seek(newPosition).then(updatePlayerState())
+      }
+    },
+    {
+      bounds: trackTimeBarRef,
+    }
+  )
+
   return (
     <TrackTimeContainer>
       <TimeElapsed>{msToTime(timerDisplay)}</TimeElapsed>
-      <TrackTimeBar>
-        <TrackTimeIndicator position={timeIndicatorPosition} />
+      <TrackTimeBar ref={trackTimeBarRef}>
+        <TrackTimeIndicator
+          as={animated.div}
+          {...bind()}
+          style={{ x }}
+          ref={trackTimeIndicatorRef}
+          location={timeIndicatorPosition}
+        />
       </TrackTimeBar>
       <TimeElapsed>-{msToTime(songDuration - timerDisplay)}</TimeElapsed>
     </TrackTimeContainer>

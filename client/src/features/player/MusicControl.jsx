@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { Swipeable } from 'react-touch'
+// import { Swipeable } from 'react-touch'
 import usePlayer from '../../context/PlayerContext'
 import PlayPause from './PlayPause'
 import NextTrack from './NextTrack'
@@ -89,23 +89,23 @@ const MusicControl = () => {
   }
 
   return (
-    <Swipeable
-      onSwipeDown={() => handleSwipe('down')}
-      onSwipeUp={() => handleSwipe('up')}
-    >
-      <MusicControlContainer ref={musicControlRef}>
-        {swipeUpBar}
-        <ControlContainer>
-          <PlayerControls>
-            <PrevTrack />
-            <PlayPause />
-            <NextTrack />
-          </PlayerControls>
-          <TrackProgress />
-          <TrackDetails />
-        </ControlContainer>
-      </MusicControlContainer>
-    </Swipeable>
+    // <Swipeable
+    //   onSwipeDown={() => handleSwipe('down')}
+    //   onSwipeUp={() => handleSwipe('up')}
+    // >
+    <MusicControlContainer ref={musicControlRef}>
+      {swipeUpBar}
+      <ControlContainer>
+        <PlayerControls>
+          <PrevTrack />
+          <PlayPause />
+          <NextTrack />
+        </PlayerControls>
+        <TrackProgress />
+        <TrackDetails />
+      </ControlContainer>
+    </MusicControlContainer>
+    // </Swipeable>
   )
 }
 
