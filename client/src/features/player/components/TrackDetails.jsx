@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import usePlayer from '../../context/PlayerContext'
-import getArtists from '../search/getArtists'
+import usePlayer from 'context/PlayerContext'
+import getArtists from 'utils/getArtists'
 
 const DetailsContainer = styled.div`
   margin-top: 7px;

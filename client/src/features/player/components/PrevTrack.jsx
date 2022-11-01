@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import useUpdatePLayerState from '../../hooks/useUpdatePlayerState'
-import usePlayer from '../../context/PlayerContext'
+import useUpdatePLayerState from 'hooks/useUpdatePlayerState'
+import usePlayer from 'context/PlayerContext'
 
 const Icon = styled.i`
   color: var(--light);

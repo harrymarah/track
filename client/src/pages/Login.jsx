@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import trackLogo from '../assets/track.png'
-import spotifyLogo from '../assets/Spotify_Logo_RGB_Green.png'
+import trackLogo from 'assets/track.png'
+import spotifyLogo from 'assets/Spotify_Logo_RGB_Green.png'
 
 const Wrapper = styled.div`
   height: 100vh;

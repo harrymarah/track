@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 // import { Swipeable } from 'react-touch'
-import usePlayer from '../../context/PlayerContext'
-import PlayPause from './PlayPause'
-import NextTrack from './NextTrack'
-import PrevTrack from './PrevTrack'
-import TrackProgress from './TrackProgress'
-import TrackDetails from './TrackDetails'
+import usePlayer from 'context/PlayerContext'
+import PlayPause from 'features/player/components/PlayPause'
+import NextTrack from 'features/player/components/NextTrack'
+import PrevTrack from 'features/player/components/PrevTrack'
+import TrackProgress from 'features/player/components/TrackProgress'
+import TrackDetails from 'features/player/components/TrackDetails'
 
 const MusicControlContainer = styled.div`
   width: 100%;

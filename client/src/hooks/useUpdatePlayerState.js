@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import usePlayer from '../context/PlayerContext'
+import usePlayer from 'context/PlayerContext'
 
 const useUpdatePlayerState = () => {
   const {

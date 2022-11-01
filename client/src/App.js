@@ -9,16 +9,16 @@ import usePlayer from './context/PlayerContext'
 
 import Login from './pages/Login'
 import Home from './pages/Home'
-import Messages from './pages/Messages'
-import Playlists from './pages/Playlists'
-import Search from './pages/Search'
-import Settings from './pages/Settings'
+import Messages from 'pages/Messages'
+import Playlists from 'pages/Playlists'
+import Search from 'pages/Search'
+import Settings from 'pages/Settings'
 
-import GlobalStyle from './layouts/GlobalStyles'
+import { GlobalStyle } from 'layouts'
 
-import PrivateRoutes from './utils/PrivateRoutes'
+import PrivateRoutes from 'utils/PrivateRoutes'
 
-import './App.css'
+import 'App.css'
 
 function App() {
   const { setWebPlayer } = usePlayer()

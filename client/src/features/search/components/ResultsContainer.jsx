@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import TrackResult from './TrackResult'
-import ArtistResult from './ArtistResult'
-import AlbumResult from './AlbumResult'
-import PlaylistResult from './PlaylistResult'
+import TrackResult from 'features/search/components/TrackResult'
+import ArtistResult from 'features/search/components/ArtistResult'
+import AlbumResult from 'features/search/components/AlbumResult'
+import PlaylistResult from 'features/search/components/PlaylistResult'
 
 const Results = styled.ul`
   overflow-y: scroll;

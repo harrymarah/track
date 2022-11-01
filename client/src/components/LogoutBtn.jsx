@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
-import useAuth from '../context/AuthContext'
-import usePlayer from '../context/PlayerContext'
+import useAuth from 'context/AuthContext'
+import usePlayer from 'context/PlayerContext'
 
 const Button = styled.button`
   background-color: #b50505;

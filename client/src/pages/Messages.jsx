@@ -1,14 +1,10 @@
 import React from 'react'
-import BottomNavbar from '../layouts/BottomNavbar'
-import MusicControl from '../features/player/MusicControl'
 
 const Messages = () => {
   return (
     <div>
       <h1>Messages</h1>
       <i className="fa-solid fa-pen-to-square"></i>
-      <MusicControl />
-      <BottomNavbar />
     </div>
   )
 }

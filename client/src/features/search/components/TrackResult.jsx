@@ -1,12 +1,11 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
-import getArtists from './getArtists'
-import useAuth from '../../context/AuthContext'
-// import setPlayback from '../../utils/setPlayback'
+import getArtists from 'utils/getArtists'
+import useAuth from 'context/AuthContext'
 
-import useUpdatePlayerState from '../../hooks/useUpdatePlayerState'
-import usePlaySong from '../../hooks/usePlaySong'
-import useSetPlayback from '../../hooks/useSetPlayback'
+import useUpdatePlayerState from 'hooks/useUpdatePlayerState'
+import usePlaySong from 'hooks/usePlaySong'
+import useSetPlayback from 'hooks/useSetPlayback'
 
 const SingleResultContainer = styled.li`
   width: 95%;

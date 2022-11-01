@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import SeeMoreChevron from './SeeMoreChevron'
+import SeeMoreChevron from 'features/search/components/SeeMoreChevron'
 
 const SingleResultContainer = styled.li`
   position: relative;

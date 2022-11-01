@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import usePlayer from '../../context/PlayerContext'
-import useUpdatePLayerState from '../../hooks/useUpdatePlayerState'
+import usePlayer from 'context/PlayerContext'
+import useUpdatePLayerState from 'hooks/useUpdatePlayerState'
 
 const PlayPauseBtn = styled.div`
   background-color: var(--bright);

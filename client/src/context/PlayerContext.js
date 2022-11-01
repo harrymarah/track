@@ -2,7 +2,7 @@ import { createContext, useReducer, useContext } from 'react'
 import playbackReducer, {
   ACTIONS,
   initialState,
-} from '../reducers/playbackReducer'
+} from 'reducers/playbackReducer'
 
 const PlayerContext = createContext(initialState)
 

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
-import usePlayer from '../../context/PlayerContext'
-import useUpdatePlayerState from '../../hooks/useUpdatePlayerState'
 import { useDrag } from '@use-gesture/react'
 import { useSpring, animated } from '@react-spring/web'
+import usePlayer from 'context/PlayerContext'
+import useUpdatePlayerState from 'hooks/useUpdatePlayerState'
+import msToTime from 'features/player/utils/msToTime'
 
 const TrackTimeBar = styled.div`
   background-color: var(--light);
@@ -16,8 +17,7 @@ const TrackTimeBar = styled.div`
 `
 const TrackTimeIndicator = styled.div`
   position: absolute;
-  background-color: ${(props) =>
-    props.beingDragged ? 'var(--bright)' : 'var(--black)'};
+  background-color: var(--black);
   height: 9px;
   width: 9px;
   border-radius: 20px;
@@ -36,25 +36,6 @@ const TimeElapsed = styled.div`
   // max-width: 70px;
   margin: 0 5px;
 `
-const msToTime = (miliseconds) => {
-  let seconds = Math.floor(miliseconds / 1000)
-  let minutes = Math.floor(seconds / 60)
-  let hours = Math.floor(minutes / 60)
-
-  seconds = seconds % 60
-  minutes = minutes % 60
-
-  seconds = seconds.toLocaleString('en-US', {
-    minimumIntegerDigits: 2,
-    useGrouping: false,
-  })
-
-  if (hours === 0) {
-    return minutes + ':' + seconds
-  } else {
-    return hours + ':' + minutes + ':' + seconds
-  }
-}
 
 const TrackProgress = () => {
   const { updatePlayerState } = useUpdatePlayerState()
@@ -68,12 +49,15 @@ const TrackProgress = () => {
     songPosition,
     updateTime: performance.now(),
   }
+
   let interval = useRef()
   const trackTimeBarRef = useRef()
   const trackTimeIndicatorRef = useRef()
+
   const getSongPosition = () => {
-    if (timerState.isPaused)
+    if (timerState.isPaused) {
       return timerState.songPosition ? timerState.songPosition : 0
+    }
     const position =
       timerState.songPosition + (performance.now() - timerState.updateTime)
     setTimerDisplay(
@@ -90,7 +74,7 @@ const TrackProgress = () => {
   useEffect(() => {
     if (!isPaused) {
       interval.current = setInterval(() => {
-        getSongPosition()
+        getSongPosition(interval.current)
       }, 1000)
     } else {
       clearInterval(interval.current)
@@ -112,11 +96,15 @@ const TrackProgress = () => {
       }
       if (last) {
         console.log(offset[0])
+        clearInterval(interval.current)
         const { left, right } = trackTimeBarRef.current.getBoundingClientRect()
         const newPosition = (songDuration / (right - left)) * (offset[0] - left)
         console.log(msToTime(newPosition))
         console.log(msToTime(songDuration))
-        webPlayer.seek(newPosition).then(updatePlayerState())
+        webPlayer
+          .seek(newPosition)
+          .then(updatePlayerState())
+          .then(webPlayer.resume())
       }
     },
     {
