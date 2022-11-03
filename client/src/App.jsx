@@ -14,11 +14,9 @@ import Playlists from 'pages/Playlists'
 import Search from 'pages/Search'
 import Settings from 'pages/Settings'
 
-import { GlobalStyle } from 'layouts'
+// import { GlobalStyle } from 'layouts'
 
 import PrivateRoutes from 'utils/PrivateRoutes'
-
-import 'App.css'
 
 function App() {
   const { setWebPlayer } = usePlayer()
@@ -33,7 +31,7 @@ function App() {
 
   return (
     <>
-      <GlobalStyle />
+      {/* <GlobalStyle /> */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoutes />}>

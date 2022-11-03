@@ -41,6 +41,24 @@
     <title>React App</title>
   </head>
   <body>
+    <!-- style tag added as jest does not like the createGlobalStyles file, remove in prod -->
+    <style>
+      html {
+        --black: #171738;
+        --dark-blue: #011638;
+        --light: #e6f1ff;
+        --bright: #9cffd9;
+        --green: #4fe383;
+      }
+      body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--dark-blue);
+        color: var(--light);
+        box-sizing: border-box;
+      }
+    </style>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
