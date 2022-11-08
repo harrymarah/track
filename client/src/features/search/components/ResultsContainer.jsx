@@ -4,6 +4,7 @@ import TrackResult from 'features/search/components/TrackResult'
 import ArtistResult from 'features/search/components/ArtistResult'
 import AlbumResult from 'features/search/components/AlbumResult'
 import PlaylistResult from 'features/search/components/PlaylistResult'
+import MoreResults from './MoreResults'
 
 const Results = styled.ul`
   overflow-y: scroll;
@@ -35,39 +36,54 @@ const ResultsContainer = ({ searchResults }) => {
     albumResults: [],
     playlistResults: [],
   }
-  if (searchResults) {
+
+  if (searchResults.tracks) {
     allResults.trackResults = searchResults.tracks.items.map((resultData) => {
       return <TrackResult key={resultData.id} searchResults={resultData} />
     })
+    allResults.trackResults.push(<MoreResults />)
+  }
+
+  if (searchResults.artists) {
     allResults.artistResults = searchResults.artists.items.map((resultData) => {
       return (
         <ArtistResult key={resultData.id} searchResults={resultData.name} />
       )
     })
+    allResults.artistResults.push(<MoreResults />)
+  }
+
+  if (searchResults.albums) {
     allResults.albumResults = searchResults.albums.items.map((resultData) => {
       return <AlbumResult key={resultData.id} searchResults={resultData} />
     })
+    allResults.albumResults.push(<MoreResults />)
+  }
+
+  if (searchResults.playlists) {
     allResults.playlistResults = searchResults.playlists.items.map(
       (resultData) => {
         return <PlaylistResult key={resultData.id} searchResults={resultData} />
       }
     )
+    allResults.playlistResults.push(<MoreResults />)
   }
+
   return (
     <Results>
-      {allResults.trackResults.length ? (
-        <ResultsHeading>tracks</ResultsHeading>
-      ) : (
-        ''
-      )}
-      {allResults.trackResults}
-
       {allResults.artistResults.length ? (
         <ResultsHeading>artists</ResultsHeading>
       ) : (
         ''
       )}
       {allResults.artistResults}
+
+      {allResults.trackResults.length ? (
+        <ResultsHeading>tracks</ResultsHeading>
+      ) : (
+        ''
+      )}
+      {allResults.trackResults}
 
       {allResults.albumResults.length ? (
         <ResultsHeading>albums</ResultsHeading>

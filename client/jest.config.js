@@ -5,7 +5,7 @@ export default {
   coverageDirectory: 'coverage',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  extensionsToTreatAsEsm: ['.jsx'],
+  extensionsToTreatAsEsm: ['.js, .jsx'],
   moduleDirectories: ['node_modules', 'src'],
   rootDir: './',
   modulePaths: ['<rootDir>'],

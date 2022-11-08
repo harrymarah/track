@@ -4,7 +4,7 @@ module.exports = {
     port: process.env.PORT || 8080,
   },
   db: {
-    url: process.env.MONGO_DB_URL || 'mongodb://localhost:27017/track',
+    url: process.env.MONGO_DB_URL || 'mongodb://127.0.0.1:27017/track',
   },
   client: {
     url: process.env.CLIENT_URL || 'http://localhost:3000',

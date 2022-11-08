@@ -8,6 +8,7 @@ import useInterceptor from './hooks/useInterceptor'
 import usePlayer from './context/PlayerContext'
 
 import Login from './pages/Login'
+import PrivateRoutes from 'utils/PrivateRoutes'
 import Home from './pages/Home'
 import Messages from 'pages/Messages'
 import Playlists from 'pages/Playlists'
@@ -15,8 +16,6 @@ import Search from 'pages/Search'
 import Settings from 'pages/Settings'
 
 // import { GlobalStyle } from 'layouts'
-
-import PrivateRoutes from 'utils/PrivateRoutes'
 
 function App() {
   const { setWebPlayer } = usePlayer()

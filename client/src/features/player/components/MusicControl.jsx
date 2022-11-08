@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
+import { useDrag } from '@use-gesture/react'
+import { animated } from '@react-spring/web'
 // import { Swipeable } from 'react-touch'
 import usePlayer from 'context/PlayerContext'
 import PlayPause from 'features/player/components/PlayPause'
@@ -74,6 +76,10 @@ const MusicControl = () => {
     }, 1000)
   }
 
+  const bind = useDrag(({ swipe: [swipeX] }) => {
+    console.log(swipeX)
+  })
+
   useEffect(() => {
     manageSwipeUpBar()
   }, [isPaused])
@@ -93,7 +99,7 @@ const MusicControl = () => {
     //   onSwipeDown={() => handleSwipe('down')}
     //   onSwipeUp={() => handleSwipe('up')}
     // >
-    <MusicControlContainer ref={musicControlRef}>
+    <MusicControlContainer as={animated.div} ref={musicControlRef} {...bind()}>
       {swipeUpBar}
       <ControlContainer>
         <PlayerControls>

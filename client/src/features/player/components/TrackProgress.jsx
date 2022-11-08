@@ -54,24 +54,23 @@ const TrackProgress = () => {
   const trackTimeBarRef = useRef()
   const trackTimeIndicatorRef = useRef()
 
-  const getSongPosition = () => {
-    if (timerState.isPaused) {
-      return timerState.songPosition ? timerState.songPosition : 0
-    }
-    const position =
-      timerState.songPosition + (performance.now() - timerState.updateTime)
-    setTimerDisplay(
-      position > timerState.songDuration ? timerState.songDuration : position
-    )
-    setTimeIndicatorPosition((position / timerState.songDuration) * 97)
-  }
-
   useEffect(() => {
     setTimerDisplay(songPosition)
     setTimeIndicatorPosition((songPosition / songDuration) * 97)
   }, [songPosition, currentTrack])
 
   useEffect(() => {
+    const getSongPosition = () => {
+      if (timerState.isPaused) {
+        return timerState.songPosition ? timerState.songPosition : 0
+      }
+      const position =
+        songPosition + (performance.now() - timerState.updateTime)
+      setTimerDisplay(
+        position > timerState.songDuration ? timerState.songDuration : position
+      )
+      setTimeIndicatorPosition((position / timerState.songDuration) * 97)
+    }
     if (!isPaused) {
       interval.current = setInterval(() => {
         getSongPosition(interval.current)
@@ -95,16 +94,14 @@ const TrackProgress = () => {
         trackTimeIndicatorRef.current.style.width = '9px'
       }
       if (last) {
-        console.log(offset[0])
-        clearInterval(interval.current)
         const { left, right } = trackTimeBarRef.current.getBoundingClientRect()
         const newPosition = (songDuration / (right - left)) * (offset[0] - left)
         console.log(msToTime(newPosition))
         console.log(msToTime(songDuration))
         webPlayer
           .seek(newPosition)
-          .then(updatePlayerState())
-          .then(webPlayer.resume())
+          .then(() => updatePlayerState())
+          .then(() => webPlayer.resume())
       }
     },
     {
