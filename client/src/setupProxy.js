@@ -1,8 +1,9 @@
 const { createProxyMiddleware } = require('http-proxy-middleware')
+// import { createProxyMiddleware } from 'http-proxy-middleware'
 
 module.exports = (app) => {
   app.use(
-    '/auth',
+    ['/auth', '/player'],
     createProxyMiddleware({
       target: process.env.REACT_APP_SERVER_URL,
       changeOrigin: true,

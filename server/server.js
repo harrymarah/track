@@ -10,8 +10,10 @@ const passport = require('passport')
 require('./config/passport')(passport)
 const session = require('express-session')
 const cors = require('cors')
-const { server, client } = require('./config/config')
+const { server, client, db } = require('./config/config')
 const auth = require('./routes/auth')
+const player = require('./routes/player')
+const MongoStore = require('connect-mongo')
 
 connectDB()
 
@@ -20,6 +22,7 @@ app.use(
     resave: false,
     saveUninitialized: true,
     secret: 'bla bla bla',
+    store: MongoStore.create({ mongoUrl: db.url }),
   })
 )
 
@@ -29,6 +32,7 @@ app.use(passport.session())
 app.use(express.json())
 
 app.use('/auth', auth)
+app.use('/player', player)
 
 app.get('/', (req, res) => {
   res.send('home page')

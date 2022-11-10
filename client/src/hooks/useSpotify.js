@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import useAuth from 'context/AuthContext'
 
 const useSpotify = () => {
-  // console.count('useSpotify')
   const [spotifyWebPlayer, setSpotifyWebPlayer] = useState(undefined)
   const { auth, token, isLoggedIn } = useAuth()
 
