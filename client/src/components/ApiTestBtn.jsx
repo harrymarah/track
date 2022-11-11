@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
+import spotifySearch from 'services/spotifySearch'
 
 const Button = styled.button`
   background-color: var(--green);
@@ -14,14 +15,10 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-const LogoutBtn = () => {
+const ApiTestBtn = () => {
   const handleClick = async (e) => {
     e.preventDefault()
-    const res = await axios.put(
-      '/player/playsong/spotify:track:1t8TCORVxdItzE3zy1X0tv?deviceId=18680f7c6248ca75b9bbc2a8eb9a685a95c6a2cc'
-    )
-    console.log(res.data)
-    console.log('clicked')
+    spotifySearch('kasabian')
   }
 
   return (
@@ -31,4 +28,4 @@ const LogoutBtn = () => {
   )
 }
 
-export default LogoutBtn
+export default ApiTestBtn

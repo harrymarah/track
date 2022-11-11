@@ -1,20 +1,24 @@
-import trackSearch from 'services/trackSearch'
-import artistSearch from 'services/artistSearch'
-import albumSearch from 'services/albumSearch'
-import playlistSearch from 'services/playlistSearch'
+import axios from 'axios'
 
-const spotifySearch = async (query, token, searchObject = {}) => {
-  const { tracks } = await trackSearch(query, token)
-  const { artists } = await artistSearch(query, token)
-  const { albums } = await albumSearch(query, token)
-  const { playlists } = await playlistSearch(query, token)
+const spotifySearch = async (
+  query,
+  cats = { track: true, artist: true, album: true, playlist: true }
+) => {
+  const { track, artist, album, playlist } = cats
 
-  return {
-    tracks,
-    artists,
-    albums,
-    playlists,
+  const config = {
+    method: 'get',
+    url: '/search',
+    params: {
+      searchTerm: query,
+      track,
+      artist,
+      album,
+      playlist,
+    },
   }
+  const { data } = await axios(config)
+  return data
 }
 
 export default spotifySearch

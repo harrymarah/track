@@ -8,7 +8,6 @@ const ExpressError = require('../utils/ExpressError')
 router.put('/playsong', async (req, res) => {
   console.log('request recieved')
   try {
-    console.log(req.body)
     const { deviceId, uri } = req.body
     const { accessToken } = req.user
     const data = JSON.stringify({

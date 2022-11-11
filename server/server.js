@@ -13,6 +13,7 @@ const cors = require('cors')
 const { server, client, db } = require('./config/config')
 const auth = require('./routes/auth')
 const player = require('./routes/player')
+const search = require('./routes/search')
 const MongoStore = require('connect-mongo')
 
 connectDB()
@@ -33,6 +34,7 @@ app.use(express.json())
 
 app.use('/auth', auth)
 app.use('/player', player)
+app.use('/search', search)
 
 app.get('/', (req, res) => {
   res.send('home page')

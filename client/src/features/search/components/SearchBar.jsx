@@ -22,7 +22,7 @@ const SearchBar = ({ updateSearchResults }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault()
-    const results = await spotifySearch(searchTerm, token)
+    const results = await spotifySearch(searchTerm)
     updateSearchResults(results)
   }
 

@@ -2,7 +2,6 @@ import axios from 'axios'
 import usePlayer from 'context/PlayerContext'
 
 const usePlaySong = () => {
-  // console.count('usePlaySong')
   const { setIsPaused, setSongPosition } = usePlayer()
   const playSong = async (uri) => {
     const deviceId = sessionStorage.getItem('deviceId')
