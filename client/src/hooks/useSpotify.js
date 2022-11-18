@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
 import useAuth from 'context/AuthContext'
+import axios from 'axios'
 
 const useSpotify = () => {
+  console.log('use spotify running')
   const [spotifyWebPlayer, setSpotifyWebPlayer] = useState(undefined)
   const { auth, token, isLoggedIn } = useAuth()
 
   useEffect(() => {
-    if (!isLoggedIn || token === 'token' || spotifyWebPlayer !== undefined)
-      return
+    // uncomment when auth cookie from backend is sorted
+    // if (!isLoggedIn || token === 'token' || spotifyWebPlayer !== undefined)
+    //   return
+    if (spotifyWebPlayer !== undefined) return
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
     script.async = true
@@ -27,7 +31,10 @@ const useSpotify = () => {
   }, [auth])
 
   useEffect(() => {
-    if (!auth.isLoggedIn || !spotifyWebPlayer) return
+    // uncomment when auth cookie from backend is sorted
+    // if (!auth.isLoggedIn || !spotifyWebPlayer) return
+    if (!spotifyWebPlayer) return
+    console.log('use spotify part 2 running')
 
     spotifyWebPlayer.addListener('initialization_error', ({ message }) => {
       console.error(message)
@@ -47,8 +54,10 @@ const useSpotify = () => {
     })
 
     spotifyWebPlayer.addListener('ready', ({ device_id }) => {
-      sessionStorage.setItem('deviceId', device_id)
       console.log('Ready with Device ID', device_id)
+      axios.post('/player/device-id', {
+        deviceId: device_id,
+      })
     })
 
     spotifyWebPlayer.addListener('not_ready', ({ device_id }) => {

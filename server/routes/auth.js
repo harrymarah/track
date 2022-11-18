@@ -23,6 +23,11 @@ router.get(
   })
 )
 
+router.get('/loggedin', (req, res) => {
+  console.log(req)
+  res.send(req.user)
+})
+
 router.get('/token', async (req, res) => {
   if (!req.user) return res.json({ access_token: null })
   const user = await User.findOne({ spotifyId: req.user.spotifyId })
@@ -45,6 +50,7 @@ router.get(
     failureRedirect: `${client.url}/login`,
   }),
   (req, res) => {
+    console.log(req.user)
     res.redirect(`${client.url}`)
   }
 )

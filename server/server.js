@@ -27,6 +27,8 @@ app.use(
   })
 )
 
+// app.use(session({ secret: '123456' }))
+
 app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
@@ -37,7 +39,7 @@ app.use('/player', player)
 app.use('/search', search)
 
 app.get('/', (req, res) => {
-  res.send('home page')
+  res.send(JSON.stringify(req))
 })
 
 app.listen(parseInt(server.port, server.host), () => {

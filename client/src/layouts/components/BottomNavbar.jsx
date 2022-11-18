@@ -37,7 +37,7 @@ const BottomNavbar = () => {
       <NavBarLink to="/playlists">
         <i className="fa-solid fa-music"></i>
       </NavBarLink>
-      <NavBarLink to="/search">
+      <NavBarLink to="/find">
         <i className="fa-solid fa-magnifying-glass"></i>
       </NavBarLink>
       <NavBarLink to="/settings">

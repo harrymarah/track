@@ -8,6 +8,7 @@ const UserSchema = new Schema({
   accessToken: String,
   refreshToken: String,
   accessTokenExpiresIn: Date,
+  deviceId: String,
 })
 
 module.exports = mongoose.model('User', UserSchema)

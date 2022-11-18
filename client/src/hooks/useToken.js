@@ -25,6 +25,7 @@ const useToken = async () => {
       try {
         const response = await fetch('/auth/token')
         const json = await response.json()
+        console.log(json)
         if (json.access_token) {
           setCookie('isAuthenticated', true, {
             // cookie set to two hours, change back to one week when deploying

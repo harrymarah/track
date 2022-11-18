@@ -30,4 +30,12 @@ router.put('/playsong', async (req, res) => {
   }
 })
 
+router.post('/device-id', (req, res) => {
+  const user = User.find({ spotifyId: req.user.spotifyId })
+  const { deviceId } = req.body
+  user.deviceId = deviceId
+  user.save()
+  res.sendStatus(200)
+})
+
 module.exports = router

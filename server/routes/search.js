@@ -7,6 +7,10 @@ const { spotify, client } = require('../config/config')
 const getRefreshToken = require('../utils/getRefreshToken')
 
 router.get('/', async (req, res) => {
+  console.log('***********')
+  console.log(req.user)
+  console.log(req.session)
+  console.log('***********')
   let results = {}
   const { accessToken } = req.user
   const { searchTerm, track, artist, album, playlist } = req.query

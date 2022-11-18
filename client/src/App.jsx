@@ -21,7 +21,7 @@ function App() {
   const { setWebPlayer } = usePlayer()
 
   useToken()
-  useInterceptor()
+  // useInterceptor()
   const { spotifyWebPlayer } = useSpotify()
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/playlists" element={<Playlists />} />
-          <Route path="/search" element={<Search />} />
+          <Route path="/find" element={<Search />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
