@@ -39,7 +39,7 @@ app.use('/player', player)
 app.use('/search', search)
 
 app.get('/', (req, res) => {
-  res.send(JSON.stringify(req))
+  res.send('hello from the server bbz ')
 })
 
 app.listen(parseInt(server.port, server.host), () => {

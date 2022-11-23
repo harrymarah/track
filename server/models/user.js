@@ -5,9 +5,11 @@ const UserSchema = new Schema({
   spotifyId: String,
   name: String,
   email: String,
-  accessToken: String,
-  refreshToken: String,
-  accessTokenExpiresIn: Date,
+  spotifyAccessToken: String,
+  spotifyRefreshToken: String,
+  clientAccessToken: String,
+  clientRefreshToken: String,
+  // accessTokenExpiry: Date,
   deviceId: String,
 })
 

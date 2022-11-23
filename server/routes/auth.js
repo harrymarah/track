@@ -5,8 +5,9 @@ const axios = require('axios')
 const qs = require('qs')
 const User = require('../models/user')
 const { findOneAndUpdate } = require('../models/user')
-const { spotify, client } = require('../config/config')
+const { spotify, client, auth } = require('../config/config')
 const getRefreshToken = require('../utils/getRefreshToken')
+const jwt = require('jsonwebtoken')
 
 router.get(
   '/spotify',
@@ -29,20 +30,26 @@ router.get('/loggedin', (req, res) => {
 })
 
 router.get('/token', async (req, res) => {
-  if (!req.user) return res.json({ access_token: null })
-  const user = await User.findOne({ spotifyId: req.user.spotifyId })
+  if (!req.user) return res.sendStatus(401)
+  const { spotifyId } = req.user
+  const user = await User.findOne({ spotifyId: spotifyId })
   if (user) {
-    const expiresIn = new Date(user.accessTokenExpiresIn)
-    // request a new access token 5 minutes (300000ms) before the current token expires
-    if (Date.now() > expiresIn.getTime() - 300000) {
-      getRefreshToken(req.user)
-    }
+    const accessToken = generateToken(user, auth.accessTokenSecret, '1h')
+    const refreshToken = generateToken(user, auth.refreshTokenSecret, '1d')
+    user.clientAccessToken = accessToken
+    user.clientRefreshToken = refreshToken
+    user.save()
     return res.json({
-      access_token: user.accessToken,
-      expires_in: user.accessTokenExpiresIn,
+      username: spotifyId,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     })
   }
 })
+
+function generateToken(user, secret, expiresIn) {
+  return jwt.sign(user.toJSON(), secret, { expiresIn: expiresIn })
+}
 
 router.get(
   '/spotify/callback',
@@ -50,7 +57,6 @@ router.get(
     failureRedirect: `${client.url}/login`,
   }),
   (req, res) => {
-    console.log(req.user)
     res.redirect(`${client.url}`)
   }
 )
@@ -62,7 +68,11 @@ router.post('/logout', async (req, res, next) => {
   )
   req.logout((e) => {
     if (e) return next(e)
-    res.json({ message: 'ok' })
+    res.json({ message: 'ok' }).cookie('isLoggedIn', 'false', {
+      httpOnly: true,
+      secure: false,
+      sameSite: false,
+    })
   })
 })
 

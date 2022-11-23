@@ -30,11 +30,13 @@ router.put('/playsong', async (req, res) => {
   }
 })
 
-router.post('/device-id', (req, res) => {
-  const user = User.find({ spotifyId: req.user.spotifyId })
+router.post('/device-id', async (req, res) => {
   const { deviceId } = req.body
-  user.deviceId = deviceId
-  user.save()
+  const user = await User.findOneAndUpdate(
+    // { spotifyId: req.user.spotifyId },
+    { spotifyId: 'harrymarah' },
+    { deviceId: deviceId }
+  )
   res.sendStatus(200)
 })
 

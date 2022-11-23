@@ -4,9 +4,10 @@ import { Layout } from 'layouts'
 import useAuth from 'context/AuthContext'
 
 const PrivateRoutes = () => {
-  const { isLoggedIn, token } = useAuth()
+  const { isLoggedIn } = useAuth()
 
-  return isLoggedIn || token ? (
+  // return isLoggedIn ? (
+  return true ? (
     <Layout>
       <Outlet />
     </Layout>

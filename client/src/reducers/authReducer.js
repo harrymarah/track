@@ -9,7 +9,9 @@ const getLoggedInCookie = () => {
 
 export const initialState = {
   // token initialized to a string to avoid logout and redirection on page refresh, if a user isn't logged in the token will eventually be set to null and trigger redirection to login page
-  token: 'token',
+  username: null,
+  accessToken: 'token',
+  refreshToken: 'token',
   isLoggedIn: getLoggedInCookie(),
   isLoading: true,
   expiresAt: Date.now(),
@@ -17,7 +19,9 @@ export const initialState = {
 
 // Actions in seperate object to aid autocompletion and avoid typos
 export const ACTIONS = {
-  UPDATE_TOKEN: 'update token',
+  UPDATE_USERNAME: 'update username',
+  UPDATE_ACCESS_TOKEN: 'update access token',
+  UPDATE_REFRESH_TOKEN: 'update refresh token',
   SET_IS_LOGGED_IN: 'set is logged in',
   SET_IS_LOADING: 'set is loading',
   SET_TOKEN_EXPIRY: 'set token expiry',
@@ -25,8 +29,12 @@ export const ACTIONS = {
 
 const authReducer = (auth, action) => {
   switch (action.type) {
-    case ACTIONS.UPDATE_TOKEN:
-      return { ...auth, token: action.payload }
+    case ACTIONS.UPDATE_USERNAME:
+      return { ...auth, username: action.payload }
+    case ACTIONS.UPDATE_ACCESS_TOKEN:
+      return { ...auth, accessToken: action.payload }
+    case ACTIONS.UPDATE_REFRESH_TOKEN:
+      return { ...auth, refreshToken: action.payload }
     case ACTIONS.SET_IS_LOGGED_IN:
       return { ...auth, isLoggedIn: action.payload }
     case ACTIONS.SET_IS_LOADING:

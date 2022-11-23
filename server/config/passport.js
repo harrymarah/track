@@ -28,8 +28,8 @@ module.exports = (passport) => {
         const existingUser = await User.findOne({ spotifyId: profile.id })
 
         if (existingUser) {
-          existingUser.accessToken = accessToken
-          existingUser.refreshToken = refreshToken
+          existingUser.spotifyAccessToken = accessToken
+          existingUser.spotifyRefreshToken = refreshToken
           existingUser.accessTokenExpiresIn = Date.now() + expires_in * 1000
           await existingUser.save()
           return done(null, existingUser)
@@ -39,8 +39,8 @@ module.exports = (passport) => {
           spotifyId,
           name,
           email,
-          accessToken,
-          refreshToken,
+          spotifyAccessToken: accessToken,
+          spotifyRefreshToken: refreshToken,
           accessTokenExpiresIn: Date.now() + expires_in * 1000,
         }).save()
 

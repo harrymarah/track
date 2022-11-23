@@ -12,8 +12,14 @@ export const AuthProvider = ({ children }) => {
   const logUserOut = () => {
     dispatch({ type: ACTIONS.SET_IS_LOGGED_IN, payload: false })
   }
-  const updateToken = (token) => {
-    dispatch({ type: ACTIONS.UPDATE_TOKEN, payload: token })
+  const updateUsername = (username) => {
+    dispatch({ type: ACTIONS.UPDATE_USERNAME, payload: username })
+  }
+  const updateAccessToken = (token) => {
+    dispatch({ type: ACTIONS.UPDATE_ACCESS_TOKEN, payload: token })
+  }
+  const updateRefreshToken = (token) => {
+    dispatch({ type: ACTIONS.UPDATE_REFRESH_TOKEN, payload: token })
   }
   const updateTokenExpiry = (expiry) => {
     dispatch({ type: ACTIONS.SET_TOKEN_EXPIRY, payload: expiry })
@@ -23,13 +29,16 @@ export const AuthProvider = ({ children }) => {
   }
   const value = {
     auth,
-    token: auth.token,
+    accessToken: auth.accessToken,
+    refreshToken: auth.refreshToken,
     isLoggedIn: auth.isLoggedIn,
     isLoading: auth.isLoading,
     expiresAt: auth.expiresAt,
     logUserIn,
     logUserOut,
-    updateToken,
+    updateUsername,
+    updateAccessToken,
+    updateRefreshToken,
     updateTokenExpiry,
     setIsLoading,
   }

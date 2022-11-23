@@ -14,4 +14,8 @@ module.exports = {
     redirectUri: process.env.SPOTIFY_REDIRECT_URI,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   },
+  auth: {
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+  },
 }
