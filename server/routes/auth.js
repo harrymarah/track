@@ -8,6 +8,7 @@ const { findOneAndUpdate } = require('../models/user')
 const { spotify, client, auth } = require('../config/config')
 const getRefreshToken = require('../utils/getRefreshToken')
 const jwt = require('jsonwebtoken')
+const authenticateToken = require('../middleware/authenticateToken')
 
 router.get(
   '/spotify',
@@ -34,8 +35,16 @@ router.get('/token', async (req, res) => {
   const { spotifyId } = req.user
   const user = await User.findOne({ spotifyId: spotifyId })
   if (user) {
-    const accessToken = generateToken(user, auth.accessTokenSecret, '1h')
-    const refreshToken = generateToken(user, auth.refreshTokenSecret, '1d')
+    const accessToken = generateToken(
+      user.spotifyId,
+      auth.accessTokenSecret,
+      '1h'
+    )
+    const refreshToken = generateToken(
+      user.spotifyId,
+      auth.refreshTokenSecret,
+      '1d'
+    )
     user.clientAccessToken = accessToken
     user.clientRefreshToken = refreshToken
     user.save()
@@ -47,8 +56,18 @@ router.get('/token', async (req, res) => {
   }
 })
 
-function generateToken(user, secret, expiresIn) {
-  return jwt.sign(user.toJSON(), secret, { expiresIn: expiresIn })
+router.get('/spotifytoken', authenticateToken, async (req, res) => {
+  const { spotifyId } = req.user
+  // const spotifyId = 'harrymarah'
+  const user = await User.findOne({ spotifyId: spotifyId })
+  console.log(user)
+  res.json({
+    spotifyAccessToken: user.spotifyAccessToken,
+  })
+})
+
+function generateToken(payload, secret, expiresIn) {
+  return jwt.sign({ username: payload }, secret, { expiresIn: expiresIn })
 }
 
 router.get(
@@ -61,17 +80,27 @@ router.get(
   }
 )
 
+router.get('/testrequest', (req, res) => {
+  res.json({
+    testRequest: 'accepted',
+  })
+})
+
 router.post('/logout', async (req, res, next) => {
-  const user = await User.findOneAndUpdate(
-    { spotifyId: req.user.spotifyId },
-    { accessToken: null, refreshToken: null, accessTokenExpiresIn: null }
-  )
+  const user = req.user
+  console.log(user)
+  if (user) {
+    user.spotifyAccessToken = null
+    user.spotifyRefreshToken = null
+    user.accessTokenExpiresIn = null
+    user.clientAccessToken = null
+    user.clientRefreshToken = null
+    user.save()
+  }
   req.logout((e) => {
     if (e) return next(e)
-    res.json({ message: 'ok' }).cookie('isLoggedIn', 'false', {
-      httpOnly: true,
-      secure: false,
-      sameSite: false,
+    res.status(200).json({
+      logout: 'successful',
     })
   })
 })

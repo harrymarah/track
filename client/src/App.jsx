@@ -3,9 +3,8 @@ import { Route, Routes } from 'react-router-dom'
 
 import useSpotify from './hooks/useSpotify'
 import useToken from './hooks/useToken'
-import useInterceptor from './hooks/useInterceptor'
-
-import usePlayer from './context/PlayerContext'
+import usePlayer from 'context/PlayerContext'
+import useAuth from 'context/AuthContext'
 
 import Login from './pages/Login'
 import PrivateRoutes from 'utils/PrivateRoutes'
@@ -19,14 +18,21 @@ import Settings from 'pages/Settings'
 
 function App() {
   const { setWebPlayer } = usePlayer()
-
-  useToken()
-  // useInterceptor()
+  const { updateUsername, updateAccessToken, updateRefreshToken } = useAuth()
+  const { username, accessToken, refreshToken } = useToken()
   const { spotifyWebPlayer } = useSpotify()
+
+  useEffect(() => {
+    updateUsername(username)
+    updateAccessToken(accessToken)
+    updateRefreshToken(refreshToken)
+  }, [])
 
   useEffect(() => {
     setWebPlayer(spotifyWebPlayer)
   }, [spotifyWebPlayer])
+
+  console.count('render count app.js')
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
+import useAxios from 'hooks/useAxios'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import useAuth from 'context/AuthContext'
@@ -20,26 +20,42 @@ const Button = styled.button`
 
 const LogoutBtn = () => {
   const [cookies, setCookie] = useCookies(['isAuthenticated'])
-  const { updateToken } = useAuth()
+  const {
+    updateAccessToken,
+    updateRefreshToken,
+    updateUsername,
+    logUserOut,
+    setIsLoading,
+  } = useAuth()
   const { webPlayer, setWebPlayer } = usePlayer()
+  const { backendApiCall } = useAxios()
   const navigate = useNavigate()
-  const handleLogout = (e) => {
-    e.preventDefault()
-    axios
-      .post('/auth/logout', { crossDomain: true })
-      .then((response) => {
-        if (response.data.message === 'ok') {
-          setCookie('isAuthenticated', false, {
-            maxAge: 60 * 60 * 2,
-            path: '/',
-          })
-          sessionStorage.clear()
-          updateToken(null)
-          webPlayer.disconnect()
-          setWebPlayer(undefined)
-        }
+
+  const handleLogout = async (e) => {
+    try {
+      e.preventDefault()
+      const { status } = await backendApiCall.post('/auth/logout', {
+        crossDomain: true,
       })
-      .finally(navigate('/login'))
+      if (status === 200) {
+        setCookie('isAuthenticated', false, {
+          maxAge: 60 * 60 * 2,
+          path: '/',
+        })
+        sessionStorage.clear()
+        updateAccessToken(null)
+        updateRefreshToken(null)
+        updateUsername(null)
+        webPlayer && webPlayer.disconnect()
+        setWebPlayer(undefined)
+        logUserOut()
+        setIsLoading(false)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      navigate('/login')
+    }
   }
 
   return (

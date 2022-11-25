@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import spotifySearch from 'services/spotifySearch'
+// import spotifySearch from 'services/spotifySearch'
 import useAuth from 'context/AuthContext'
+import useSpotifySearch from 'hooks/useSpotifySearch'
 
 const Input = styled.input`
   padding: 0.5em;
@@ -18,7 +19,7 @@ const Input = styled.input`
 
 const SearchBar = ({ updateSearchResults }) => {
   const [searchTerm, updateSearchTerm] = useState('')
-  const { token } = useAuth()
+  const { spotifySearch } = useSpotifySearch()
 
   const handleSearch = async (e) => {
     e.preventDefault()

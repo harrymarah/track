@@ -4,16 +4,20 @@ import { Layout } from 'layouts'
 import useAuth from 'context/AuthContext'
 
 const PrivateRoutes = () => {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, isLoading, setIsLoading } = useAuth()
+  let pageRedirect
+  if (isLoggedIn !== false || isLoading) {
+    pageRedirect = (
+      <Layout>
+        <Outlet />
+      </Layout>
+    )
+  } else {
+    pageRedirect = <Navigate to="/login" />
+  }
+  setIsLoading(false)
 
-  // return isLoggedIn ? (
-  return true ? (
-    <Layout>
-      <Outlet />
-    </Layout>
-  ) : (
-    <Navigate to="/login" />
-  )
+  return <>{pageRedirect}</>
 }
 
 export default PrivateRoutes

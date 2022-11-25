@@ -15,7 +15,9 @@ module.exports = {
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   },
   auth: {
-    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
-    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+    accessTokenSecret:
+      process.env.ACCESS_TOKEN_SECRET || 'thisisatempoaryaccesstokensecret',
+    refreshTokenSecret:
+      process.env.REFRESH_TOKEN_SECRET || 'thisisatempoaryrefreshtokensecret',
   },
 }

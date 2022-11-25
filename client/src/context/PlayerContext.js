@@ -56,21 +56,7 @@ export const PlayerProvider = ({ children }) => {
   }
 
   const value = {
-    webPlayer: playback.webPlayer,
-    playback,
-    currentTrack: playback.currentTrack,
-    songId: playback.songId,
-    albumName: playback.albumName,
-    albumId: playback.albumId,
-    artistId: playback.artistId,
-    artistArr: playback.artistArr,
-    isPaused: playback.isPaused,
-    songDuration: playback.songDuration,
-    songPosition: playback.songPosition,
-    nextTracks: playback.nextTracks,
-    prevTracks: playback.prevTracks,
-    uri: playback.uri,
-    artwork: playback.artwork,
+    ...playback,
     setWebPlayer,
     resetAllButWebPlayer,
     updateSong,

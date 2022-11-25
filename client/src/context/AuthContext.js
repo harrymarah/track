@@ -1,4 +1,4 @@
-import { createContext, useReducer, useContext } from 'react'
+import { createContext, useReducer, useContext, useMemo } from 'react'
 import authReducer, { ACTIONS, initialState } from 'reducers/authReducer'
 
 const AuthContext = createContext(initialState)
@@ -27,13 +27,9 @@ export const AuthProvider = ({ children }) => {
   const setIsLoading = (bool) => {
     dispatch({ type: ACTIONS.SET_IS_LOADING, payload: bool })
   }
+
   const value = {
-    auth,
-    accessToken: auth.accessToken,
-    refreshToken: auth.refreshToken,
-    isLoggedIn: auth.isLoggedIn,
-    isLoading: auth.isLoading,
-    expiresAt: auth.expiresAt,
+    ...auth,
     logUserIn,
     logUserOut,
     updateUsername,

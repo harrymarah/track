@@ -8,10 +8,9 @@ const getLoggedInCookie = () => {
 }
 
 export const initialState = {
-  // token initialized to a string to avoid logout and redirection on page refresh, if a user isn't logged in the token will eventually be set to null and trigger redirection to login page
   username: null,
-  accessToken: 'token',
-  refreshToken: 'token',
+  accessToken: null,
+  refreshToken: null,
   isLoggedIn: getLoggedInCookie(),
   isLoading: true,
   expiresAt: Date.now(),
