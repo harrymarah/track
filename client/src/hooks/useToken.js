@@ -5,17 +5,22 @@ import axios from 'axios'
 
 const useToken = async () => {
   console.count('useToken running')
-  const [cookies, setCookie] = useCookies(['isAuthenticated'])
-  const [username, setUsername] = useState(null)
-  const [backendToken, setBackendToken] = useState(null)
-  const [refreshToken, setRefreshToken] = useState(null)
-  const { isLoading, logUserIn, logUserOut, setIsLoading, accessToken } =
-    useAuth()
+  const [, setCookie] = useCookies(['isAuthenticated'])
+  const {
+    isLoading,
+    logUserIn,
+    logUserOut,
+    setIsLoading,
+    accessToken,
+    updateUsername,
+    updateAccessToken,
+    updateRefreshToken,
+  } = useAuth()
   useEffect(() => {
     console.count('useToken useEffect running')
     const getToken = async () => {
       setIsLoading(true)
-      if (backendToken) return setIsLoading(false)
+      if (accessToken) return setIsLoading(false)
       try {
         const { data } = await axios.get('/auth/token')
         if (data) {
@@ -24,13 +29,13 @@ const useToken = async () => {
             maxAge: 60 * 60 * 2,
             path: '/',
           })
-          setUsername(data.username)
-          setBackendToken(data.accessToken)
-          setRefreshToken(data.refreshToken)
+          updateUsername(data.username)
+          updateAccessToken(data.accessToken)
+          updateRefreshToken(data.refreshToken)
           logUserIn()
         } else {
-          setBackendToken(null)
-          setRefreshToken(null)
+          updateAccessToken(null)
+          updateRefreshToken(null)
           isLoading || logUserOut()
         }
       } catch (err) {
@@ -39,9 +44,7 @@ const useToken = async () => {
     }
     getToken()
     setIsLoading(false)
-  }, [accessToken])
-
-  return { username, backendToken, refreshToken }
+  }, [])
 }
 
 export default useToken

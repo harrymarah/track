@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }) => {
   const setIsLoading = (bool) => {
     dispatch({ type: ACTIONS.SET_IS_LOADING, payload: bool })
   }
-
   const value = {
     ...auth,
     logUserIn,
@@ -38,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     updateTokenExpiry,
     setIsLoading,
   }
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

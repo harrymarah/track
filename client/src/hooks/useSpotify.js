@@ -9,17 +9,16 @@ const useSpotify = () => {
   const { backendApiCall } = useAxios()
 
   const getSpotifyAccessToken = async () => {
-    const { spotifyAccessToken } = await backendApiCall.get(
-      '/auth/spotifytoken'
-    )
-    console.log(spotifyAccessToken)
-    return spotifyAccessToken
+    const { data } = await backendApiCall.get('/auth/spotifytoken')
+    console.log(data.spotifyAccessToken)
+    return data.spotifyAccessToken
   }
 
   useEffect(() => {
     console.count('use spotify useeffect no 1a')
-
-    if (!isLoggedIn || spotifyWebPlayer !== undefined || !accessToken) return
+    console.log(accessToken)
+    console.log(!isLoggedIn, !!spotifyWebPlayer, !accessToken)
+    if ((!isLoggedIn, !!spotifyWebPlayer, !accessToken)) return
     console.count('use spotify useeffect no 1b')
 
     const script = document.createElement('script')
@@ -37,7 +36,7 @@ const useSpotify = () => {
       })
       setSpotifyWebPlayer(player)
     }
-  }, [accessToken, isLoggedIn])
+  }, [])
 
   useEffect(() => {
     console.count('use spotify useeffect no 2a')

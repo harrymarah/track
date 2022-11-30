@@ -1,3 +1,4 @@
+import 'wdyr.js'
 import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
@@ -18,15 +19,17 @@ import Settings from 'pages/Settings'
 
 function App() {
   const { setWebPlayer } = usePlayer()
-  const { updateUsername, updateAccessToken, updateRefreshToken } = useAuth()
-  const { username, accessToken, refreshToken } = useToken()
+  // const { updateUsername, updateAccessToken, updateRefreshToken } = useAuth()
+  useToken()
   const { spotifyWebPlayer } = useSpotify()
 
-  useEffect(() => {
-    updateUsername(username)
-    updateAccessToken(accessToken)
-    updateRefreshToken(refreshToken)
-  }, [])
+  // useEffect(() => {
+  //   console.log('useeffect in app.js running')
+  //   console.log(username, backendToken, refreshToken)
+  //   updateUsername(username)
+  //   updateAccessToken(backendToken)
+  //   updateRefreshToken(refreshToken)
+  // }, [])
 
   useEffect(() => {
     setWebPlayer(spotifyWebPlayer)
@@ -50,5 +53,7 @@ function App() {
     </>
   )
 }
+
+App.whyDidYouRender = true
 
 export default App

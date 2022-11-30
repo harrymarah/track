@@ -29,16 +29,34 @@ export const ACTIONS = {
 const authReducer = (auth, action) => {
   switch (action.type) {
     case ACTIONS.UPDATE_USERNAME:
+      if (auth.username === action.payload) {
+        return auth
+      }
       return { ...auth, username: action.payload }
     case ACTIONS.UPDATE_ACCESS_TOKEN:
+      if (auth.accessToken === action.payload) {
+        return auth
+      }
       return { ...auth, accessToken: action.payload }
     case ACTIONS.UPDATE_REFRESH_TOKEN:
+      if (auth.refreshToken === action.payload) {
+        return auth
+      }
       return { ...auth, refreshToken: action.payload }
     case ACTIONS.SET_IS_LOGGED_IN:
+      if (auth.isLoggedIn === action.payload) {
+        return auth
+      }
       return { ...auth, isLoggedIn: action.payload }
     case ACTIONS.SET_IS_LOADING:
+      if (auth.isLoading === action.payload) {
+        return auth
+      }
       return { ...auth, isLoading: action.payload }
     case ACTIONS.SET_TOKEN_EXPIRY:
+      if (auth.expiresAt === action.payload) {
+        return auth
+      }
       return { ...auth, expiresAt: action.payload }
     default:
       return auth

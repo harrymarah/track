@@ -48,18 +48,17 @@ const handleEvent = (e) => {
 const TrackResult = ({ searchResults }) => {
   const { playSong } = usePlaySong()
   const { updatePlayerState } = useUpdatePlayerState()
-  const { setPlayback } = useSetPlayback()
+  // const { setPlayback } = useSetPlayback()
   const handleClick = async (uri, token) => {
-    await setPlayback(token)
+    // await setPlayback(token)
     await playSong(uri, token)
     updatePlayerState()
   }
   const resultRef = useRef()
-  const { token } = useAuth()
   return (
     <SingleResultContainer
       ref={resultRef}
-      onClick={(e) => handleClick(searchResults.uri, token)}
+      onClick={(e) => handleClick(searchResults.uri)}
       onMouseDown={handleEvent}
       onMouseUp={handleEvent}
     >

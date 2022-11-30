@@ -31,6 +31,7 @@ router.get('/loggedin', (req, res) => {
 })
 
 router.get('/token', async (req, res) => {
+  console.log('token requested')
   if (!req.user) return res.sendStatus(401)
   const { spotifyId } = req.user
   const user = await User.findOne({ spotifyId: spotifyId })
@@ -60,7 +61,7 @@ router.get('/spotifytoken', authenticateToken, async (req, res) => {
   const { spotifyId } = req.user
   // const spotifyId = 'harrymarah'
   const user = await User.findOne({ spotifyId: spotifyId })
-  console.log(user)
+  console.log(user.spotifyAccessToken)
   res.json({
     spotifyAccessToken: user.spotifyAccessToken,
   })
