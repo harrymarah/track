@@ -6,7 +6,7 @@ const ExpressError = require('./ExpressError')
 
 module.exports = getRefreshToken = async (loggedInUser) => {
   const user = await User.findOne({ spotifyId: loggedInUser.spotifyId })
-  const refreshToken = user.refreshToken
+  const refreshToken = user.spotifyRefreshToken
   const credentials = `${spotify.clientId}:${spotify.clientSecret}`
   const data = qs.stringify({
     grant_type: 'refresh_token',
@@ -24,7 +24,7 @@ module.exports = getRefreshToken = async (loggedInUser) => {
   try {
     const response = await axios(config)
     const { access_token, expires_in } = response.data
-    user.accessToken = access_token
+    user.spotifyAccessToken = access_token
     user.accessTokenExpiresIn = Date.now() + expires_in * 1000
     console.log(access_token)
     await user.save()

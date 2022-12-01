@@ -18,7 +18,7 @@ const More = styled.div`
 const MoreResults = () => {
   return (
     <More>
-      <i class="fa-solid fa-chevron-down"></i>
+      <i className="fa-solid fa-chevron-down"></i>
     </More>
   )
 }

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useAuth from 'context/AuthContext'
 import { useCookies } from 'react-cookie'
 import axios from 'axios'
 
 const useToken = async () => {
   console.count('useToken running')
-  const [, setCookie] = useCookies(['isAuthenticated'])
+  const [cookie, setCookie] = useCookies(['isAuthenticated'])
   const {
     isLoading,
     logUserIn,
@@ -20,8 +20,9 @@ const useToken = async () => {
     console.count('useToken useEffect running')
     const getToken = async () => {
       setIsLoading(true)
-      if (accessToken) return setIsLoading(false)
       try {
+        if (accessToken) return setIsLoading(false)
+        console.count('trying to get token')
         const { data } = await axios.get('/auth/token')
         if (data) {
           setCookie('isAuthenticated', true, {

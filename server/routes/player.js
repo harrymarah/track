@@ -24,19 +24,31 @@ router.put('/playsong', async (req, res) => {
     }
     const response = await axios(config)
     return res.sendStatus(response.status)
-  } catch (e) {
-    console.error(e.message)
+  } catch (err) {
+    res.status(err?.response.status || 500).json({ error: err.message })
   }
 })
 
 router.post('/device-id', async (req, res) => {
-  const { deviceId } = req.body
-  const user = await User.findOneAndUpdate(
-    // { spotifyId: req.user.spotifyId },
-    { spotifyId: 'harrymarah' },
-    { deviceId: deviceId }
-  )
-  res.sendStatus(200)
+  try {
+    const { deviceId } = req.body
+    const user = await User.findOneAndUpdate(
+      { spotifyId: req.user.spotifyId },
+      { deviceId: deviceId }
+    )
+    res.sendStatus(200)
+  } catch (err) {
+    res.status(err?.response.status || 500).json({ error: err.message })
+  }
 })
+
+router.get('/get-state', (req, res) => {})
+router.put('/transfer-playback', (req, res) => {})
+router.get('/currently-playing', (req, res) => {})
+router.get('/pause-song', (req, res) => {})
+router.get('/play-song', (req, res) => {})
+router.post('/next-song', (req, res) => {})
+router.post('/prev-song', (req, res) => {})
+router.put('/song-position', (req, res) => {})
 
 module.exports = router

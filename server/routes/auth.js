@@ -31,40 +31,47 @@ router.get('/loggedin', (req, res) => {
 })
 
 router.get('/token', async (req, res) => {
-  console.log('token requested')
   if (!req.user) return res.sendStatus(401)
-  const { spotifyId } = req.user
-  const user = await User.findOne({ spotifyId: spotifyId })
-  if (user) {
-    const accessToken = generateToken(
-      user.spotifyId,
-      auth.accessTokenSecret,
-      '1h'
-    )
-    const refreshToken = generateToken(
-      user.spotifyId,
-      auth.refreshTokenSecret,
-      '1d'
-    )
-    user.clientAccessToken = accessToken
-    user.clientRefreshToken = refreshToken
-    user.save()
-    return res.json({
-      username: spotifyId,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    })
+  try {
+    const { spotifyId } = req.user
+    const user = await User.findOne({ spotifyId: spotifyId })
+    if (user) {
+      const accessToken = generateToken(
+        user.spotifyId,
+        auth.accessTokenSecret,
+        '1h'
+      )
+      const refreshToken = generateToken(
+        user.spotifyId,
+        auth.refreshTokenSecret,
+        '1d'
+      )
+      user.clientAccessToken = accessToken
+      user.clientRefreshToken = refreshToken
+      user.save()
+      return res.json({
+        username: spotifyId,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      })
+    }
+  } catch (err) {
+    res.status(err?.response.status || 500).json({ error: err.message })
   }
 })
 
 router.get('/spotifytoken', authenticateToken, async (req, res) => {
-  const { spotifyId } = req.user
-  // const spotifyId = 'harrymarah'
-  const user = await User.findOne({ spotifyId: spotifyId })
-  console.log(user.spotifyAccessToken)
-  res.json({
-    spotifyAccessToken: user.spotifyAccessToken,
-  })
+  if (!req.user) return res.sendStatus(401)
+  try {
+    const { spotifyId } = req.user
+    const user = await User.findOne({ spotifyId: spotifyId })
+    console.log(user.spotifyAccessToken)
+    res.json({
+      spotifyAccessToken: user.spotifyAccessToken,
+    })
+  } catch (err) {
+    res.status(err?.response.status || 500).json({ error: err.message })
+  }
 })
 
 function generateToken(payload, secret, expiresIn) {
@@ -81,21 +88,15 @@ router.get(
   }
 )
 
-router.get('/testrequest', (req, res) => {
-  res.json({
-    testRequest: 'accepted',
-  })
-})
-
 router.post('/logout', async (req, res, next) => {
   const user = req.user
-  console.log(user)
   if (user) {
     user.spotifyAccessToken = null
     user.spotifyRefreshToken = null
     user.accessTokenExpiresIn = null
     user.clientAccessToken = null
     user.clientRefreshToken = null
+    user.deviceId = null
     user.save()
   }
   req.logout((e) => {

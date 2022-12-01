@@ -49,8 +49,7 @@ router.get('/', authenticateToken, async (req, res) => {
     }
     res.send(results)
   } catch (err) {
-    console.error(err.message)
-    res.status(500).send({ message: 'something went wrong' })
+    res.status(err?.response.status || 500).json({ error: err.message })
   }
 })
 

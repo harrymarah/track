@@ -27,8 +27,6 @@ app.use(
   })
 )
 
-// app.use(session({ secret: '123456' }))
-
 app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
@@ -40,6 +38,12 @@ app.use('/search', search)
 
 app.get('/', (req, res) => {
   res.send('hello from the server bbz ')
+})
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err
+  if (!err.message) err.message = 'Oh no! Something went wrong!'
+  res.status(statusCode).json({ error: err.message })
 })
 
 app.listen(parseInt(server.port, server.host), () => {

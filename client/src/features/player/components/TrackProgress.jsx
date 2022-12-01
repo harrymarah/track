@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { useDrag } from '@use-gesture/react'
 import { useSpring, animated } from '@react-spring/web'
 import usePlayer from 'context/PlayerContext'
-import useUpdatePlayerState from 'hooks/useUpdatePlayerState'
 import msToTime from 'features/player/utils/msToTime'
 
 const TrackTimeBar = styled.div`
@@ -38,7 +37,6 @@ const TimeElapsed = styled.div`
 `
 
 const TrackProgress = () => {
-  const { updatePlayerState } = useUpdatePlayerState()
   const { webPlayer, songDuration, songPosition, isPaused, currentTrack } =
     usePlayer()
   const [timerDisplay, setTimerDisplay] = useState(0)
@@ -98,10 +96,7 @@ const TrackProgress = () => {
         const newPosition = (songDuration / (right - left)) * (offset[0] - left)
         console.log(msToTime(newPosition))
         console.log(msToTime(songDuration))
-        webPlayer
-          .seek(newPosition)
-          .then(() => updatePlayerState())
-          .then(() => webPlayer.resume())
+        webPlayer.seek(newPosition).then(() => webPlayer.resume())
       }
     },
     {

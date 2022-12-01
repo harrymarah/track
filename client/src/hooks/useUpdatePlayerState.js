@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import usePlayer from 'context/PlayerContext'
 
-const useUpdatePlayerState = () => {
+const useUpdatePlayerState = (state) => {
   const {
     playback,
     webPlayer,
@@ -19,39 +19,22 @@ const useUpdatePlayerState = () => {
     setSongArtwork,
   } = usePlayer()
 
-  const updatePlayerState = () => {
-    console.count('updating player state')
-    setTimeout(async () => {
-      try {
-        const { track_window, duration, position, paused } =
-          (await webPlayer.getCurrentState()) || {}
-        if (track_window === undefined) {
-          return
-        } else {
-          await setIsPaused(paused)
-          await updateSong(track_window.current_track.name)
-          await updateSongId(track_window.current_track.id)
-          await updateAlbumName(track_window.current_track.album.name)
-          await updateAlbumId(track_window.current_track.album.name)
-          await updateArtistArr(track_window.current_track.artists)
-          await updateSongDuration(duration)
-          await updateSongPosition(position)
-          await setNextTracks(track_window.next_tracks)
-          await setPreviousTracks(track_window.previous_tracks)
-          await setUri(track_window.current_track.uri)
-          await setSongArtwork(track_window.current_track.album.images)
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    }, 1000)
+  const updatePlayerState = (state) => {
+    if (state !== undefined) {
+      setIsPaused(state.paused)
+      updateSong(state.track_window.current_track.name)
+      updateSongId(state.track_window.current_track.id)
+      updateAlbumName(state.track_window.current_track.album.name)
+      updateAlbumId(state.track_window.current_track.album.name)
+      updateArtistArr(state.track_window.current_track.artists)
+      updateSongDuration(state.duration)
+      updateSongPosition(state.position)
+      setNextTracks(state.track_window.next_tracks)
+      setPreviousTracks(state.track_window.previous_tracks)
+      setUri(state.track_window.current_track.uri)
+      setSongArtwork(state.track_window.current_track.album.images)
+    }
   }
-
-  // const webPlayerObj = useMemo(() => ({ webPlayer }), [])
-
-  useEffect(() => {
-    updatePlayerState()
-  }, [webPlayer])
 
   return { updatePlayerState }
 }

@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react'
 import useAuth from 'context/AuthContext'
 import useAxios from './useAxios'
+import useUpdatePlayerState from './useUpdatePlayerState'
 
 const useSpotify = () => {
   console.count('useSpotify running')
-  const { isLoggedIn, accessToken } = useAuth()
+  const { isLoggedIn, accessToken, webPlayer } = useAuth()
   const [spotifyWebPlayer, setSpotifyWebPlayer] = useState(null)
   const { backendApiCall } = useAxios()
-
-  const getSpotifyAccessToken = async () => {
-    const { data } = await backendApiCall.get('/auth/spotifytoken')
-    console.log(data.spotifyAccessToken)
-    return data.spotifyAccessToken
-  }
+  const { updatePlayerState } = useUpdatePlayerState()
 
   useEffect(() => {
+    const getSpotifyAccessToken = async () => {
+      const { data } = await backendApiCall.get('/auth/spotifytoken')
+      return data.spotifyAccessToken
+    }
     console.count('use spotify useeffect no 1a')
-    console.log(accessToken)
-    console.log(!isLoggedIn, !!spotifyWebPlayer, !accessToken)
-    if ((!isLoggedIn, !!spotifyWebPlayer, !accessToken)) return
+    if ((!isLoggedIn, !!webPlayer)) return
     console.count('use spotify useeffect no 1b')
 
     const script = document.createElement('script')
@@ -36,13 +34,11 @@ const useSpotify = () => {
       })
       setSpotifyWebPlayer(player)
     }
-  }, [])
+  }, [accessToken])
 
   useEffect(() => {
-    console.count('use spotify useeffect no 2a')
-    if (!isLoggedIn || !spotifyWebPlayer) return
-    console.count('use spotify useeffect no 2b')
-
+    if (!isLoggedIn || !spotifyWebPlayer || !!webPlayer) return
+    console.count('part 22222')
     spotifyWebPlayer.addListener('initialization_error', ({ message }) => {
       console.error(message)
     })
@@ -57,6 +53,7 @@ const useSpotify = () => {
     })
 
     spotifyWebPlayer.addListener('player_state_changed', (state) => {
+      updatePlayerState(state)
       console.log(state)
     })
 

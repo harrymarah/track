@@ -2,7 +2,7 @@ import axios from 'axios'
 import usePlayer from 'context/PlayerContext'
 
 const usePlaySong = () => {
-  const { setIsPaused, setSongPosition } = usePlayer()
+  const { setIsPaused, updateSongPosition } = usePlayer()
   const playSong = async (uri) => {
     const deviceId = sessionStorage.getItem('deviceId')
     try {
@@ -20,10 +20,11 @@ const usePlaySong = () => {
       }
       await axios(config)
 
-      setSongPosition(0)
+      updateSongPosition(0)
       setIsPaused(false)
     } catch (error) {
-      console.error(error)
+      console.log('error!!!!!')
+      console.warn(error.response)
     }
   }
   return { playSong }

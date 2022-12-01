@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import usePlayer from 'context/PlayerContext'
-import useUpdatePLayerState from 'hooks/useUpdatePlayerState'
 
 const PlayPauseBtn = styled.div`
   background-color: var(--bright);
@@ -23,11 +22,10 @@ let iconClassNames = ['fa-solid', 'fa-play']
 
 const PlayPause = () => {
   const { webPlayer, isPaused, setIsPaused } = usePlayer()
-  const { updatePlayerState } = useUpdatePLayerState()
 
   useEffect(() => {
     setIcon(isPaused)
-  }, [isPaused])
+  }, [webPlayer, isPaused])
 
   const setIcon = (isPaused) => {
     if (isPaused) {
@@ -39,11 +37,9 @@ const PlayPause = () => {
 
   const handleClick = async () => {
     await webPlayer.togglePlay()
-    updatePlayerState()
-    //don't understand why the below code works but it does
-    setIcon(!isPaused)
     setIsPaused(!isPaused)
   }
+
   return (
     <PlayPauseBtn onClick={handleClick}>
       <Icon className={iconClassNames}></Icon>
