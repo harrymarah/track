@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useDrag } from '@use-gesture/react'
-import { animated } from '@react-spring/web'
+import { animated, useSpring, config } from '@react-spring/web'
 // import { Swipeable } from 'react-touch'
 import usePlayer from 'context/PlayerContext'
 import PlayPause from 'features/player/components/PlayPause'
@@ -16,12 +16,14 @@ const MusicControlContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
   position: fixed;
-  bottom: 60px;
+  bottom: 0;
+  padding-bottom: 60px;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: all 0.5s ease-in;
+  touch-action: none;
 `
 const ControlContainer = styled.div`
   width: 100%;
@@ -31,6 +33,7 @@ const ControlContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: all 1s ease-in;
 `
 const colorChange = keyframes`
   50%{
@@ -61,47 +64,73 @@ const PlayerControls = styled.div`
 
 const MusicControl = () => {
   const musicControlRef = useRef()
+  const controlContainerRef = useRef()
   const { isPaused } = usePlayer()
-  const [swipeUpBar, setSwipeUpBar] = useState(
-    <SwipeUpBar onClick={() => handleSwipe('up')} />
-  )
+  const open = ({ canceled }) => {
+    api.start({
+      y: 0,
+      immediate: false,
+      config: canceled ? config.wobbly : config.stiff,
+    })
+    controlContainerRef.current.style.opacity = 1
+  }
+  const close = (velocity = 0) => {
+    api.start({
+      y: 160,
+      immediate: false,
+      config: { ...config.stiff, velocity },
+    })
+    controlContainerRef.current.style.opacity = 0
+  }
+  const [swipeUpBar, setSwipeUpBar] = useState(<SwipeUpBar onClick={open} />)
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }))
 
   const manageSwipeUpBar = () => {
     setTimeout(() => {
       if (musicControlRef.current.style.height === '17px' && !isPaused) {
-        setSwipeUpBar(<ActiveSwipeUpBar onClick={() => handleSwipe('up')} />)
+        setSwipeUpBar(<ActiveSwipeUpBar onClick={open} />)
       } else {
-        setSwipeUpBar(<SwipeUpBar onClick={() => handleSwipe('up')} />)
+        setSwipeUpBar(<SwipeUpBar onClick={open} />)
       }
     }, 1000)
   }
 
-  const bind = useDrag(({ swipe: [swipeX] }) => {
-    console.log(swipeX)
-  })
+  const bind = useDrag(
+    ({
+      last,
+      velocity: [, vy],
+      direction: [, dy],
+      movement: [, my],
+      cancel,
+      canceled,
+    }) => {
+      if (my < -70) cancel()
+
+      if (last) {
+        my > 160 * 0.5 || (vy > 0.5 && dy > 0) ? close(vy) : open({ canceled })
+      } else api.start({ y: my, immediate: true })
+    },
+    {
+      from: () => [0, y.get()],
+      filterTaps: true,
+      bounds: { top: 0 },
+      rubberband: true,
+    }
+  )
 
   useEffect(() => {
     manageSwipeUpBar()
   }, [isPaused])
 
-  const handleSwipe = (direction) => {
-    if (direction === 'down') {
-      musicControlRef.current.style.height = '17px'
-    }
-    if (direction === 'up') {
-      musicControlRef.current.style.height = '180px'
-    }
-    manageSwipeUpBar()
-  }
-
   return (
-    // <Swipeable
-    //   onSwipeDown={() => handleSwipe('down')}
-    //   onSwipeUp={() => handleSwipe('up')}
-    // >
-    <MusicControlContainer as={animated.div} ref={musicControlRef} {...bind()}>
+    <MusicControlContainer
+      as={animated.div}
+      ref={musicControlRef}
+      {...bind()}
+      style={{ x, y }}
+    >
       {swipeUpBar}
-      <ControlContainer>
+      <ControlContainer ref={controlContainerRef}>
         <PlayerControls>
           <PrevTrack />
           <PlayPause />
@@ -111,7 +140,6 @@ const MusicControl = () => {
         <TrackDetails />
       </ControlContainer>
     </MusicControlContainer>
-    // </Swipeable>
   )
 }
 

@@ -5,6 +5,7 @@ import getArtists from 'utils/getArtists'
 
 const DetailsContainer = styled.div`
   margin-top: 7px;
+  white-space: nowrap;
 `
 const TrackName = styled.span``
 const AlbumName = styled.span`
@@ -18,9 +19,8 @@ const TrackDetails = () => {
   const { currentTrack, albumName, artistArr } = usePlayer()
   return (
     <DetailsContainer>
-      <TrackName>{currentTrack}</TrackName>&nbsp;&ndash;&nbsp;
-      <AlbumName>{albumName}</AlbumName>
-      &nbsp;&ndash;&nbsp;
+      <TrackName>{currentTrack + (currentTrack ? ' - ' : '')}</TrackName>
+      <AlbumName>{albumName + (albumName ? ' - ' : '')}</AlbumName>
       <ArtistName>{getArtists(artistArr)}</ArtistName>
     </DetailsContainer>
   )

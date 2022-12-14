@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 const NavBar = styled.div`
   display: flex;
-  background-color: rgba(0, 0, 0, 0.3);
+  // background-color: rgba(0, 0, 0, 0.3);
   // background-color: rgba(230, 241, 255, 0.1);
   backdrop-filter: blur(5px);
   height: 60px;
