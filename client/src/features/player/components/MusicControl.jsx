@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useDrag } from '@use-gesture/react'
 import { animated, useSpring, config } from '@react-spring/web'
-// import { Swipeable } from 'react-touch'
+
 import usePlayer from 'context/PlayerContext'
 import PlayPause from 'features/player/components/PlayPause'
 import NextTrack from 'features/player/components/NextTrack'

@@ -1,7 +1,7 @@
 import 'wdyr.js'
 import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import useSpotify from './hooks/useSpotify'
@@ -28,18 +28,10 @@ function App() {
     setWebPlayer(spotifyWebPlayer)
   }, [spotifyWebPlayer])
 
-  const notify = () => {
-    toast.error('Error Notification !', {
-      position: toast.POSITION.TOP_CENTER,
-      theme: 'dark',
-    })
-  }
-
   return (
     <>
       {/* <GlobalStyle /> */}
       <ToastContainer />
-      <button onClick={notify}>hello</button>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoutes />}>
