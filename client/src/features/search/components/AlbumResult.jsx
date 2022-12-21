@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import getArtists from 'utils/getArtists'
+import ShowAlbum from './ShowAlbum'
 import SeeMoreChevron from 'features/search/components/SeeMoreChevron'
 
 const SingleResultContainer = styled.li`
@@ -39,15 +40,26 @@ const Artwork = styled.img`
 `
 
 const AlbumResult = ({ searchResults }) => {
+  const [showFullAlbum, toggleShowFullAlbum] = useState(false)
   return (
-    <AlbumResultContainer>
-      <Artwork src={searchResults.images[2].url} />
-      <SingleResultContainer>
-        <AlbumName>{searchResults.name}</AlbumName>
-        <ArtistName>{getArtists(searchResults.artists)}</ArtistName>
-        <SeeMoreChevron />
-      </SingleResultContainer>
-    </AlbumResultContainer>
+    <>
+      {showFullAlbum ? (
+        <ShowAlbum
+          searchResults={searchResults}
+          toggleShowFullAlbum={toggleShowFullAlbum}
+        />
+      ) : (
+        ''
+      )}
+      <AlbumResultContainer onClick={() => toggleShowFullAlbum(true)}>
+        <Artwork src={searchResults.images[2].url} />
+        <SingleResultContainer>
+          <AlbumName>{searchResults.name}</AlbumName>
+          <ArtistName>{getArtists(searchResults.artists)}</ArtistName>
+          <SeeMoreChevron />
+        </SingleResultContainer>
+      </AlbumResultContainer>
+    </>
   )
 }
 

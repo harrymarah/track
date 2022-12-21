@@ -13,7 +13,7 @@ const NavBar = styled.div`
   bottom: 0;
   justify-content: space-between;
   padding: 0 1rem;
-  z-index: 10;
+  z-index: 100;
 `
 
 const NavBarLink = styled(NavLink)`
@@ -22,7 +22,7 @@ const NavBarLink = styled(NavLink)`
   font-size: 2rem;
   line-height: 60px;
   cursor: pointer;
-  z-index: 10;
+  z-index: 100;
 `
 
 const BottomNavbar = () => {

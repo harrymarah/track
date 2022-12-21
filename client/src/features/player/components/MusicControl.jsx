@@ -18,7 +18,7 @@ const MusicControlContainer = styled.div`
   position: fixed;
   bottom: 0;
   padding-bottom: 60px;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
