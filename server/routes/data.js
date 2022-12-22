@@ -6,9 +6,10 @@ const { spotify, client } = require('../config/config')
 const ExpressError = require('../utils/ExpressError')
 
 router.get('/get-album-tracks', async (req, res) => {
+  console.log('route hit')
   try {
     const spotifyAccessToken =
-      'BQDZu4uhPAynMycYTtZAuELbUk_LyoBewMkSkOTO4elUflTMmMKMtQvDnPvUNBpCFW4cyAdgHApRXrM4OjRA1HbRltQ_FgdmpTg2BcFPJ8J9Uq3AV3HTtCY8MVVPDMJo0Rfnj45zoj8p2Oqal76BAx9DmhnZTLrXU1Jp0URcEmGUdK3bu_mkpaxN1nfKh4u2TsvZC6Z_CWMBzw'
+      'BQDAK7gzRoFWgwgsdnJwQCIsQhLCNRafZgcjGRxFDYeDaDjTR6Lrh0bEW653_wKbYATp4YPjqp-v6pgf0m1_szp2A2CVcxpKwDR-DIitRdHz2iUX_ZVb9PsNPWhTNuC0k7G6SmwswEOvn-KE8bMiVwkQMw-ojuZyoFvjFhI13KCO2zbhH8pDzs08FhyMotaZg_cwTe5CI20P2A'
     const { albumId } = req.query
     const config = {
       method: 'get',
@@ -25,7 +26,7 @@ router.get('/get-album-tracks', async (req, res) => {
       trackName: track.name,
       trackUri: track.uri,
     }))
-    res.send(trackList)
+    res.send({ trackList })
   } catch (err) {
     console.log(err)
   }
