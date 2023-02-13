@@ -8,6 +8,9 @@ module.exports = authenticateToken = (req, res, next) => {
 
   jwt.verify(token, auth.accessTokenSecret, (err, user) => {
     if (err) return res.sendStatus(403)
+    console.log(user)
+    console.log(req.user)
+    // req.user = user
     next()
   })
 }
