@@ -6,7 +6,7 @@ const { findOneAndUpdate } = require('../models/user')
 const { spotify, client } = require('../config/config')
 const authenticateToken = require('../middleware/authenticateToken')
 
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     let results = {}
     const { spotifyAccessToken } = req.user

@@ -20,7 +20,7 @@ import Settings from 'pages/Settings'
 // import { GlobalStyle } from 'layouts'
 
 function App() {
-  useToken()
+  // useToken()
   const { spotifyWebPlayer } = useSpotify()
   const { setWebPlayer } = usePlayer()
 

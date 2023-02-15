@@ -7,10 +7,10 @@ module.exports = authenticateToken = (req, res, next) => {
   if (token == null) return res.sendStatus(401)
 
   jwt.verify(token, auth.accessTokenSecret, (err, user) => {
-    if (err) return res.sendStatus(403)
-    console.log(user)
-    console.log(req.user)
-    // req.user = user
+    if (err) {
+      console.log(err.message)
+      return res.sendStatus(403)
+    }
     next()
   })
 }

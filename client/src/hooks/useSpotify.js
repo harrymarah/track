@@ -15,9 +15,7 @@ const useSpotify = () => {
       const { data } = await backendApiCall.get('/auth/spotifytoken')
       return data.spotifyAccessToken
     }
-    console.count('use spotify useeffect no 1a')
     if ((!isLoggedIn, !!webPlayer)) return
-    console.count('use spotify useeffect no 1b')
 
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
