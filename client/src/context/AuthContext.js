@@ -1,5 +1,9 @@
 import { createContext, useReducer, useContext } from 'react'
-import authReducer, { ACTIONS, initialState } from 'reducers/authReducer'
+import authReducer, {
+  ACTIONS,
+  initialState,
+  getLoggedInCookie,
+} from 'reducers/authReducer'
 
 const AuthContext = createContext(initialState)
 
@@ -15,27 +19,19 @@ export const AuthProvider = ({ children }) => {
   const updateUsername = (username) => {
     dispatch({ type: ACTIONS.UPDATE_USERNAME, payload: username })
   }
-  const updateAccessToken = (token) => {
-    dispatch({ type: ACTIONS.UPDATE_ACCESS_TOKEN, payload: token })
-  }
-  const updateRefreshToken = (token) => {
-    dispatch({ type: ACTIONS.UPDATE_REFRESH_TOKEN, payload: token })
-  }
-  const updateTokenExpiry = (expiry) => {
-    dispatch({ type: ACTIONS.SET_TOKEN_EXPIRY, payload: expiry })
-  }
   const setIsLoading = (bool) => {
     dispatch({ type: ACTIONS.SET_IS_LOADING, payload: bool })
+  }
+  const checkLoggedIn = () => {
+    return getLoggedInCookie()
   }
   const value = {
     ...auth,
     logUserIn,
     logUserOut,
     updateUsername,
-    updateAccessToken,
-    updateRefreshToken,
-    updateTokenExpiry,
     setIsLoading,
+    checkLoggedIn,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

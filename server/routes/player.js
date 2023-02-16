@@ -4,8 +4,9 @@ const axios = require('axios')
 const User = require('../models/user')
 const { spotify, client } = require('../config/config')
 const ExpressError = require('../utils/ExpressError')
+const { isAuth } = require('../middleware/isAuth')
 
-router.put('/playsong', async (req, res) => {
+router.put('/playsong', isAuth, async (req, res) => {
   try {
     const { uri } = req.body
     const { spotifyAccessToken, deviceId } = req.user
@@ -29,7 +30,7 @@ router.put('/playsong', async (req, res) => {
   }
 })
 
-router.post('/device-id', async (req, res) => {
+router.post('/device-id', isAuth, async (req, res) => {
   try {
     const { deviceId } = req.body
     const user = await User.findOneAndUpdate(

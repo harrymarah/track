@@ -2,20 +2,23 @@ import { useEffect, useState } from 'react'
 import useAuth from 'context/AuthContext'
 import useAxios from './useAxios'
 import useUpdatePlayerState from './useUpdatePlayerState'
+import { useNavigate } from 'react-router-dom'
 
 const useSpotify = () => {
   console.count('useSpotify running')
-  const { isLoggedIn, accessToken, webPlayer } = useAuth()
+  const { isLoggedIn } = useAuth()
   const [spotifyWebPlayer, setSpotifyWebPlayer] = useState(null)
   const { backendApiCall } = useAxios()
   const { updatePlayerState } = useUpdatePlayerState()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getSpotifyAccessToken = async () => {
       const { data } = await backendApiCall.get('/auth/spotifytoken')
       return data.spotifyAccessToken
     }
-    if ((!isLoggedIn, !!webPlayer)) return
+    if (!isLoggedIn) return navigate('/login')
+    if (spotifyWebPlayer) return
 
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
@@ -32,10 +35,10 @@ const useSpotify = () => {
       })
       setSpotifyWebPlayer(player)
     }
-  }, [accessToken])
+  }, [])
 
   useEffect(() => {
-    if (!isLoggedIn || !spotifyWebPlayer || !!webPlayer) return
+    if (!isLoggedIn || !spotifyWebPlayer) return
     console.count('part 22222')
     spotifyWebPlayer.addListener('initialization_error', ({ message }) => {
       console.error(message)
@@ -74,7 +77,7 @@ const useSpotify = () => {
       })
   }, [spotifyWebPlayer])
 
-  return { spotifyWebPlayer, setSpotifyWebPlayer }
+  return spotifyWebPlayer
 }
 
 export default useSpotify

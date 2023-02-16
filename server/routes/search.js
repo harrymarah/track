@@ -5,8 +5,9 @@ const User = require('../models/user')
 const { findOneAndUpdate } = require('../models/user')
 const { spotify, client } = require('../config/config')
 const authenticateToken = require('../middleware/authenticateToken')
+const { isAuth } = require('../middleware/isAuth')
 
-router.get('/', async (req, res) => {
+router.get('/', isAuth, async (req, res) => {
   try {
     let results = {}
     const { spotifyAccessToken } = req.user
@@ -49,7 +50,7 @@ router.get('/', async (req, res) => {
     }
     res.send(results)
   } catch (err) {
-    res.status(err?.response.status || 500).json({ error: err.message })
+    res.status(err?.response?.status || 500).json({ error: err.message })
   }
 })
 

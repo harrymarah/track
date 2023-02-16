@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import useSpotify from './hooks/useSpotify'
-import useToken from './hooks/useToken'
 import usePlayer from 'context/PlayerContext'
 import useAuth from 'context/AuthContext'
 
@@ -20,8 +19,7 @@ import Settings from 'pages/Settings'
 // import { GlobalStyle } from 'layouts'
 
 function App() {
-  // useToken()
-  const { spotifyWebPlayer } = useSpotify()
+  const spotifyWebPlayer = useSpotify()
   const { setWebPlayer } = usePlayer()
 
   useEffect(() => {
