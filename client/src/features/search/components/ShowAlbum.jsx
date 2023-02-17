@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import getArtists from 'utils/getArtists'
 import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
@@ -58,6 +58,7 @@ const Exit = styled.div`
 
 const ShowAlbum = ({ searchResults, toggleShowFullAlbum }) => {
   const [tracks, setTracks] = useState([])
+  const [trackComponents, setTrackComponents] = useState([])
   const { backendApiCall } = useAxios()
   const getAlbumTracks = async (albumId) => {
     const config = {
@@ -68,12 +69,20 @@ const ShowAlbum = ({ searchResults, toggleShowFullAlbum }) => {
       },
     }
     const { data } = await backendApiCall(config)
-    console.log(data)
-    return data
+    setTracks(data.trackList)
   }
   useEffect(() => {
-    getAlbumTracks(searchResults.id).then((results) => console.log(results))
+    getAlbumTracks(searchResults.id)
   }, [])
+
+  useEffect(() => {
+    setTrackComponents(
+      tracks.map((track) => {
+        return <Track>{track.trackName}</Track>
+      })
+    )
+    console.log(trackComponents)
+  }, [tracks])
 
   return (
     <Container>
@@ -83,7 +92,7 @@ const ShowAlbum = ({ searchResults, toggleShowFullAlbum }) => {
       <Artwork src={searchResults.images[0].url} />
       <AlbumTitle>{searchResults.name}</AlbumTitle>
       <Artist>{getArtists(searchResults.artists)}</Artist>
-      <TrackList></TrackList>
+      <TrackList>{trackComponents}</TrackList>
     </Container>
   )
 }
