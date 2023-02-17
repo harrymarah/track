@@ -23,7 +23,7 @@ router.get(
   })
 )
 
-router.get('/user', isAuth, (req, res) => {
+router.get('/verifyuser', isAuth, (req, res) => {
   return res.json({
     authenticated: req.isAuthenticated(),
     username: req.user.spotifyId,

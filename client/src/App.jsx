@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import useSpotify from './hooks/useSpotify'
 import usePlayer from 'context/PlayerContext'
+import useAuthentication from 'hooks/useAuthentication'
 import useAuth from 'context/AuthContext'
 
 import PrivateRoutes from 'utils/PrivateRoutes'
@@ -21,6 +22,8 @@ import Settings from 'pages/Settings'
 function App() {
   const spotifyWebPlayer = useSpotify()
   const { setWebPlayer } = usePlayer()
+
+  useAuthentication()
 
   useEffect(() => {
     setWebPlayer(spotifyWebPlayer)
