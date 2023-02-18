@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import getArtists from 'utils/getArtists'
 import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
+import usePlaySong from 'hooks/usePlaySong'
+import PlayContentBtn from 'features/search/components/PlayContentBtn'
 
 const Container = styled.div`
   position: fixed;
@@ -20,13 +22,14 @@ const Artwork = styled.img`
 `
 const AlbumTitle = styled.h2`
   font-size: 1.6rem;
-  margin: 0.5rem 7px 0;
+  margin: 2rem 7px 0;
 `
 const Artist = styled.h3`
   font-size: 1.2rem;
-  margin: 0.1rem 0.5rem 0;
+  margin: 0.3rem 0.5rem;
   font-weight: 400;
 `
+
 const TrackList = styled.div`
   width: 95%;
   background-color: rgba(255, 255, 255, 0.1);
@@ -36,7 +39,7 @@ const TrackList = styled.div`
 `
 const Track = styled.div`
   font-size: 1.1rem;
-  padding: 10px 0 10px 10px;
+  padding: 15px 10px;
   border-bottom: 1px solid #fff;
   &:nth-last-of-type(1) {
     border-bottom: none;
@@ -58,8 +61,8 @@ const Exit = styled.div`
 
 const ShowAlbum = ({ searchResults, toggleShowFullAlbum }) => {
   const [tracks, setTracks] = useState([])
-  const [trackComponents, setTrackComponents] = useState([])
   const { backendApiCall } = useAxios()
+  const { playSong } = usePlaySong()
   const getAlbumTracks = async (albumId) => {
     const config = {
       method: 'get',
@@ -69,20 +72,20 @@ const ShowAlbum = ({ searchResults, toggleShowFullAlbum }) => {
       },
     }
     const { data } = await backendApiCall(config)
-    setTracks(data.trackList)
+    setTracks(
+      data.trackList.map((track) => {
+        return (
+          <Track key={track.trackUri} onClick={() => playSong(track.trackUri)}>
+            {track.trackName}
+          </Track>
+        )
+      })
+    )
   }
   useEffect(() => {
     getAlbumTracks(searchResults.id)
+    return setTracks([])
   }, [])
-
-  useEffect(() => {
-    setTrackComponents(
-      tracks.map((track) => {
-        return <Track>{track.trackName}</Track>
-      })
-    )
-    console.log(trackComponents)
-  }, [tracks])
 
   return (
     <Container>
@@ -92,7 +95,8 @@ const ShowAlbum = ({ searchResults, toggleShowFullAlbum }) => {
       <Artwork src={searchResults.images[0].url} />
       <AlbumTitle>{searchResults.name}</AlbumTitle>
       <Artist>{getArtists(searchResults.artists)}</Artist>
-      <TrackList>{trackComponents}</TrackList>
+      <PlayContentBtn uri={searchResults.uri} />
+      <TrackList>{tracks}</TrackList>
     </Container>
   )
 }

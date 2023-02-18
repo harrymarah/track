@@ -3,7 +3,7 @@ import usePlayer from 'context/PlayerContext'
 
 const usePlaySong = () => {
   const { setIsPaused, updateSongPosition } = usePlayer()
-  const playSong = async (uri) => {
+  const playSong = async (uri, type = 'song') => {
     const deviceId = sessionStorage.getItem('deviceId')
     try {
       const data = JSON.stringify({
@@ -12,7 +12,7 @@ const usePlaySong = () => {
       })
       const config = {
         method: 'put',
-        url: '/player/playsong',
+        url: '/player/play' + type,
         headers: {
           'Content-Type': 'application/json',
         },

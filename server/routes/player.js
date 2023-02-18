@@ -30,6 +30,30 @@ router.put('/playsong', isAuth, async (req, res) => {
   }
 })
 
+router.put('/playalbum', isAuth, async (req, res) => {
+  try {
+    const { uri } = req.body
+    const { spotifyAccessToken, deviceId } = req.user
+    const data = JSON.stringify({
+      context_uri: uri,
+      position_ms: 0,
+    })
+    const config = {
+      method: 'put',
+      url: `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+        'Content-Type': 'application/json',
+      },
+      data: data,
+    }
+    const response = await axios(config)
+    return res.sendStatus(response.status)
+  } catch (err) {
+    res.status(err?.response.status || 500).json({ error: err.message })
+  }
+})
+
 router.post('/device-id', isAuth, async (req, res) => {
   try {
     const { deviceId } = req.body

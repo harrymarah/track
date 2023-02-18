@@ -33,6 +33,7 @@ const LogoutBtn = () => {
 
   const handleLogout = async (e) => {
     try {
+      console.log('running')
       e.preventDefault()
       const { status } = await backendApiCall.post('/auth/logout', {
         crossDomain: true,
