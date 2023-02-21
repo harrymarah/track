@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import getArtists from 'utils/getArtists'
-import ShowAlbum from './ShowAlbum'
+import ShowAlbum from 'features/search/components/ShowAlbum'
 import SeeMoreChevron from 'features/search/components/SeeMoreChevron'
 
 const SingleResultContainer = styled.li`
