@@ -32,9 +32,6 @@ router.get('/get-album-tracks', async (req, res) => {
 router.get('/get-playlist-tracks', async (req, res) => {
   try {
     const { spotifyAccessToken } = req.user
-    // const spotifyAccessToken =
-    //   'BQD_vo71EKKBY8JlSjHRR1zGa9gKTjMvcSf9HIe2CNqIgMbc2w5Hse1AXqnLQ4uF5ChII1tJ0ohDbNACj0fqwWbZjiVcgNNgnBVYB4-Iq1aBAI4DAgg8smn-nSnbWEimcmT8lJLFee7ndcwZxee15ESp2e_SspWrR4GCNUXfDkP4uLN1O-ZVC0nqkZiX0YEza48mlTJYt13OVjM'
-    // const playlistId = '1Fy5p1KbV1XBE16GKF9jOS'
     const { playlistId } = req.query
     const config = {
       method: 'get',
@@ -55,5 +52,61 @@ router.get('/get-playlist-tracks', async (req, res) => {
     console.log(err)
   }
 })
+router.get('/get-artist-top-tracks', async (req, res) => {
+  try {
+    const { spotifyAccessToken } = req.user
+    const { artistId } = req.query
+    const config = {
+      method: 'get',
+      url: `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=GB`,
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+      },
+    }
+    const { data } = await axios(config)
+    const tracks = data.tracks.map((track) => {
+      return {
+        name: track.name,
+        artist: track.artists,
+        album: track.album.name,
+        uri: track.uri,
+      }
+    })
+    res.send(tracks)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get('/get-artist-albums', async (req, res) => {
+  try {
+    const { spotifyAccessToken } = req.user
+    const { artistId } = req.query
+    const config = {
+      method: 'get',
+      url: `https://api.spotify.com/v1/artists/${artistId}/albums`,
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+      },
+      params: {
+        limit: 10,
+      },
+    }
+    const { data } = await axios(config)
+    const albums = data.items.map((album) => {
+      return {
+        name: album.name,
+        type: album.album_type,
+        imageUrl: album.images[1].url,
+        uri: album.uri,
+      }
+    })
+    res.send(albums)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get('get-artist-playlists', (req, res) => {})
 
 module.exports = router

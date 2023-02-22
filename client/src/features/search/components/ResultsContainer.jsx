@@ -46,9 +46,7 @@ const ResultsContainer = ({ searchResults }) => {
 
   if (searchResults.artists) {
     allResults.artistResults = searchResults.artists.items.map((resultData) => {
-      return (
-        <ArtistResult key={resultData.id} searchResults={resultData.name} />
-      )
+      return <ArtistResult key={resultData.id} searchResults={resultData} />
     })
     allResults.artistResults.push(<MoreResults />)
   }

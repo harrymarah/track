@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import SeeMoreChevron from 'features/search/components/SeeMoreChevron'
+import ShowArtist from './ShowArtist'
 
 const SingleResultContainer = styled.li`
   width: 95%;
@@ -21,13 +22,24 @@ const ArtistName = styled.div`
   z-index: -100;
 `
 
-const TrackResult = ({ searchResults }) => {
+const ArtistResult = ({ searchResults }) => {
+  const [showFullArtist, toggleShowFullArtist] = useState(false)
   return (
-    <SingleResultContainer>
-      <ArtistName>{searchResults}</ArtistName>
-      <SeeMoreChevron />
-    </SingleResultContainer>
+    <>
+      {showFullArtist ? (
+        <ShowArtist
+          toggleShowFullArtist={toggleShowFullArtist}
+          searchResults={searchResults}
+        />
+      ) : (
+        ''
+      )}
+      <SingleResultContainer onClick={() => toggleShowFullArtist(true)}>
+        <ArtistName>{searchResults.name}</ArtistName>
+        <SeeMoreChevron />
+      </SingleResultContainer>
+    </>
   )
 }
 
-export default TrackResult
+export default ArtistResult
