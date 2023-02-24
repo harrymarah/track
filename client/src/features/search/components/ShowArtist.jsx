@@ -65,11 +65,39 @@ const Exit = styled.div`
   align-items: center;
   margin: 10px 10px 0;
 `
+const AlbumList = styled.div`
+  display: flex;
+  margin: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+`
+const Album = styled.div`
+  margin: 10px;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  .type {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+  .name {
+    margin-top: 6px;
+  }
+`
+const SeeMoreAlbums = styled.div`
+  background-color: var(--bright);
+  color: var(--dark-blue);
+  font-size: 2rem;
+  border-radius: 30px;
+  padding: 5px 20px;
+`
 
 const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const [topTracks, setTopTracks] = useState([])
   const [albums, setAlbums] = useState([])
-  const [numOfResults, setNumOfResults] = useState(5)
+  const [numOfTrackResults, setNumOfTrackResults] = useState(5)
+  const [numOfAlbumResults, setNumOfAlbumResults] = useState(4)
   const { backendApiCall } = useAxios()
   const config = {
     method: 'get',
@@ -80,14 +108,24 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const getArtistAlbums = async (artistId) => {
     config.url = '/data/get-artist-albums'
     const { data } = await backendApiCall(config)
-    console.log(data)
+    setAlbums(
+      data.map((album) => {
+        return (
+          <Album>
+            <img src={album.imageUrl} alt={album.name + 'album art'} />
+            <div className="type">{album.type}</div>
+            <div className="name">{album.name}</div>
+          </Album>
+        )
+      })
+    )
   }
   const getArtistTopTracks = async (artistId) => {
     config.url = '/data/get-artist-top-tracks'
     const { data } = await backendApiCall(config)
     setTopTracks(
       data.map((track) => {
-        return <Track>{track.name}</Track>
+        return <Track key={track.uri}>{track.name}</Track>
       })
     )
   }
@@ -106,9 +144,11 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
       <Artist>{searchResults.name}</Artist>
       <Heading>top tracks</Heading>
       <TrackList>
-        {topTracks.slice(0, numOfResults)}
-        {numOfResults < topTracks.length ? (
-          <SeeMoreTracks onClick={() => setNumOfResults(numOfResults + 5)}>
+        {topTracks.slice(0, numOfTrackResults)}
+        {numOfTrackResults < topTracks.length ? (
+          <SeeMoreTracks
+            onClick={() => setNumOfTrackResults(numOfTrackResults + 5)}
+          >
             <i className="fa-solid fa-chevron-down"></i>
           </SeeMoreTracks>
         ) : (
@@ -116,6 +156,18 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )}
       </TrackList>
       <Heading>albums</Heading>
+      <AlbumList>
+        {albums.slice(0, numOfAlbumResults)}
+        {numOfAlbumResults < albums.length ? (
+          <SeeMoreAlbums
+            onClick={() => setNumOfAlbumResults(numOfAlbumResults + 4)}
+          >
+            <i className="fa-solid fa-chevron-down"></i>
+          </SeeMoreAlbums>
+        ) : (
+          ''
+        )}
+      </AlbumList>
       <Heading>playlists</Heading>
     </Container>
   )
