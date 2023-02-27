@@ -44,7 +44,7 @@ router.get('/', isAuth, async (req, res) => {
     }
     if (playlist === 'true') {
       config.params.type = 'playlist'
-      config.params.limit = 3
+      config.params.limit = 10
       const { data } = await axios(config)
       results.playlists = data.playlists
     }

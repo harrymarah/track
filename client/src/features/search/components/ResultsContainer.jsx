@@ -4,7 +4,7 @@ import TrackResult from 'features/search/components/TrackResult'
 import ArtistResult from 'features/search/components/ArtistResult'
 import AlbumResult from 'features/search/components/AlbumResult'
 import PlaylistResult from 'features/search/components/PlaylistResult'
-import MoreResults from './MoreResults'
+import MoreResults from 'features/search/components/MoreResults'
 
 const Results = styled.ul`
   overflow-y: scroll;

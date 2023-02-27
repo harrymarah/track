@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
 import usePlaySong from 'hooks/usePlaySong'
+import useSpotifySearch from 'hooks/useSpotifySearch'
 import PlayContentBtn from 'features/search/components/PlayContentBtn'
+import MoreResults from 'features/search/components/MoreResults'
 
 const Container = styled.div`
   position: fixed;
@@ -31,7 +33,7 @@ const Heading = styled.h3`
 
 const TrackList = styled.div`
   width: 95%;
-  background-color: rgba(255, 255, 255, 0.1);
+  // background-color: rgba(255, 255, 255, 0.1);
   margin: auto;
   border-radius: 8px;
   margin-top: 8px;
@@ -39,18 +41,22 @@ const TrackList = styled.div`
 const Track = styled.div`
   font-size: 1.1rem;
   padding: 10px 10px;
-  border-bottom: 1px solid #fff;
-  &:nth-last-of-type(1) {
-    border-bottom: none;
-  }
+  width: 95%;
+  background-color: rgba(230, 241, 255, 0.04);
+  margin: 5px auto;
+  border-radius: 8px;
+  overflow: hidden;
 `
 const SeeMoreTracks = styled.div`
-  background-color: var(--bright);
-  color: var(--dark-blue);
-  border-radius: 0 0 8px 8px;
-  display: flex;
-  justify-content: center;
+  width: 95%;
+  margin: 5px auto;
+  padding: 0.3rem 0.5rem;
+  border-radius: 8px;
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(230, 241, 255, 0.2);
 `
 const Exit = styled.div`
   position: fixed;
@@ -72,8 +78,11 @@ const AlbumList = styled.div`
   justify-content: center;
 `
 const Album = styled.div`
-  margin: 10px;
-  width: 160px;
+  background-color: rgba(230, 241, 255, 0.04);
+  margin: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  width: 150px;
   display: flex;
   flex-direction: column;
   .type {
@@ -85,20 +94,19 @@ const Album = styled.div`
     margin-top: 6px;
   }
 `
-const SeeMoreAlbums = styled.div`
-  background-color: var(--bright);
-  color: var(--dark-blue);
-  font-size: 2rem;
-  border-radius: 30px;
-  padding: 5px 20px;
+const SeeMoreAlbums = styled(SeeMoreTracks)`
+  width: 90%;
 `
 
 const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const [topTracks, setTopTracks] = useState([])
   const [albums, setAlbums] = useState([])
+  const [playlists, setPlaylists] = useState([])
   const [numOfTrackResults, setNumOfTrackResults] = useState(5)
   const [numOfAlbumResults, setNumOfAlbumResults] = useState(4)
+  const [numOfPlaylistResults, setNumOfPlaylistResults] = useState(4)
   const { backendApiCall } = useAxios()
+  const { spotifySearch } = useSpotifySearch()
   const config = {
     method: 'get',
     params: {
@@ -129,10 +137,32 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
       })
     )
   }
+  const getPlaylists = async (name) => {
+    const { playlists } = await spotifySearch(name, {
+      track: false,
+      artist: false,
+      album: false,
+      playlist: true,
+    })
+    setPlaylists(
+      playlists.items.map((playlist) => {
+        return (
+          <Album>
+            <img
+              src={playlist.images[0].url}
+              alt={playlist.name + 'playlist art'}
+            />
+            <div className="name">{playlist.name}</div>
+          </Album>
+        )
+      })
+    )
+  }
 
   useEffect(() => {
     getArtistTopTracks()
     getArtistAlbums()
+    getPlaylists(searchResults.name)
   }, [])
 
   return (
@@ -169,6 +199,18 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )}
       </AlbumList>
       <Heading>playlists</Heading>
+      <AlbumList>
+        {playlists.slice(0, numOfPlaylistResults)}
+        {numOfPlaylistResults < playlists.length ? (
+          <SeeMoreAlbums
+            onClick={() => setNumOfPlaylistResults(numOfPlaylistResults + 4)}
+          >
+            <i className="fa-solid fa-chevron-down"></i>
+          </SeeMoreAlbums>
+        ) : (
+          ''
+        )}
+      </AlbumList>
     </Container>
   )
 }
