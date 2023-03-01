@@ -95,9 +95,11 @@ router.get('/get-artist-albums', async (req, res) => {
     const { data } = await axios(config)
     const albums = data.items.map((album) => {
       return {
+        id: album.id,
         name: album.name,
+        artists: album.artists,
         type: album.album_type,
-        imageUrl: album.images[1].url,
+        images: album.images,
         uri: album.uri,
       }
     })

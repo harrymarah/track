@@ -4,7 +4,7 @@ import useAxios from 'hooks/useAxios'
 import usePlaySong from 'hooks/usePlaySong'
 import useSpotifySearch from 'hooks/useSpotifySearch'
 import PlayContentBtn from 'features/search/components/PlayContentBtn'
-import MoreResults from 'features/search/components/MoreResults'
+import ShowAlbum from 'features/search/components/ShowAlbum'
 
 const Container = styled.div`
   position: fixed;
@@ -13,7 +13,7 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   background-color: var(--dark-blue);
-  z-index: 20;
+  z-index: 15;
   overflow: scroll;
   padding-bottom: 150px;
 `
@@ -105,6 +105,8 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const [numOfTrackResults, setNumOfTrackResults] = useState(5)
   const [numOfAlbumResults, setNumOfAlbumResults] = useState(4)
   const [numOfPlaylistResults, setNumOfPlaylistResults] = useState(4)
+  const [showFullAlbum, toggleShowFullAlbum] = useState(false)
+  const [albumData, setAlbumData] = useState(null)
   const { backendApiCall } = useAxios()
   const { spotifySearch } = useSpotifySearch()
   const config = {
@@ -113,14 +115,21 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
       artistId: searchResults.id,
     },
   }
+  // need searchResults.id,name,images[0],artists,uri
   const getArtistAlbums = async (artistId) => {
     config.url = '/data/get-artist-albums'
     const { data } = await backendApiCall(config)
     setAlbums(
       data.map((album) => {
         return (
-          <Album>
-            <img src={album.imageUrl} alt={album.name + 'album art'} />
+          <Album
+            key={album.id}
+            onClick={() => {
+              setAlbumData(album)
+              toggleShowFullAlbum(true)
+            }}
+          >
+            <img src={album.images[1].url} alt={album.name + 'album art'} />
             <div className="type">{album.type}</div>
             <div className="name">{album.name}</div>
           </Album>
@@ -186,6 +195,14 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )}
       </TrackList>
       <Heading>albums</Heading>
+      {showFullAlbum ? (
+        <ShowAlbum
+          searchResults={albumData}
+          toggleShowFullAlbum={toggleShowFullAlbum}
+        />
+      ) : (
+        ''
+      )}
       <AlbumList>
         {albums.slice(0, numOfAlbumResults)}
         {numOfAlbumResults < albums.length ? (
