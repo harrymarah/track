@@ -5,6 +5,8 @@ import usePlaySong from 'hooks/usePlaySong'
 import useSpotifySearch from 'hooks/useSpotifySearch'
 import PlayContentBtn from 'features/search/components/PlayContentBtn'
 import ShowAlbum from 'features/search/components/ShowAlbum'
+import ShowPlaylist from 'features/search/components/ShowPlaylist'
+import Loading from 'components/Loading'
 
 const Container = styled.div`
   position: fixed;
@@ -106,7 +108,12 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const [numOfAlbumResults, setNumOfAlbumResults] = useState(4)
   const [numOfPlaylistResults, setNumOfPlaylistResults] = useState(4)
   const [showFullAlbum, toggleShowFullAlbum] = useState(false)
+  const [showFullPlaylist, toggleShowFullPlaylist] = useState(false)
   const [albumData, setAlbumData] = useState(null)
+  const [playlistData, setPlaylistData] = useState(null)
+  const [albumLoading, setAlbumLoading] = useState(true)
+  const [playlistLoading, setPlaylistLoading] = useState(true)
+  const [topTracksLoading, setTopTracksLoading] = useState(true)
   const { backendApiCall } = useAxios()
   const { spotifySearch } = useSpotifySearch()
   const config = {
@@ -115,7 +122,6 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
       artistId: searchResults.id,
     },
   }
-  // need searchResults.id,name,images[0],artists,uri
   const getArtistAlbums = async (artistId) => {
     config.url = '/data/get-artist-albums'
     const { data } = await backendApiCall(config)
@@ -136,6 +142,7 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )
       })
     )
+    setAlbumLoading(false)
   }
   const getArtistTopTracks = async (artistId) => {
     config.url = '/data/get-artist-top-tracks'
@@ -145,6 +152,7 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         return <Track key={track.uri}>{track.name}</Track>
       })
     )
+    setTopTracksLoading(false)
   }
   const getPlaylists = async (name) => {
     const { playlists } = await spotifySearch(name, {
@@ -156,7 +164,13 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
     setPlaylists(
       playlists.items.map((playlist) => {
         return (
-          <Album>
+          <Album
+            key={playlist.id}
+            onClick={() => {
+              setPlaylistData(playlist)
+              toggleShowFullPlaylist(true)
+            }}
+          >
             <img
               src={playlist.images[0].url}
               alt={playlist.name + 'playlist art'}
@@ -166,6 +180,7 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )
       })
     )
+    setPlaylistLoading(false)
   }
 
   useEffect(() => {
@@ -182,6 +197,7 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
       <Artwork src={searchResults.images[0].url} />
       <Artist>{searchResults.name}</Artist>
       <Heading>top tracks</Heading>
+      <Loading loading={topTracksLoading} />
       <TrackList>
         {topTracks.slice(0, numOfTrackResults)}
         {numOfTrackResults < topTracks.length ? (
@@ -195,6 +211,7 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )}
       </TrackList>
       <Heading>albums</Heading>
+      <Loading loading={albumLoading} />
       {showFullAlbum ? (
         <ShowAlbum
           searchResults={albumData}
@@ -216,6 +233,15 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
         )}
       </AlbumList>
       <Heading>playlists</Heading>
+      <Loading loading={playlistLoading} />
+      {showFullPlaylist ? (
+        <ShowPlaylist
+          searchResults={playlistData}
+          toggleShowFullPlaylist={toggleShowFullPlaylist}
+        />
+      ) : (
+        ''
+      )}
       <AlbumList>
         {playlists.slice(0, numOfPlaylistResults)}
         {numOfPlaylistResults < playlists.length ? (
