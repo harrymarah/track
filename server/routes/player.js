@@ -11,7 +11,7 @@ router.put('/playsong', isAuth, async (req, res) => {
     const { uri } = req.body
     const { spotifyAccessToken, deviceId } = req.user
     const data = JSON.stringify({
-      uris: [uri],
+      uris: typeof uri === 'string' ? [uri] : [...uri],
       position_ms: 0,
     })
     const config = {

@@ -102,6 +102,7 @@ const SeeMoreAlbums = styled(SeeMoreTracks)`
 
 const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const [topTracks, setTopTracks] = useState([])
+  const [topTrackUris, setTopTrackUris] = useState([])
   const [albums, setAlbums] = useState([])
   const [playlists, setPlaylists] = useState([])
   const [numOfTrackResults, setNumOfTrackResults] = useState(5)
@@ -114,6 +115,7 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
   const [albumLoading, setAlbumLoading] = useState(true)
   const [playlistLoading, setPlaylistLoading] = useState(true)
   const [topTracksLoading, setTopTracksLoading] = useState(true)
+  const { playSong } = usePlaySong()
   const { backendApiCall } = useAxios()
   const { spotifySearch } = useSpotifySearch()
   const config = {
@@ -149,7 +151,16 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
     const { data } = await backendApiCall(config)
     setTopTracks(
       data.map((track) => {
-        return <Track key={track.uri}>{track.name}</Track>
+        return (
+          <Track key={track.uri} onClick={() => playSong(track.uri)}>
+            {track.name}
+          </Track>
+        )
+      })
+    )
+    setTopTrackUris(
+      data.map((track) => {
+        return track.uri
       })
     )
     setTopTracksLoading(false)
@@ -197,6 +208,11 @@ const ShowArtist = ({ toggleShowFullArtist, searchResults }) => {
       <Artwork src={searchResults.images[0].url} />
       <Artist>{searchResults.name}</Artist>
       <Heading>top tracks</Heading>
+      <PlayContentBtn
+        uri={topTrackUris}
+        type="song"
+        isDisabled={topTracksLoading}
+      />
       <Loading loading={topTracksLoading} />
       <TrackList>
         {topTracks.slice(0, numOfTrackResults)}
