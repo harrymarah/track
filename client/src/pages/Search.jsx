@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import {
-  SearchBar,
-  ResultsContainer,
-  SearchFilterButtons,
-} from '../features/search'
+import { SearchBar, ResultsContainer } from 'features/search'
 
 const Heading = styled.h1`
   font-size: 2rem;
   margin: 0;
 `
-const PageHeadWrapper = styled.div`
-  height: 140px;
-`
+const PageHeadWrapper = styled.div``
 
 const Search = () => {
   const [searchResults, updateSearchResults] = useState('')
@@ -22,7 +16,6 @@ const Search = () => {
       <PageHeadWrapper>
         <Heading>Search</Heading>
         <SearchBar updateSearchResults={updateSearchResults} />
-        <SearchFilterButtons />
       </PageHeadWrapper>
       <ResultsContainer searchResults={searchResults} />
     </>

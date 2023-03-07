@@ -26,25 +26,25 @@ router.get('/', isAuth, async (req, res) => {
     }
     if (track === 'true') {
       config.params.type = 'track'
-      config.params.limit = 10
+      config.params.limit = 50
       const { data } = await axios(config)
       results.tracks = data.tracks
     }
     if (artist === 'true') {
       config.params.type = 'artist'
-      config.params.limit = 1
+      config.params.limit = 10
       const { data } = await axios(config)
       results.artists = data.artists
     }
     if (album === 'true') {
       config.params.type = 'album'
-      config.params.limit = 5
+      config.params.limit = 50
       const { data } = await axios(config)
       results.albums = data.albums
     }
     if (playlist === 'true') {
       config.params.type = 'playlist'
-      config.params.limit = 10
+      config.params.limit = 50
       const { data } = await axios(config)
       results.playlists = data.playlists
     }

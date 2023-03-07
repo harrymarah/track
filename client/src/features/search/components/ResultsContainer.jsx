@@ -5,6 +5,8 @@ import ArtistResult from 'features/search/components/ArtistResult'
 import AlbumResult from 'features/search/components/AlbumResult'
 import PlaylistResult from 'features/search/components/PlaylistResult'
 import MoreResults from 'features/search/components/MoreResults'
+import SearchFilterButtons from 'features/search/components/SearchFilterButtons'
+import { useState, useEffect } from 'react'
 
 const Results = styled.ul`
   overflow-y: scroll;
@@ -30,72 +32,111 @@ const ResultsHeading = styled.div`
 `
 
 const ResultsContainer = ({ searchResults }) => {
+  const [noOfTracks, setNoOfTracks] = useState(10)
+  const [noOfArtists, setNoOfArtists] = useState(1)
+  const [noOfAlbums, setNoOfAlbums] = useState(5)
+  const [noOfPlaylists, setNoOfPlaylists] = useState(3)
+  const [showTracks, toggleShowTracks] = useState(true)
+  const [showArtists, toggleShowArtists] = useState(true)
+  const [showAlbums, toggleShowAlbums] = useState(true)
+  const [showPlaylists, toggleShowPlaylists] = useState(true)
   let allResults = {
     trackResults: [],
     artistResults: [],
     albumResults: [],
     playlistResults: [],
   }
+  useEffect(() => {
+    setNoOfArtists(1)
+    setNoOfTracks(10)
+    setNoOfAlbums(5)
+    setNoOfPlaylists(3)
+  }, [searchResults])
 
-  if (searchResults.tracks) {
+  if (searchResults.tracks && showTracks) {
     allResults.trackResults = searchResults.tracks.items.map((resultData) => {
       return <TrackResult key={resultData.id} searchResults={resultData} />
     })
-    allResults.trackResults.push(<MoreResults />)
   }
 
-  if (searchResults.artists) {
+  if (searchResults.artists && showArtists) {
     allResults.artistResults = searchResults.artists.items.map((resultData) => {
       return <ArtistResult key={resultData.id} searchResults={resultData} />
     })
-    allResults.artistResults.push(<MoreResults />)
   }
 
-  if (searchResults.albums) {
+  if (searchResults.albums && showAlbums) {
     allResults.albumResults = searchResults.albums.items.map((resultData) => {
       return <AlbumResult key={resultData.id} searchResults={resultData} />
     })
-    allResults.albumResults.push(<MoreResults />)
   }
 
-  if (searchResults.playlists) {
+  if (searchResults.playlists && showPlaylists) {
     allResults.playlistResults = searchResults.playlists.items.map(
       (resultData) => {
         return <PlaylistResult key={resultData.id} searchResults={resultData} />
       }
     )
-    allResults.playlistResults.push(<MoreResults />)
   }
 
   return (
     <Results>
+      <SearchFilterButtons
+        show={{ showTracks, showArtists, showAlbums, showPlaylists }}
+        toggle={{
+          toggleShowTracks,
+          toggleShowArtists,
+          toggleShowAlbums,
+          toggleShowPlaylists,
+        }}
+      />
       {allResults.artistResults.length ? (
-        <ResultsHeading>artists</ResultsHeading>
+        <>
+          <ResultsHeading>artists</ResultsHeading>
+          {allResults.artistResults.slice(0, noOfArtists)}
+          {allResults.artistResults.length > noOfArtists && (
+            <MoreResults onClick={() => setNoOfArtists(noOfArtists + 5)} />
+          )}
+        </>
       ) : (
         ''
       )}
-      {allResults.artistResults}
 
       {allResults.trackResults.length ? (
-        <ResultsHeading>tracks</ResultsHeading>
+        <>
+          <ResultsHeading>tracks</ResultsHeading>
+          {allResults.trackResults.slice(0, noOfTracks)}
+          {allResults.trackResults.length > noOfTracks && (
+            <MoreResults onClick={() => setNoOfTracks(noOfTracks + 10)} />
+          )}
+        </>
       ) : (
         ''
       )}
-      {allResults.trackResults}
 
       {allResults.albumResults.length ? (
-        <ResultsHeading>albums</ResultsHeading>
+        <>
+          <ResultsHeading>albums</ResultsHeading>
+          {allResults.albumResults.slice(0, noOfAlbums)}
+          {allResults.albumResults.length > noOfAlbums && (
+            <MoreResults onClick={() => setNoOfAlbums(noOfAlbums + 5)} />
+          )}
+        </>
       ) : (
         ''
       )}
-      {allResults.albumResults}
 
       {allResults.playlistResults.length ? (
-        <ResultsHeading>playlist</ResultsHeading>
+        <>
+          <ResultsHeading>playlist</ResultsHeading>
+          {allResults.playlistResults.slice(0, noOfPlaylists)}
+          {allResults.playlistResults.length > noOfPlaylists && (
+            <MoreResults onClick={() => setNoOfPlaylists(noOfPlaylists + 5)} />
+          )}
+        </>
       ) : (
         ''
       )}
-      {allResults.playlistResults}
     </Results>
   )
 }

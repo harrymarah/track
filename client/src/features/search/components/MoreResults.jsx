@@ -15,9 +15,9 @@ const More = styled.div`
   background-color: rgba(230, 241, 255, 0.2);
 `
 
-const MoreResults = () => {
+const MoreResults = ({ onClick }) => {
   return (
-    <More>
+    <More onClick={() => onClick()}>
       <i className="fa-solid fa-chevron-down"></i>
     </More>
   )
