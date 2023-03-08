@@ -1,15 +1,13 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 import getArtists from 'utils/getArtists'
-import useAuth from 'context/AuthContext'
 
 import useUpdatePlayerState from 'hooks/useUpdatePlayerState'
 import usePlaySong from 'hooks/usePlaySong'
-import useSetPlayback from 'hooks/useSetPlayback'
 
 const SingleResultContainer = styled.li`
   width: 95%;
-  height: 60px;
+  min-height: 60px;
   background-color: rgba(230, 241, 255, 0.04);
   margin: 5px auto;
   padding: 0.3rem 0.5rem;
@@ -48,9 +46,7 @@ const handleEvent = (e) => {
 const TrackResult = ({ searchResults }) => {
   const { playSong } = usePlaySong()
   const { updatePlayerState } = useUpdatePlayerState()
-  // const { setPlayback } = useSetPlayback()
   const handleClick = async (uri, token) => {
-    // await setPlayback(token)
     await playSong(uri, token)
     updatePlayerState()
   }

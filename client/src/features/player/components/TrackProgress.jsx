@@ -4,6 +4,7 @@ import { useDrag } from '@use-gesture/react'
 import { useSpring, animated } from '@react-spring/web'
 import usePlayer from 'context/PlayerContext'
 import msToTime from 'features/player/utils/msToTime'
+import mapRanges from 'features/player/utils/mapRanges'
 
 const TrackTimeBar = styled.div`
   background-color: var(--light);
@@ -21,7 +22,12 @@ const TrackTimeIndicator = styled.div`
   width: 9px;
   border-radius: 20px;
   transition: all 0.2s;
-  left: ${(props) => props.location}px;
+  left: ${({ location, max }) => Math.min(Math.max(location, 0), max)}px;
+  &:hover {
+    background-color: var(--bright);
+    height: 20px;
+    width: 20px;
+  }
 `
 const TrackTimeContainer = styled.div`
   width: 100%;
@@ -37,66 +43,72 @@ const TimeElapsed = styled.div`
 `
 
 const TrackProgress = () => {
-  const { webPlayer, songDuration, songPosition, isPaused, currentTrack } =
-    usePlayer()
+  const { webPlayer, songDuration, isPaused, currentTrack } = usePlayer()
   const [timerDisplay, setTimerDisplay] = useState(0)
   const [timeIndicatorPosition, setTimeIndicatorPosition] = useState(0)
-  const timerState = {
-    isPaused,
-    songDuration,
-    songPosition,
-    updateTime: performance.now(),
-  }
-
-  let interval = useRef()
+  const [songScrubbing, setSongScrubbing] = useState(false)
   const trackTimeBarRef = useRef()
   const trackTimeIndicatorRef = useRef()
 
   useEffect(() => {
-    setTimerDisplay(songPosition)
-    setTimeIndicatorPosition((songPosition / songDuration) * 97)
-  }, [songPosition, currentTrack])
-
-  useEffect(() => {
-    const getSongPosition = () => {
-      if (timerState.isPaused) {
-        return timerState.songPosition ? timerState.songPosition : 0
-      }
-      const position =
-        songPosition + (performance.now() - timerState.updateTime)
-      setTimerDisplay(
-        position > timerState.songDuration ? timerState.songDuration : position
+    const setSongPosition = async () => {
+      const res = await webPlayer.getCurrentState()
+      const position = res === null ? 0 : res.position
+      const indicatorPos = mapRanges(
+        0,
+        songDuration,
+        0,
+        trackTimeBarRef.current.getBoundingClientRect().width - 9,
+        position
       )
-      setTimeIndicatorPosition((position / timerState.songDuration) * 97)
+      setTimerDisplay(position)
+      setTimeIndicatorPosition(indicatorPos)
     }
-    if (!isPaused) {
-      interval.current = setInterval(() => {
-        getSongPosition(interval.current)
-      }, 1000)
-    } else {
-      clearInterval(interval.current)
-    }
-  }, [isPaused])
+    const interval = setInterval(() => {
+      if (currentTrack && !isPaused && !songScrubbing) {
+        setSongPosition()
+      } else clearInterval(interval)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [isPaused, currentTrack, songDuration, webPlayer, songScrubbing])
 
   const [{ x }, api] = useSpring(() => ({ x: 0 }))
   const bind = useDrag(
-    ({ offset: [x], active, offset, last }) => {
-      api.start({ x, immediate: active })
+    ({ movement: [mx], active, down, last }) => {
+      api.start({ x: down ? mx : 0, immediate: active })
       if (active) {
         trackTimeIndicatorRef.current.style.backgroundColor = 'var(--bright)'
         trackTimeIndicatorRef.current.style.height = '20px'
         trackTimeIndicatorRef.current.style.width = '20px'
+        setSongScrubbing(true)
+        const timeBarPos = trackTimeBarRef.current.getBoundingClientRect()
+        const pointerPos = trackTimeIndicatorRef.current.getBoundingClientRect()
+        const newPos = mapRanges(
+          parseFloat(timeBarPos.left),
+          parseFloat(timeBarPos.left) + parseFloat(timeBarPos.width),
+          0,
+          songDuration,
+          pointerPos.left
+        )
+        setTimerDisplay(newPos)
       } else {
         trackTimeIndicatorRef.current.style.backgroundColor = 'var(--black)'
         trackTimeIndicatorRef.current.style.height = '9px'
         trackTimeIndicatorRef.current.style.width = '9px'
+        setSongScrubbing(false)
       }
       if (last) {
-        const { left, right } = trackTimeBarRef.current.getBoundingClientRect()
-        const newPosition = (songDuration / (right - left)) * (offset[0] - left)
-        console.log(msToTime(newPosition))
-        console.log(msToTime(songDuration))
-        webPlayer.seek(newPosition).then(() => webPlayer.resume())
+        const timeBarPos = trackTimeBarRef.current.getBoundingClientRect()
+        const pointerPos = trackTimeIndicatorRef.current.getBoundingClientRect()
+        const newPos = mapRanges(
+          parseFloat(timeBarPos.left),
+          parseFloat(timeBarPos.left) + parseFloat(timeBarPos.width),
+          0,
+          songDuration,
+          pointerPos.left
+        )
+        webPlayer.seek(newPos).then(() => webPlayer.resume())
+        setSongScrubbing(false)
       }
     },
     {
@@ -106,7 +118,7 @@ const TrackProgress = () => {
 
   return (
     <TrackTimeContainer>
-      <TimeElapsed>{msToTime(timerDisplay)}</TimeElapsed>
+      <TimeElapsed>{msToTime(Math.max(timerDisplay, 0))}</TimeElapsed>
       <TrackTimeBar ref={trackTimeBarRef}>
         <TrackTimeIndicator
           as={animated.div}
@@ -114,9 +126,12 @@ const TrackProgress = () => {
           style={{ x }}
           ref={trackTimeIndicatorRef}
           location={timeIndicatorPosition}
+          max={trackTimeBarRef.current.getBoundingClientRect().width - 9}
         />
       </TrackTimeBar>
-      <TimeElapsed>-{msToTime(songDuration - timerDisplay)}</TimeElapsed>
+      <TimeElapsed>
+        -{msToTime(Math.max(songDuration - timerDisplay, 0))}
+      </TimeElapsed>
     </TrackTimeContainer>
   )
 }
