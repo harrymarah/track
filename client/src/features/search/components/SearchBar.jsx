@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-// import spotifySearch from 'services/spotifySearch'
-import useAuth from 'context/AuthContext'
 import useSpotifySearch from 'hooks/useSpotifySearch'
 
 const Input = styled.input`
   padding: 0.5em;
-  margin: 0.5em auto;
+  margin: 1rem auto 0;
   align-self: flex-start;
   font-size: 1.2rem;
   color: var(--black);

@@ -109,6 +109,50 @@ router.get('/get-artist-albums', async (req, res) => {
   }
 })
 
-router.get('get-artist-playlists', (req, res) => {})
+router.get('/get-users-playlists', async (req, res) => {
+  const { spotifyAccessToken } = req.user
+  const config = {
+    method: 'get',
+    url: `https://api.spotify.com/v1/me/playlists`,
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    },
+    params: {
+      limit: 50,
+    },
+  }
+  const { data } = await axios(config)
+  const playlists = data.items.map((playlist) => {
+    return {
+      name: playlist.name,
+      images: playlist.images,
+      owner: playlist.owner,
+      tracks: playlist.tracks,
+      uri: playlist.uri,
+      id: playlist.id,
+    }
+  })
+  res.send(playlists)
+})
+
+router.get('/get-users-tracks', async (req, res) => {
+  const spotifyAccessToken =
+    'BQA5tE4z9F-bBqgl3BKVEVyx9qqkkbRLx-TiXndhHu0aAnWeNEpLiZ-pUIBjRcQNfPaOlj5M3f3W9FopmmcBmMIMjJpxmlgZOrDQU0SzAiBYYeUoykaOg1FCJ45yRP6FAyZ4dgRrAPpZ_6Ev63Et6aT5WvKNReRG7pgxD-MU9BuwNmrrQzeNfyonDkBoAbeeq2OOZxZ8hDb9IbMMkvkMmZ5i4RW-VwU00cwmlKz9y8z7hbgXq9F3nhFUhTprbM1cAfbsrX4HE7QJ1IrCdMulfNQbw52hjVB4t5BjvxWFMDWHNt0'
+  const config = {
+    method: 'get',
+    url: `https://api.spotify.com/v1/me/tracks`,
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    },
+    params: {
+      limit: 50,
+    },
+  }
+  const { data } = await axios(config)
+  const names = data.items.map(({ track }) => {
+    return track.name
+  })
+  res.send(names)
+})
 
 module.exports = router

@@ -1,10 +1,13 @@
 import React from 'react'
+import { PageHead } from 'layouts'
+import { PlaylistList } from 'features/explore'
 
 const Playlists = () => {
   return (
-    <div>
-      <h1>Playlists</h1>
-    </div>
+    <>
+      <PageHead heading={'Playlists'} />
+      <PlaylistList></PlaylistList>
+    </>
   )
 }
 

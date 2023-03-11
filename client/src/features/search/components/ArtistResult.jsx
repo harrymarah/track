@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import SeeMoreChevron from 'features/search/components/SeeMoreChevron'
-import ShowArtist from './ShowArtist'
+import { SeeMoreChevron } from 'features/search'
+import { ShowArtist } from 'features/explore'
 
 const SingleResultContainer = styled.li`
   width: 95%;

@@ -1,10 +1,11 @@
 import React from 'react'
+import { PageHead } from 'layouts'
 
 const Home = () => {
   return (
-    <div>
-      <h1>Home page</h1>
-    </div>
+    <>
+      <PageHead heading={'Home'} />
+    </>
   )
 }
 

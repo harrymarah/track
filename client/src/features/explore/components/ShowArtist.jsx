@@ -3,9 +3,8 @@ import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
 import usePlaySong from 'hooks/usePlaySong'
 import useSpotifySearch from 'hooks/useSpotifySearch'
-import PlayContentBtn from 'features/search/components/PlayContentBtn'
-import ShowAlbum from 'features/search/components/ShowAlbum'
-import ShowPlaylist from 'features/search/components/ShowPlaylist'
+import { PlayContentBtn } from 'features/search'
+import { ShowAlbum, ShowPlaylist } from 'features/explore'
 import Loading from 'components/Loading'
 
 const Container = styled.div`

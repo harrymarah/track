@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import SeeMoreChevron from 'features/search/components/SeeMoreChevron'
 import { useState } from 'react'
-import ShowPlaylist from 'features/search/components/ShowPlaylist'
+import { ShowPlaylist } from 'features/explore'
 
 const SingleResultContainer = styled.li`
   position: relative;
@@ -51,7 +51,7 @@ const PlaylistResult = ({ searchResults }) => {
         ''
       )}
       <PlaylistResultsContainer onClick={() => toggleShowFullPlaylist(true)}>
-        <Artwork src={searchResults.images[0].url} />
+        <Artwork src={searchResults?.images[0]?.url || ''} />
         <SingleResultContainer>
           <PlaylistName>{searchResults.name}</PlaylistName>
           <TrackCount>{searchResults.tracks.total} tracks</TrackCount>

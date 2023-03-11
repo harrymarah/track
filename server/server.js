@@ -25,6 +25,9 @@ app.use(
     saveUninitialized: true,
     secret: 'bla bla bla',
     store: MongoStore.create({ mongoUrl: db.url }),
+    cookie: {
+      maxAge: 6 * 60 * 60 * 1000,
+    },
   })
 )
 

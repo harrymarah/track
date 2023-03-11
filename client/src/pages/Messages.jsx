@@ -1,11 +1,11 @@
 import React from 'react'
+import { PageHead } from 'layouts'
 
 const Messages = () => {
   return (
-    <div>
-      <h1>Messages</h1>
-      <i className="fa-solid fa-pen-to-square"></i>
-    </div>
+    <>
+      <PageHead heading={'Messages'} />
+    </>
   )
 }
 

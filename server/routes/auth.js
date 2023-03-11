@@ -19,6 +19,12 @@ router.get(
       'user-modify-playback-state',
       'user-read-currently-playing',
       'streaming',
+      'user-library-read',
+      'user-top-read',
+      'user-library-modify',
+      'playlist-read-private',
+      'playlist-modify-private',
+      'playlist-modify-public',
     ],
   })
 )
@@ -54,7 +60,7 @@ router.get(
       httpOnly: false,
       sameSite: 'None',
       secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 6 * 60 * 60 * 1000,
     })
     res.redirect(`${client.url}`)
   }

@@ -67,13 +67,4 @@ router.post('/device-id', isAuth, async (req, res) => {
   }
 })
 
-router.get('/get-state', (req, res) => {})
-router.put('/transfer-playback', (req, res) => {})
-router.get('/currently-playing', (req, res) => {})
-router.get('/pause-song', (req, res) => {})
-router.get('/play-song', (req, res) => {})
-router.post('/next-song', (req, res) => {})
-router.post('/prev-song', (req, res) => {})
-router.put('/song-position', (req, res) => {})
-
 module.exports = router

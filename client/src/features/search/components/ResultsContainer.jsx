@@ -1,12 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import TrackResult from 'features/search/components/TrackResult'
-import ArtistResult from 'features/search/components/ArtistResult'
-import AlbumResult from 'features/search/components/AlbumResult'
-import PlaylistResult from 'features/search/components/PlaylistResult'
-import MoreResults from 'features/search/components/MoreResults'
-import SearchFilterButtons from 'features/search/components/SearchFilterButtons'
 import { useState, useEffect } from 'react'
+import {
+  TrackResult,
+  ArtistResult,
+  AlbumResult,
+  PlaylistResult,
+  MoreResults,
+  SearchFilterButtons,
+} from 'features/search'
 
 const Results = styled.ul`
   overflow-y: scroll;

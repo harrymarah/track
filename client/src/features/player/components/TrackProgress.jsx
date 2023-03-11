@@ -51,6 +51,7 @@ const TrackProgress = () => {
   const trackTimeIndicatorRef = useRef()
 
   useEffect(() => {
+    console.log(trackTimeBarRef.current)
     const setSongPosition = async () => {
       const res = await webPlayer.getCurrentState()
       const position = res === null ? 0 : res.position
@@ -126,7 +127,11 @@ const TrackProgress = () => {
           style={{ x }}
           ref={trackTimeIndicatorRef}
           location={timeIndicatorPosition}
-          max={trackTimeBarRef.current.getBoundingClientRect().width - 9}
+          max={
+            trackTimeBarRef
+              ? trackTimeBarRef.current?.getBoundingClientRect()?.width - 9
+              : 0
+          }
         />
       </TrackTimeBar>
       <TimeElapsed>

@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
   return (
     <>
       <Wrapper>{children}</Wrapper>
-      <MusicControl />
+      {/* <MusicControl /> */}
       <BottomNavbar />
     </>
   )

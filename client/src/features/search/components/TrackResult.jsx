@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components'
 import getArtists from 'utils/getArtists'
-
 import useUpdatePlayerState from 'hooks/useUpdatePlayerState'
 import usePlaySong from 'hooks/usePlaySong'
 

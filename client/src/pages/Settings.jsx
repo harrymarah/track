@@ -1,14 +1,15 @@
 import React from 'react'
 import LogoutBtn from 'components/LogoutBtn'
 import ApiTestBtn from 'components/ApiTestBtn'
+import { PageHead } from 'layouts'
 
 const Settings = () => {
   return (
-    <div>
-      <h1>Settings</h1>
+    <>
+      <PageHead heading={'Settings'} />
       <LogoutBtn />
       <ApiTestBtn />
-    </div>
+    </>
   )
 }
 

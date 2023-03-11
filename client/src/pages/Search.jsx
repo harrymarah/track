@@ -1,22 +1,14 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
-
 import { SearchBar, ResultsContainer } from 'features/search'
-
-const Heading = styled.h1`
-  font-size: 2rem;
-  margin: 0;
-`
-const PageHeadWrapper = styled.div``
+import { PageHead } from 'layouts'
 
 const Search = () => {
   const [searchResults, updateSearchResults] = useState('')
   return (
     <>
-      <PageHeadWrapper>
-        <Heading>Search</Heading>
+      <PageHead heading={'Search'}>
         <SearchBar updateSearchResults={updateSearchResults} />
-      </PageHeadWrapper>
+      </PageHead>
       <ResultsContainer searchResults={searchResults} />
     </>
   )
