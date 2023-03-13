@@ -56,13 +56,19 @@ router.get(
     failureRedirect: `${client.url}/login`,
   }),
   (req, res) => {
-    res.cookie('isAuthenticated', req.isAuthenticated(), {
-      httpOnly: false,
-      sameSite: 'None',
-      secure: true,
-      maxAge: 6 * 60 * 60 * 1000,
-    })
-    res.redirect(`${client.url}`)
+    try {
+      res.cookie('isAuthenticated', req.isAuthenticated(), {
+        httpOnly: false,
+        sameSite: 'None',
+        secure: true,
+        maxAge: 6 * 60 * 60 * 1000,
+      })
+      res.redirect(`${client.url}`)
+    } catch (err) {
+      console.log(err)
+      res.clearCookie('isAuthenticated')
+      res.redirect(`${client.url}/login`)
+    }
   }
 )
 
