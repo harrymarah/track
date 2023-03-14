@@ -11,11 +11,15 @@ const Container = styled.div`
   background-color: var(--dark-blue);
   z-index: 20;
   overflow: scroll;
-  padding-bottom: 150px;
+  padding-bottom: calc(240px - 160px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 const MessageArea = styled.ul`
   width: 90%;
-  margin: auto;
+  margin: 0 auto;
+  // flex: 1;
 `
 const MsgToUser = styled.li`
   background-color: rgba(230, 241, 255, 0.1);
