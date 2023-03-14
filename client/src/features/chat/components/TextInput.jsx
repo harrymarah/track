@@ -1,8 +1,13 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
+import io from 'socket.io-client'
+const socket = io.connect('http://localhost:8080')
+console.log(socket)
 
 const Container = styled.form`
+  width: 90%;
+  margin: 0 auto;
   display: flex;
   padding: 0.3rem;
   justify-content: space-between;
@@ -47,8 +52,13 @@ const TextInput = () => {
     }, [textAreaRef, value])
   }
   useAutosizeTextArea(textAreaRef.current, message)
+  const sendMessage = (e, message) => {
+    e.preventDefault()
+    socket.emit('send_message', message)
+    setMessage('')
+  }
   return (
-    <Container>
+    <Container onSubmit={(e) => sendMessage(e, message)}>
       <MessageInput
         type="text"
         rows={1}

@@ -6,6 +6,7 @@ const https = require('https')
 const http = require('http')
 const fs = require('fs')
 const connectDB = require('./config/db')
+const initChatSocket = require('./config/chat')
 const passport = require('passport')
 require('./config/passport')(passport)
 const session = require('express-session')
@@ -18,6 +19,8 @@ const data = require('./routes/data')
 const MongoStore = require('connect-mongo')
 
 connectDB()
+
+const appServer = http.createServer(app)
 
 app.use(
   session({
@@ -36,6 +39,8 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
 
+initChatSocket(appServer)
+
 app.use('/auth', auth)
 app.use('/player', player)
 app.use('/search', search)
@@ -51,7 +56,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: err.message })
 })
 
-app.listen(parseInt(server.port, server.host), () => {
+appServer.listen(parseInt(server.port, server.host), () => {
   console.log(
     `Server connection successful, listening at ${server.host}:${server.port}`
   )
