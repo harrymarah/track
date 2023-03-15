@@ -7,10 +7,22 @@ const UserSchema = new Schema({
   email: String,
   spotifyAccessToken: String,
   spotifyRefreshToken: String,
-  clientAccessToken: String,
-  clientRefreshToken: String,
-  // accessTokenExpiry: Date,
   deviceId: String,
+  friends: [
+    {
+      friend: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      isAccepted: Boolean,
+    },
+  ],
+  chats: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Chat',
+    },
+  ],
 })
 
 module.exports = mongoose.model('User', UserSchema)

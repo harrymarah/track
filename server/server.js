@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const https = require('https')
-const http = require('http')
+const {createServer} = require('http')
 const fs = require('fs')
 const connectDB = require('./config/db')
 const initChatSocket = require('./config/chat')
@@ -20,7 +20,7 @@ const MongoStore = require('connect-mongo')
 
 connectDB()
 
-const appServer = http.createServer(app)
+const httpServer = createServer(app)
 
 app.use(
   session({
@@ -39,7 +39,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
 
-initChatSocket(appServer)
+initChatSocket(httpServer)
 
 app.use('/auth', auth)
 app.use('/player', player)
@@ -56,7 +56,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: err.message })
 })
 
-appServer.listen(parseInt(server.port, server.host), () => {
+httpServer.listen(parseInt(server.port, server.host), () => {
   console.log(
     `Server connection successful, listening at ${server.host}:${server.port}`
   )

@@ -73,13 +73,11 @@ router.get(
 )
 
 router.post('/logout', async (req, res, next) => {
-  const user = req.user
+  const { user } = req
   if (user) {
     user.spotifyAccessToken = null
     user.spotifyRefreshToken = null
     user.accessTokenExpiresIn = null
-    user.clientAccessToken = null
-    user.clientRefreshToken = null
     user.deviceId = null
     user.save()
   }

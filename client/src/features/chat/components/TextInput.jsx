@@ -3,14 +3,16 @@ import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import io from 'socket.io-client'
 const socket = io.connect('http://localhost:8080')
-console.log(socket)
 
 const Container = styled.form`
   width: 90%;
-  margin: 0 auto;
   display: flex;
   padding: 0.3rem;
   justify-content: space-between;
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
 `
 const MessageInput = styled.textarea`
   border: none;
@@ -37,7 +39,7 @@ const SendBtn = styled.button`
   align-self: flex-end;
 `
 
-const TextInput = () => {
+const TextInput = ({ appendMessage }) => {
   const [message, setMessage] = useState('')
   const textAreaRef = useRef(null)
   const useAutosizeTextArea = (textAreaRef, value) => {
@@ -55,6 +57,7 @@ const TextInput = () => {
   const sendMessage = (e, message) => {
     e.preventDefault()
     socket.emit('send_message', message)
+    appendMessage(message)
     setMessage('')
   }
   return (
