@@ -57,6 +57,8 @@ const seedData = async () => {
     harrymarah[0].chats.push(chat)
     users[i].chats.push(chat)
     await chat.save()
+    await harrymarah[0].save()
+    await users[i].save()
   }
 }
 

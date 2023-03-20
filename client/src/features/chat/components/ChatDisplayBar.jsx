@@ -30,8 +30,12 @@ const ChatDisplayBar = ({ name, message }) => {
   const [showChat, toggleShowChat] = useState(false)
   return (
     <>
-      <Chat />
-      <Container>
+      {showChat ? (
+        <Chat name={name} message={message} toggleShowChat={toggleShowChat} />
+      ) : (
+        ''
+      )}
+      <Container onClick={() => toggleShowChat(true)}>
         <Name>{name}</Name>
         <Message>{message}</Message>
       </Container>

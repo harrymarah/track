@@ -1,36 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PageHead } from 'layouts'
 import { AllMessagesContainer, ChatDisplayBar } from 'features/chat'
+import useAxios from 'hooks/useAxios'
 
 const Messages = () => {
+  const [messages, setMessages] = useState([])
+  const { backendApiCall } = useAxios()
+  const populateChats = async () => {
+    const config = {
+      url: '/chat/get-chats',
+      method: 'get',
+    }
+    const { data } = await backendApiCall(config)
+    setMessages(
+      data.map((msg) => {
+        return <ChatDisplayBar name={msg.name} message={msg.newestMessage} />
+      })
+    )
+  }
+  useEffect(() => {
+    populateChats()
+  }, [])
   return (
     <>
       <PageHead heading={'Messages'} />
       <AllMessagesContainer>
-        <ChatDisplayBar
-          name={'harrymarah'}
-          message={
-            'hey there how are you doing today? I hope you are doing well babes'
-          }
-        />
-        {/* <ChatDisplayBar
-          name={'sophiedonnellan'}
-          message={
-            'please can you buy me a snickers? I want to bring it on holiday with me'
-          }
-        />
-        <ChatDisplayBar
-          name={'jakethomas'}
-          message={'dont worry, I wont be driving'}
-        />
-        <ChatDisplayBar
-          name={'juliemarah'}
-          message={'get milk from the shop please'}
-        />
-        <ChatDisplayBar
-          name={'company'}
-          message={'we would love to offer you a job'}
-        /> */}
+        {messages.length > 0 ? messages : ''}
       </AllMessagesContainer>
     </>
   )
