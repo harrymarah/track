@@ -14,7 +14,13 @@ const Messages = () => {
     const { data } = await backendApiCall(config)
     setMessages(
       data.map((msg) => {
-        return <ChatDisplayBar name={msg.name} message={msg.newestMessage} />
+        return (
+          <ChatDisplayBar
+            name={msg.name}
+            message={msg.newestMessage}
+            chatId={msg.id}
+          />
+        )
       })
     )
   }

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { TextInput } from 'features/chat'
-import { useState } from 'react'
+import useAxios from 'hooks/useAxios'
 
 const Container = styled.div`
   position: fixed;
@@ -16,9 +16,34 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `
+const ChatName = styled.div`
+  font-size: 1.3rem;
+  font-weight: 400;
+  text-align: right;
+  white-space: nowrap;
+`
+const TopNav = styled.div`
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(3px);
+  top: 20px;
+  left: 50%;
+  width: auto;
+  transform: translateX(-50%);
+  display: flex;
+  padding: 10px;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: space-between;
+  i {
+    font-size: 2rem;
+    margin-right: 20px;
+  }
+`
 const MessageArea = styled.ul`
   width: 90%;
   margin: 0 auto;
+  y-overflow: scroll;
 `
 const MsgToUser = styled.li`
   background-color: rgba(230, 241, 255, 0.1);
@@ -37,48 +62,39 @@ const Anchor = styled.div`
   height: 10px;
 `
 
-const Chat = () => {
-  const initialState = [
-    {
-      message: 'This is a message that is being displayed',
-      fromUser: true,
-    },
-    {
-      message:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor corporis delectus illum nostrum minima dolorem architecto ipsa quo nihil sit.',
-      fromUser: false,
-    },
-    {
-      message:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Neque saepe iste dolorem magnam tenetur unde, nesciunt quae id nemo debitis! Aliquid quia adipisci reprehenderit atque impedit iure nemo explicabo autem!',
-      fromUser: true,
-    },
-    {
-      message:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Neque saepe iste dolorem magnam tenetur unde, nesciunt quae id nemo debitis! Aliquid quia adipisci reprehenderit atque impedit iure nemo explicabo autem!',
-      fromUser: false,
-    },
-    {
-      message:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Neque saepe iste dolorem magnam tenetur unde, nesciunt quae id nemo debitis! Aliquid quia adipisci reprehenderit atque impedit iure nemo explicabo autem!',
-      fromUser: true,
-    },
-    {
-      message:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Neque saepe iste dolorem magnam tenetur unde, nesciunt quae id nemo debitis! Aliquid quia adipisci reprehenderit atque impedit iure nemo explicabo autem!',
-      fromUser: false,
-    },
-  ]
-  const [messages, setMessages] = useState(initialState)
-  
+const Chat = ({ name, chatId, toggleShowChat }) => {
+  const [messages, setMessages] = useState([])
+  const { backendApiCall } = useAxios()
+  const getMessages = async (id) => {
+    const config = {
+      url: '/chat/get-full-chat',
+      method: 'get',
+      params: {
+        chatId: chatId,
+      },
+    }
+    const { data } = await backendApiCall(config)
+    setMessages(data)
+  }
+  useEffect(() => {
+    getMessages(chatId)
+  }, [])
+
   const appendMessage = (msg) => {
     setMessages([...messages, { message: msg, fromUser: true }])
   }
   return (
     <Container>
+      <TopNav>
+        <i
+          class="fa-solid fa-circle-chevron-left"
+          onClick={() => toggleShowChat(false)}
+        ></i>
+        <ChatName>{name}</ChatName>
+      </TopNav>
       <MessageArea>
         {messages.map((msg) => {
-          return msg.fromUser ? (
+          return msg.sendByUser ? (
             <MsgFromUser>{msg.message}</MsgFromUser>
           ) : (
             <MsgToUser>{msg.message}</MsgToUser>

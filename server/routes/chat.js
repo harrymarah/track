@@ -20,8 +20,21 @@ router.get('/get-chats', async (req, res) => {
       newestMessage: chat.messages[0].message,
     }
   })
-  console.log(chats)
   res.json(chats)
+})
+
+router.get('/get-full-chat', async (req, res) => {
+  const { _id } = req.user
+  const { chatId } = req.query
+  const user = await User.findById(_id)
+  const fullChat = await Chat.findById(chatId)
+  const messages = fullChat.messages.map((msg) => {
+    return {
+      message: msg.message,
+      sendByUser: msg.sender.toString() == user._id.toString(),
+    }
+  })
+  res.json(messages)
 })
 
 module.exports = router

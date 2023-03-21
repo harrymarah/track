@@ -26,12 +26,12 @@ const Message = styled.div`
   line-height: 1.2rem;
 `
 
-const ChatDisplayBar = ({ name, message }) => {
+const ChatDisplayBar = ({ name, message, chatId }) => {
   const [showChat, toggleShowChat] = useState(false)
   return (
     <>
       {showChat ? (
-        <Chat name={name} message={message} toggleShowChat={toggleShowChat} />
+        <Chat name={name} chatId={chatId} toggleShowChat={toggleShowChat} />
       ) : (
         ''
       )}
