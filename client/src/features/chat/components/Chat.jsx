@@ -67,7 +67,7 @@ const Chat = ({ name, chatId, toggleShowChat }) => {
   const { backendApiCall } = useAxios()
   const getMessages = async (id) => {
     const config = {
-      url: '/chat/get-full-chat',
+      url: '/chat/full-chat',
       method: 'get',
       params: {
         chatId: chatId,
@@ -78,10 +78,10 @@ const Chat = ({ name, chatId, toggleShowChat }) => {
   }
   useEffect(() => {
     getMessages(chatId)
-  }, [])
+  }, [messages])
 
   const appendMessage = (msg) => {
-    setMessages([...messages, { message: msg, fromUser: true }])
+    setMessages([...messages, { message: msg, sendByUser: true }])
   }
   return (
     <Container>
@@ -102,7 +102,7 @@ const Chat = ({ name, chatId, toggleShowChat }) => {
         })}
         <Anchor />
       </MessageArea>
-      <TextInput appendMessage={appendMessage} />
+      <TextInput appendMessage={appendMessage} chatId={chatId} />
     </Container>
   )
 }

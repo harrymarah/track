@@ -8,7 +8,7 @@ const Messages = () => {
   const { backendApiCall } = useAxios()
   const populateChats = async () => {
     const config = {
-      url: '/chat/get-chats',
+      url: '/chat',
       method: 'get',
     }
     const { data } = await backendApiCall(config)

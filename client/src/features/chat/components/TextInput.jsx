@@ -1,7 +1,7 @@
-import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import io from 'socket.io-client'
+import useAxios from 'hooks/useAxios'
 const socket = io.connect('http://localhost:8080')
 
 const Container = styled.form`
@@ -39,9 +39,10 @@ const SendBtn = styled.button`
   align-self: flex-end;
 `
 
-const TextInput = ({ appendMessage }) => {
+const TextInput = ({ appendMessage, chatId }) => {
   const [message, setMessage] = useState('')
   const textAreaRef = useRef(null)
+  const { backendApiCall } = useAxios()
   const useAutosizeTextArea = (textAreaRef, value) => {
     useEffect(() => {
       if (textAreaRef) {
@@ -54,11 +55,22 @@ const TextInput = ({ appendMessage }) => {
     }, [textAreaRef, value])
   }
   useAutosizeTextArea(textAreaRef.current, message)
-  const sendMessage = (e, message) => {
+  const sendMessage = async (e, message) => {
+    const config = {
+      url: '/chat',
+      method: 'post',
+      params: {
+        chatId: chatId,
+      },
+      data: {
+        message: message,
+      },
+    }
     e.preventDefault()
     socket.emit('send_message', message)
-    appendMessage(message)
+    // appendMessage(message)
     setMessage('')
+    await backendApiCall(config)
   }
   return (
     <Container onSubmit={(e) => sendMessage(e, message)}>

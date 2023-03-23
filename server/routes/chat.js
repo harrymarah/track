@@ -4,7 +4,7 @@ const axios = require('axios')
 const User = require('../models/user')
 const Chat = require('../models/chat')
 
-router.get('/get-chats', async (req, res) => {
+router.get('/', async (req, res) => {
   const { _id } = req.user
   const user = await User.findById(_id).populate({
     path: 'chats',
@@ -23,7 +23,7 @@ router.get('/get-chats', async (req, res) => {
   res.json(chats)
 })
 
-router.get('/get-full-chat', async (req, res) => {
+router.get('/full-chat', async (req, res) => {
   const { _id } = req.user
   const { chatId } = req.query
   const user = await User.findById(_id)
@@ -35,6 +35,19 @@ router.get('/get-full-chat', async (req, res) => {
     }
   })
   res.json(messages)
+})
+
+router.post('/', async (req, res) => {
+  const { _id } = req.user
+  const { chatId } = req.query
+  const { message } = req.body
+  const chat = await Chat.findById(chatId)
+  const chatMsg = {
+    message: message,
+    sender: _id,
+  }
+  chat.messages.push(chatMsg)
+  await chat.save()
 })
 
 module.exports = router
