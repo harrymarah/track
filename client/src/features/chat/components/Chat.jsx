@@ -78,7 +78,7 @@ const Chat = ({ name, chatId, toggleShowChat }) => {
   }
   useEffect(() => {
     getMessages(chatId)
-  }, [messages])
+  }, [chatId])
 
   const appendMessage = (msg) => {
     setMessages([...messages, { message: msg, sendByUser: true }])

@@ -67,8 +67,9 @@ const TextInput = ({ appendMessage, chatId }) => {
       },
     }
     e.preventDefault()
+    console.log(socket)
     socket.emit('send_message', message)
-    // appendMessage(message)
+    appendMessage(message)
     setMessage('')
     await backendApiCall(config)
   }

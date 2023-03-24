@@ -16,7 +16,7 @@ const player = require('./routes/player')
 const search = require('./routes/search')
 const data = require('./routes/data')
 const chat = require('./routes/chat')
-const sessionMiddleware = require('./middleware')
+const { sessionMiddleware } = require('./middleware')
 
 connectDB()
 

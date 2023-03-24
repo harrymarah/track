@@ -12,13 +12,15 @@ module.exports = initChatSocket = (server, passport) => {
   io.use(wrap(passport.initialize()))
   io.use(wrap(passport.session()))
   io.use((socket, next) => {
-    if (socket.request.user) {
+    if (socket.request.session && socket.request.session.user) {
+      socket.user = { ...socket.request.session.user }
       next()
     } else {
       next(new Error('unauthorized'))
     }
   })
   io.on('connection', (socket) => {
+    console.log(socket.request.session)
     console.log(`User connected: ${socket.id}`)
 
     socket.on('send_message', (data) => {
