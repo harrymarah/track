@@ -6,7 +6,7 @@ const qs = require('qs')
 const User = require('../models/user')
 const { findOneAndUpdate } = require('../models/user')
 const { spotify, client, auth } = require('../config/config')
-const { isAuth } = require('../middleware/isAuth')
+const { isAuth } = require('../middleware')
 
 router.get(
   '/spotify',

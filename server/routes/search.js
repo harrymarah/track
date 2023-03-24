@@ -4,8 +4,7 @@ const axios = require('axios')
 const User = require('../models/user')
 const { findOneAndUpdate } = require('../models/user')
 const { spotify, client } = require('../config/config')
-const authenticateToken = require('../middleware/authenticateToken')
-const { isAuth } = require('../middleware/isAuth')
+const { isAuth } = require('../middleware')
 
 router.get('/', isAuth, async (req, res) => {
   try {

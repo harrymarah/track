@@ -9,38 +9,27 @@ const connectDB = require('./config/db')
 const initChatSocket = require('./config/chat')
 const passport = require('passport')
 require('./config/passport')(passport)
-const session = require('express-session')
 const cors = require('cors')
-const { server, client, db } = require('./config/config')
+const { server, client } = require('./config/config')
 const auth = require('./routes/auth')
 const player = require('./routes/player')
 const search = require('./routes/search')
 const data = require('./routes/data')
 const chat = require('./routes/chat')
-const MongoStore = require('connect-mongo')
+const sessionMiddleware = require('./middleware')
 
 connectDB()
 
 const httpServer = createServer(app)
 
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: true,
-    secret: 'bla bla bla',
-    store: MongoStore.create({ mongoUrl: db.url }),
-    cookie: {
-      maxAge: 6 * 60 * 60 * 1000,
-    },
-  })
-)
+app.use(sessionMiddleware)
 
 app.use(cors())
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
 
-initChatSocket(httpServer)
+initChatSocket(httpServer, passport)
 
 app.use('/auth', auth)
 app.use('/player', player)
