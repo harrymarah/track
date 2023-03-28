@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { CookiesProvider } from 'react-cookie'
 import { AuthProvider } from 'context/AuthContext'
 import { PlayerProvider } from 'context/PlayerContext'
+import { ChatProvider } from 'context/ChatContext'
 import ErrorProvider from 'context/ErrorContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
@@ -17,11 +18,13 @@ root.render(
       <ErrorProvider>
         <AuthProvider>
           <PlayerProvider>
-            <CookiesProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </CookiesProvider>
+            <ChatProvider>
+              <CookiesProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </CookiesProvider>
+            </ChatProvider>
           </PlayerProvider>
         </AuthProvider>
       </ErrorProvider>

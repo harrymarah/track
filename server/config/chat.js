@@ -6,6 +6,7 @@ module.exports = initChatSocket = (server, passport) => {
   const io = new Server(server, {
     cors: {
       origin: client.url,
+      credentials: true,
     },
   })
   io.use(wrap(sessionMiddleware))

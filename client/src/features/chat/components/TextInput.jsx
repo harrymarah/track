@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import io from 'socket.io-client'
 import useAxios from 'hooks/useAxios'
-const socket = io.connect('http://localhost:8080')
 
 const Container = styled.form`
   width: 90%;
@@ -67,8 +65,8 @@ const TextInput = ({ appendMessage, chatId }) => {
       },
     }
     e.preventDefault()
-    console.log(socket)
-    socket.emit('send_message', message)
+    // console.log(socket)
+    // socket.emit('send_message', message)
     appendMessage(message)
     setMessage('')
     await backendApiCall(config)

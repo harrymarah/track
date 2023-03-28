@@ -1,0 +1,42 @@
+import { createContext, useReducer, useContext } from 'react'
+import chatReducer, { ACTIONS, initialState } from 'reducers/chatReducer'
+
+const ChatContext = createContext(initialState)
+
+export const ChatProvider = ({ children }) => {
+  const [chat, dispatch] = useReducer(chatReducer, initialState)
+
+  const setSocket = (socket) => {
+    dispatch({ type: ACTIONS.SET_SOCKET, payload: socket })
+  }
+  const setActiveChats = (chats) => {
+    dispatch({ type: ACTIONS.SET_ACTIVE_CHATS, payload: chats })
+  }
+  const setFriendsList = (friendsList) => {
+    dispatch({ type: ACTIONS.SET_FRIENDS_LIST, payload: friendsList })
+  }
+  const setFriendRequests = (friendRequests) => {
+    dispatch({ type: ACTIONS.SET_FRIEND_REQUESTS, payload: friendRequests })
+  }
+
+  const value = {
+    ...chat,
+    setSocket,
+    setActiveChats,
+    setFriendsList,
+    setFriendRequests,
+  }
+  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
+}
+
+const useChat = () => {
+  const context = useContext(ChatContext)
+
+  if (context === undefined) {
+    throw new Error('useChat must be used within ChatContext')
+  }
+
+  return context
+}
+
+export default useChat
