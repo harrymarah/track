@@ -13,19 +13,27 @@ module.exports = initChatSocket = (server, passport) => {
   io.use(wrap(passport.initialize()))
   io.use(wrap(passport.session()))
   io.use((socket, next) => {
-    if (socket.request.session && socket.request.session.user) {
-      socket.user = { ...socket.request.session.user }
+    if (socket.request.session && socket.request.session.passport.user) {
+      socket.user = socket.request.session.passport.user
       next()
     } else {
       next(new Error('unauthorized'))
     }
   })
   io.on('connection', (socket) => {
-    console.log(socket.request.session)
-    console.log(`User connected: ${socket.id}`)
+    socket.join(socket.user._id)
 
-    socket.on('send_message', (data) => {
-      console.log(data)
+    socket.onAny((event, ...args) => {
+      console.log(`got ${event}`)
+      console.log(...args)
+    })
+
+    socket.on('send_message', ({ message, to }) => {
+      socket.to(to).to(socket.user._id).emit('new_message', {
+        message: message,
+        from: socket.user,
+        to: to,
+      })
     })
   })
 }

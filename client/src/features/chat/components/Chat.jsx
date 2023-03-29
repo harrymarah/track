@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { TextInput } from 'features/chat'
 import useAxios from 'hooks/useAxios'
@@ -62,9 +62,10 @@ const Anchor = styled.div`
   height: 10px;
 `
 
-const Chat = ({ name, chatId, toggleShowChat }) => {
+const Chat = ({ name, chatId, toggleShowChat, recipient }) => {
   const [messages, setMessages] = useState([])
   const { backendApiCall } = useAxios()
+  const anchorDiv = useRef(null)
   const getMessages = async (id) => {
     const config = {
       url: '/chat/full-chat',
@@ -76,13 +77,24 @@ const Chat = ({ name, chatId, toggleShowChat }) => {
     const { data } = await backendApiCall(config)
     setMessages(data)
   }
+  const appendMessage = (msg) => {
+    setMessages([...messages, { message: msg, sendByUser: true }])
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      anchorDiv.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }, 200)
+  }, [])
+
   useEffect(() => {
     getMessages(chatId)
   }, [chatId])
 
-  const appendMessage = (msg) => {
-    setMessages([...messages, { message: msg, sendByUser: true }])
-  }
   return (
     <Container>
       <TopNav>
@@ -100,9 +112,13 @@ const Chat = ({ name, chatId, toggleShowChat }) => {
             <MsgToUser>{msg.message}</MsgToUser>
           )
         })}
-        <Anchor />
+        <Anchor ref={anchorDiv} />
       </MessageArea>
-      <TextInput appendMessage={appendMessage} chatId={chatId} />
+      <TextInput
+        appendMessage={appendMessage}
+        chatId={chatId}
+        recipient={recipient}
+      />
     </Container>
   )
 }

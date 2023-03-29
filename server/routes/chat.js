@@ -12,14 +12,17 @@ router.get('/', async (req, res) => {
     populate: { path: 'recipients' },
   })
   const chats = user.chats.map((chat) => {
+    const recipient = chat.recipients.filter(
+      (recipient) => recipient.name !== user.name
+    )
     return {
       id: chat._id,
-      name: chat.recipients.filter(
-        (recipient) => recipient.name !== user.name
-      )[0].name,
+      name: recipient[0].name,
+      recipientId: recipient[0]._id,
       newestMessage: chat.messages[0].message,
     }
   })
+  console.log(chats[0])
   res.json(chats)
 })
 

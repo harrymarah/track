@@ -7,8 +7,6 @@ const useSocket = () => {
   const { isLoggedIn, logUserOut } = useAuth()
   const { setSocket } = useChat()
   useEffect(() => {
-    console.log('socket running')
-    console.log(socket)
     socket.connect()
     socket.onAny((event, ...args) => {
       console.log(event, args)
@@ -16,16 +14,23 @@ const useSocket = () => {
     socket.on('connect', () => {
       setSocket(socket)
     })
+    socket.on('hello', (arg) => {
+      console.log('arg')
+      console.log(arg)
+    })
     socket.on('connect_error', (error) => {
-      // logUserOut()
-      console.log(error)
+      logUserOut()
+    })
+    socket.on('new_message', (message) => {
+      console.log(`NEW MESSAGE!!! from: ${message.from}, to: ${message.to}`)
+      console.log(message.message)
     })
     console.log(socket)
     return () => {
       socket.off('connect_error')
       socket.offAny()
     }
-  }, [])
+  }, [isLoggedIn, logUserOut, setSocket])
 }
 
 export default useSocket

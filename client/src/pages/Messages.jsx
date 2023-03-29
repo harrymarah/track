@@ -19,6 +19,7 @@ const Messages = () => {
             name={msg.name}
             message={msg.newestMessage}
             chatId={msg.id}
+            recipient={msg.recipientId}
           />
         )
       })

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
+import useChat from 'context/ChatContext'
 
 const Container = styled.form`
   width: 90%;
@@ -37,10 +38,11 @@ const SendBtn = styled.button`
   align-self: flex-end;
 `
 
-const TextInput = ({ appendMessage, chatId }) => {
+const TextInput = ({ appendMessage, chatId, recipient }) => {
   const [message, setMessage] = useState('')
   const textAreaRef = useRef(null)
   const { backendApiCall } = useAxios()
+  const { socket } = useChat()
   const useAutosizeTextArea = (textAreaRef, value) => {
     useEffect(() => {
       if (textAreaRef) {
@@ -53,7 +55,7 @@ const TextInput = ({ appendMessage, chatId }) => {
     }, [textAreaRef, value])
   }
   useAutosizeTextArea(textAreaRef.current, message)
-  const sendMessage = async (e, message) => {
+  const sendMessage = async (e, message, recipient) => {
     const config = {
       url: '/chat',
       method: 'post',
@@ -65,14 +67,17 @@ const TextInput = ({ appendMessage, chatId }) => {
       },
     }
     e.preventDefault()
-    // console.log(socket)
-    // socket.emit('send_message', message)
+    console.log(socket)
+    socket.emit('send_message', {
+      message: message,
+      to: recipient,
+    })
     appendMessage(message)
     setMessage('')
     await backendApiCall(config)
   }
   return (
-    <Container onSubmit={(e) => sendMessage(e, message)}>
+    <Container onSubmit={(e) => sendMessage(e, message, recipient)}>
       <MessageInput
         type="text"
         rows={1}
