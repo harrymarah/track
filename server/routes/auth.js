@@ -41,7 +41,6 @@ router.get('/spotifytoken', isAuth, async (req, res) => {
   try {
     const { spotifyId } = req.user
     const user = await User.findOne({ spotifyId: spotifyId })
-    console.log(user.spotifyAccessToken)
     res.json({
       spotifyAccessToken: user.spotifyAccessToken,
     })
@@ -63,7 +62,7 @@ router.get(
         secure: true,
         maxAge: 6 * 60 * 60 * 1000,
       })
-      res.redirect(`${client.url}`)
+      res.redirect(`${client.url}/home`)
     } catch (err) {
       console.log(err)
       res.clearCookie('isAuthenticated')

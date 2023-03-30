@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { TextInput } from 'features/chat'
 import useAxios from 'hooks/useAxios'
+import useChat from 'context/ChatContext'
 
 const Container = styled.div`
   position: fixed;
@@ -66,6 +67,7 @@ const Chat = ({ name, chatId, toggleShowChat, recipient }) => {
   const [messages, setMessages] = useState([])
   const { backendApiCall } = useAxios()
   const anchorDiv = useRef(null)
+  const { newMessage, setNewMessage } = useChat()
   const getMessages = async (id) => {
     const config = {
       url: '/chat/full-chat',
@@ -93,7 +95,8 @@ const Chat = ({ name, chatId, toggleShowChat, recipient }) => {
 
   useEffect(() => {
     getMessages(chatId)
-  }, [chatId])
+    setNewMessage(false)
+  }, [chatId, newMessage])
 
   return (
     <Container>

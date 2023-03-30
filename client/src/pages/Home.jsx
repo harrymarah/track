@@ -4,6 +4,7 @@ import useSpotify from 'hooks/useSpotify'
 import usePlayer from 'context/PlayerContext'
 import useAuthentication from 'hooks/useAuthentication'
 import useSocket from 'hooks/useSocket'
+import 'wdyr'
 
 const Home = () => {
   useAuthentication()
@@ -20,5 +21,7 @@ const Home = () => {
     </>
   )
 }
+
+Home.whyDidYouRender = true
 
 export default Home

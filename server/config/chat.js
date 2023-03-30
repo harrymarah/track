@@ -21,7 +21,7 @@ module.exports = initChatSocket = (server, passport) => {
     }
   })
   io.on('connection', (socket) => {
-    socket.join(socket.user._id)
+    socket.join(socket.user)
 
     socket.onAny((event, ...args) => {
       console.log(`got ${event}`)
@@ -29,7 +29,7 @@ module.exports = initChatSocket = (server, passport) => {
     })
 
     socket.on('send_message', ({ message, to }) => {
-      socket.to(to).to(socket.user._id).emit('new_message', {
+      socket.to(to).to(socket.user).emit('new_message', {
         message: message,
         from: socket.user,
         to: to,

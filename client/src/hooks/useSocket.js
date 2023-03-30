@@ -5,7 +5,8 @@ import useChat from 'context/ChatContext'
 
 const useSocket = () => {
   const { isLoggedIn, logUserOut } = useAuth()
-  const { setSocket } = useChat()
+  const { setSocket, setNewMessage, setNewMessageSenders, newMessageSenders } =
+    useChat()
   useEffect(() => {
     socket.connect()
     socket.onAny((event, ...args) => {
@@ -21,16 +22,21 @@ const useSocket = () => {
     socket.on('connect_error', (error) => {
       logUserOut()
     })
-    socket.on('new_message', (message) => {
-      console.log(`NEW MESSAGE!!! from: ${message.from}, to: ${message.to}`)
-      console.log(message.message)
+    socket.on('new_message', ({ message, from, to }) => {
+      console.log(`NEW MESSAGE: ${message}, FROM: ${from} TO: ${to}`)
+      setNewMessage(true)
+      setNewMessageSenders([
+        ...newMessageSenders.filter(
+          (senderId) => senderId !== from && senderId !== to
+        ),
+        from,
+      ])
     })
-    console.log(socket)
     return () => {
       socket.off('connect_error')
       socket.offAny()
     }
-  }, [isLoggedIn, logUserOut, setSocket])
+  }, [, isLoggedIn])
 }
 
 export default useSocket

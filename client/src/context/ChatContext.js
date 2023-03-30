@@ -18,6 +18,12 @@ export const ChatProvider = ({ children }) => {
   const setFriendRequests = (friendRequests) => {
     dispatch({ type: ACTIONS.SET_FRIEND_REQUESTS, payload: friendRequests })
   }
+  const setNewMessage = (bool) => {
+    dispatch({ type: ACTIONS.SET_NEW_MESSAGE, payload: bool })
+  }
+  const setNewMessageSenders = (senderId) => {
+    dispatch({ type: ACTIONS.SET_NEW_MESSAGE_SENDERS, payload: senderId })
+  }
 
   const value = {
     ...chat,
@@ -25,6 +31,8 @@ export const ChatProvider = ({ children }) => {
     setActiveChats,
     setFriendsList,
     setFriendRequests,
+    setNewMessage,
+    setNewMessageSenders,
   }
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }

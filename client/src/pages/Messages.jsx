@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { PageHead } from 'layouts'
 import { AllMessagesContainer, ChatDisplayBar } from 'features/chat'
 import useAxios from 'hooks/useAxios'
+import useChat from 'context/ChatContext'
 
 const Messages = () => {
   const [messages, setMessages] = useState([])
   const { backendApiCall } = useAxios()
+  const { newMessage, setNewMessage } = useChat()
   const populateChats = async () => {
     const config = {
       url: '/chat',
@@ -27,7 +29,8 @@ const Messages = () => {
   }
   useEffect(() => {
     populateChats()
-  }, [])
+    setNewMessage(false)
+  }, [newMessage])
   return (
     <>
       <PageHead heading={'Messages'} />

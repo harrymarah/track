@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
       newestMessage: chat.messages[0].message,
     }
   })
-  console.log(chats[0])
   res.json(chats)
 })
 

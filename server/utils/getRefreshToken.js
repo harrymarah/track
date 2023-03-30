@@ -26,7 +26,6 @@ module.exports = getRefreshToken = async (loggedInUser) => {
     const { access_token, expires_in } = response.data
     user.spotifyAccessToken = access_token
     user.accessTokenExpiresIn = Date.now() + expires_in * 1000
-    console.log(access_token)
     await user.save()
   } catch (error) {
     console.log(error)

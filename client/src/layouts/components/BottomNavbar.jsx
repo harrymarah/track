@@ -28,7 +28,7 @@ const NavBarLink = styled(NavLink)`
 const BottomNavbar = () => {
   return (
     <NavBar>
-      <NavBarLink to="/">
+      <NavBarLink to="/home">
         <i className="fa-solid fa-house"></i>
       </NavBarLink>
       <NavBarLink to="/messages">
