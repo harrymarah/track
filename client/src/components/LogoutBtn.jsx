@@ -7,7 +7,7 @@ import useAuth from 'context/AuthContext'
 import usePlayer from 'context/PlayerContext'
 
 const Button = styled.button`
-  background-color: #b50505;
+  background-color: var(--red);
   border: none;
   padding: 0.3rem 1.2rem;
   margin: 0.8rem;

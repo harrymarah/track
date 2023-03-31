@@ -15,15 +15,10 @@ const useSocket = () => {
     socket.on('connect', () => {
       setSocket(socket)
     })
-    socket.on('hello', (arg) => {
-      console.log('arg')
-      console.log(arg)
-    })
     socket.on('connect_error', (error) => {
       logUserOut()
     })
     socket.on('new_message', ({ message, from, to }) => {
-      console.log(`NEW MESSAGE: ${message}, FROM: ${from} TO: ${to}`)
       setNewMessage(true)
       setNewMessageSenders([
         ...newMessageSenders.filter(

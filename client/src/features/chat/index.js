@@ -2,3 +2,5 @@ export { default as AllMessagesContainer } from 'features/chat/components/AllMes
 export { default as ChatDisplayBar } from 'features/chat/components/ChatDisplayBar'
 export { default as Chat } from 'features/chat/components/Chat'
 export { default as TextInput } from 'features/chat/components/TextInput'
+export { default as FriendsBtn } from 'features/chat/components/FriendsBtn'
+export { default as AddFriendModal } from 'features/chat/components/AddFriendModal'
