@@ -10,11 +10,14 @@ const UserSchema = new Schema({
   deviceId: String,
   friends: [
     {
-      friend: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-      isAccepted: Boolean,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  requests: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Request',
     },
   ],
   chats: [

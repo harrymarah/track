@@ -27,8 +27,9 @@ export default function ErrorProvider({ children }) {
 
   useEffect(() => {
     if (error) {
+      let errorMessage = error?.error?.response?.data?.error || error.message
       console.log(error)
-      toast.error(error.message, {
+      toast.error(errorMessage, {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,

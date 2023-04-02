@@ -1,8 +1,10 @@
-import React from 'react'
+import { useState, useRef } from 'react'
 import ModalContainer from 'components/ModalContainer'
 import styled from 'styled-components'
+import useAxios from 'hooks/useAxios'
+import { useEffect } from 'react'
 
-const AddFriendBox = styled.div`
+const AddFriendBox = styled.form`
   width: 88%;
   height: 140px;
   background-color: var(--dark-blue);
@@ -26,18 +28,30 @@ const Input = styled.input`
   border-radius: 4px;
   margin-bottom: 10px;
   background-color: var(--light);
+  transition: all 0.5s;
+  &.success {
+    color: green;
+    border: 3px green solid;
+  }
+  &.failure {
+    color: var(--red);
+    border: 3px solid var(--red);
+  }
 `
-const Submit = styled.div`
+const Submit = styled.button`
   width: 100%;
   font-size: 1.2rem;
   border: none;
   font-family: inherit;
-  padding: 0.5rem 0.2rem;
+  padding: 0.4rem 0.2rem;
   border-radius: 4px;
   text-align: center;
   background-color: var(--bright);
   color: var(--black);
   font-weight: 600;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
 `
 const CloseBtn = styled.i`
   color: var(--red);
@@ -49,13 +63,49 @@ const CloseBtn = styled.i`
 `
 
 const AddFriendModal = ({ closeModal }) => {
+  const usernameInput = useRef(null)
+  const { backendApiCall } = useAxios()
+  const [usernameSearchTerm, updateUsernameSearchTerm] = useState('')
+  const handleSubmit = async (e, username) => {
+    const config = {
+      url: '/chat/add-user',
+      method: 'post',
+      data: {
+        username,
+      },
+    }
+    e.preventDefault()
+    const data = await backendApiCall(config)
+    if (!data) {
+      usernameInput.current.classList.remove('success')
+      usernameInput.current.classList.add('failure')
+    } else {
+      usernameInput.current.classList.remove('failure')
+      usernameInput.current.classList.add('success')
+      setTimeout(() => {
+        closeModal()
+      }, [1000])
+    }
+  }
+  useEffect(() => {
+    return () => {
+      updateUsernameSearchTerm('')
+    }
+  }, [])
   return (
     <ModalContainer onClick={() => closeModal()}>
-      <AddFriendBox>
+      <AddFriendBox onSubmit={(e) => handleSubmit(e, usernameSearchTerm)}>
         <CloseBtn onClick={() => closeModal()} className="fa-solid fa-x" />
         <Heading>add a new friend</Heading>
-        <Input placeholder="type a username" />
-        <Submit>submit</Submit>
+
+        <Input
+          ref={usernameInput}
+          type="text"
+          placeholder="type a username"
+          value={usernameSearchTerm}
+          onChange={(e) => updateUsernameSearchTerm(e.target.value)}
+        />
+        <Submit type="submit">submit</Submit>
       </AddFriendBox>
     </ModalContainer>
   )

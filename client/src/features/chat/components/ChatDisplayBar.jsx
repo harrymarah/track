@@ -40,7 +40,7 @@ const ChatDisplayBar = ({ name, message, chatId, recipient }) => {
       ) : (
         ''
       )}
-      <Container onClick={() => toggleShowChat(true)}>
+      <Container key={chatId} onClick={() => toggleShowChat(true)}>
         <Name>{name}</Name>
         <Message>{message}</Message>
       </Container>
