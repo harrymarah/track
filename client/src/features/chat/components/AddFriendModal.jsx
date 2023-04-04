@@ -1,8 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import ModalContainer from 'components/ModalContainer'
 import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
-import { useEffect } from 'react'
 
 const AddFriendBox = styled.form`
   width: 88%;
@@ -14,6 +13,7 @@ const AddFriendBox = styled.form`
   padding: 20px 10px;
   align-items: center;
   position: relative;
+  margin-top: 20vh;
 `
 const Heading = styled.div`
   font-size: 1.4rem;
@@ -68,7 +68,7 @@ const AddFriendModal = ({ closeModal }) => {
   const [usernameSearchTerm, updateUsernameSearchTerm] = useState('')
   const handleSubmit = async (e, username) => {
     const config = {
-      url: '/chat/add-user',
+      url: '/chat/friends',
       method: 'post',
       data: {
         username,

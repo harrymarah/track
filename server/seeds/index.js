@@ -3,6 +3,7 @@ const { db } = require('../config/config')
 const { names, messages } = require('./seedData')
 const User = require('../models/user')
 const Chat = require('../models/chat')
+const Request = require('../models/request')
 
 mongoose.connect(db.url)
 
@@ -14,6 +15,7 @@ mongoDb.once('open', () => {
 })
 
 const seedData = async () => {
+  const harrymarah = await User.findOne({ name: 'harrymarah' })
   const randomNumber = (input) => {
     return Math.floor(Math.random() * input.length)
   }
@@ -27,6 +29,11 @@ const seedData = async () => {
   }
   await User.deleteMany({ name: { $not: { $eq: 'harrymarah' } } })
   await Chat.deleteMany()
+  await Request.deleteMany()
+  harrymarah.chats = []
+  harrymarah.requests = []
+  harrymarah.friends = []
+  await harrymarah.save()
   for (let i = 0; i < 6; i++) {
     const { name } = names[randomNumber(names)]
     const username = name.split(' ').join('').toLowerCase()
@@ -35,29 +42,30 @@ const seedData = async () => {
       spotifyId: username,
       name: name,
       email: email,
+      friends: [harrymarah._id],
     })
     await user.save()
   }
   const users = await User.find({ name: { $not: { $eq: 'harrymarah' } } })
-  const harrymarah = await User.find({ name: 'harrymarah' })
 
   for (let i = 0; i < users.length; i++) {
     const chatMessages = []
     for (let j = 0; j < 20; j++) {
       const message = {
         message: messages[randomNumber(messages)].message,
-        sender: randomlyChooseSender(harrymarah[0]._id, users[i]._id),
+        sender: randomlyChooseSender(harrymarah._id, users[i]._id),
       }
       chatMessages.push(message)
     }
     const chat = new Chat({
-      recipients: [harrymarah[0]._id, users[i]._id],
+      recipients: [harrymarah._id, users[i]._id],
       messages: chatMessages,
     })
-    harrymarah[0].chats.push(chat)
+    harrymarah.chats.push(chat)
     users[i].chats.push(chat)
+    harrymarah.friends.push(users[i]._id)
     await chat.save()
-    await harrymarah[0].save()
+    await harrymarah.save()
     await users[i].save()
   }
 }

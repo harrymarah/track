@@ -11,7 +11,6 @@ const Container = styled.div`
   z-index: 200;
   display: flex;
   justify-content: center;
-  padding-top: 20vh;
   backdrop-filter: blur(2px);
 `
 

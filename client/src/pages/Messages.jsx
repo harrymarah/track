@@ -6,6 +6,7 @@ import {
   ChatDisplayBar,
   FriendsBtn,
   AddFriendModal,
+  FriendsListModal,
 } from 'features/chat'
 import useAxios from 'hooks/useAxios'
 import useChat from 'context/ChatContext'
@@ -20,6 +21,7 @@ const BtnContainer = styled.div`
 const Messages = () => {
   const [messages, setMessages] = useState([])
   const [showAddFriends, toggleShowAddFriends] = useState(false)
+  const [showFriendsList, toggleShowFriendsList] = useState(true)
   const { backendApiCall } = useAxios()
   const { newMessage, setNewMessage } = useChat()
   const populateChats = async () => {
@@ -57,7 +59,16 @@ const Messages = () => {
             setShowModal={toggleShowAddFriends}
             showModal={showAddFriends}
           />
-          <FriendsBtn text={'friends'} />
+          <FriendsBtn
+            text={'friends'}
+            modal={
+              <FriendsListModal
+                closeModal={() => toggleShowFriendsList(false)}
+              />
+            }
+            setShowModal={toggleShowFriendsList}
+            showModal={showFriendsList}
+          />
           <FriendsBtn text={'requests'} />
         </BtnContainer>
       </PageHead>

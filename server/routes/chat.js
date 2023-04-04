@@ -25,7 +25,6 @@ router.get('/', async (req, res) => {
         newestMessage: chat.messages[chat.messages.length - 1].message,
       }
     })
-    console.log(chats)
     res.json(chats)
   } catch (err) {
     console.error(err)
@@ -67,7 +66,25 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.post('/add-user', async (req, res) => {
+router.get('/friends', async (req, res) => {
+  const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
+    path: 'friends',
+  })
+  const friendsData = await Promise.all(
+    user.friends.map(async (friend) => {
+      const chat = await Chat.findOne({ recipients: [user._id, friend._id] })
+      return {
+        id: friend._id,
+        name: friend.name,
+        spotifyId: friend.spotifyId,
+        chatId: chat._id,
+      }
+    })
+  )
+  res.send(friendsData)
+})
+
+router.post('/friends', async (req, res) => {
   try {
     const { username } = req.body
     const user = await User.findById(req.user._id)
@@ -77,18 +94,16 @@ router.post('/add-user', async (req, res) => {
     } else if (user._id.toString() === newFriend._id.toString()) {
       res.status(400).json({ error: 'You cannot add yourself as a friend' })
     } else {
-      const newSentRequest = new Request({
+      const newSentRequest = await new Request({
         user: newFriend._id,
         sentByUser: true,
-      })
-      const newIncomingRequest = new Request({
+      }).save()
+      const newIncomingRequest = await new Request({
         user: user._id,
         sentByUser: false,
-      })
+      }).save()
       user.requests.push(newSentRequest)
       newFriend.requests.push(newIncomingRequest)
-      await newSentRequest.save()
-      await newIncomingRequest.save()
       await user.save()
       await newFriend.save()
       res.sendStatus(200)
@@ -97,6 +112,8 @@ router.post('/add-user', async (req, res) => {
     res.status(err?.response?.status || 500).json({ error: err.message })
   }
 })
+
+router.delete('/friends', async (req, res) => {})
 
 router.get('/requests', async (req, res) => {
   const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
