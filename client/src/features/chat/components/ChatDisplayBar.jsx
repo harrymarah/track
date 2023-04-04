@@ -26,11 +26,26 @@ const Message = styled.div`
   line-height: 1.2rem;
 `
 
-const ChatDisplayBar = ({ name, message, chatId, recipient }) => {
-  const [showChat, toggleShowChat] = useState(false)
+const ChatDisplayBar = ({
+  name,
+  message,
+  chatId,
+  recipient,
+  toggleShowChat,
+  setChatData,
+}) => {
+  // const [showChat, toggleShowChat] = useState(false)
+  const handleClick = () => {
+    setChatData({
+      name,
+      chatId,
+      recipient,
+    })
+    toggleShowChat(true)
+  }
   return (
     <>
-      {showChat ? (
+      {/* {showChat ? (
         <Chat
           name={name}
           chatId={chatId}
@@ -39,8 +54,8 @@ const ChatDisplayBar = ({ name, message, chatId, recipient }) => {
         />
       ) : (
         ''
-      )}
-      <Container key={chatId} onClick={() => toggleShowChat(true)}>
+      )} */}
+      <Container key={chatId} onClick={() => handleClick()}>
         <Name>{name}</Name>
         <Message>{message}</Message>
       </Container>

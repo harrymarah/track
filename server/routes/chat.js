@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/friends', async (req, res) => {
-  const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
+  const user = await User.findById(req.user._id).populate({
     path: 'friends',
   })
   const friendsData = await Promise.all(
@@ -113,7 +113,22 @@ router.post('/friends', async (req, res) => {
   }
 })
 
-router.delete('/friends', async (req, res) => {})
+router.delete('/friends', async (req, res) => {
+  try {
+    const { friendId, chatId } = req.body
+    const user = await User.findByIdAndUpdate(req.user._id, {
+      $pull: { friends: friendId, chats: chatId },
+    })
+    const friend = await User.findByIdAndUpdate(friendId, {
+      $pull: { friends: user._id, chats: chatId },
+    })
+    const chat = await Chat.findByIdAndDelete(chatId)
+    res.sendStatus(200)
+  } catch (err) {
+    res.status(err?.response?.status || 500).json({ error: err.message })
+    console.error(err)
+  }
+})
 
 router.get('/requests', async (req, res) => {
   const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({

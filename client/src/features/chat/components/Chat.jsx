@@ -63,11 +63,16 @@ const Anchor = styled.div`
   height: 10px;
 `
 
-const Chat = ({ name, chatId, toggleShowChat, recipient }) => {
+const Chat = ({ chatData, toggleShowChat, setChatData }) => {
   const [messages, setMessages] = useState([])
   const { backendApiCall } = useAxios()
   const anchorDiv = useRef(null)
   const { newMessage, setNewMessage } = useChat()
+  const { name, chatId, recipient } = chatData
+  const handleClose = () => {
+    toggleShowChat(false)
+    setChatData({})
+  }
   const getMessages = async (id) => {
     const config = {
       url: '/chat/full-chat',
@@ -103,7 +108,7 @@ const Chat = ({ name, chatId, toggleShowChat, recipient }) => {
       <TopNav>
         <i
           class="fa-solid fa-circle-chevron-left"
-          onClick={() => toggleShowChat(false)}
+          onClick={() => handleClose()}
         ></i>
         <ChatName>{name}</ChatName>
       </TopNav>

@@ -30,9 +30,10 @@ const Heading = styled.div`
 `
 const NameListContainer = styled.ul`
   width: 100%;
+  overflow-y: scroll;
 `
 
-const FriendsListModal = ({ closeModal }) => {
+const FriendsListModal = ({ closeModal, toggleShowChat, setChatData }) => {
   const { backendApiCall } = useAxios()
   const [friendsData, setFriendsData] = useState([])
   const getFriendsData = async () => {
@@ -46,9 +47,14 @@ const FriendsListModal = ({ closeModal }) => {
         return (
           <FriendName
             key={friend.id}
+            recipient={friend.id}
             name={friend.name}
             spotifyId={friend.spotifyId}
             chatId={friend.chatId}
+            closeModal={closeModal}
+            toggleShowChat={toggleShowChat}
+            setChatData={setChatData}
+            getFriendsData={getFriendsData}
           />
         )
       })
