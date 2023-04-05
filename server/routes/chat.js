@@ -112,6 +112,34 @@ router.post('/friends', async (req, res) => {
     res.status(err?.response?.status || 500).json({ error: err.message })
   }
 })
+router.post('/friendstest', async (req, res) => {
+  try {
+    const { username } = req.query
+    const user = await User.findOne({ spotifyId: username })
+    const newFriend = await User.findOne({ spotifyId: 'harrymarah' })
+    if (!user) {
+      res.status(404).json({ error: 'User not found' })
+    } else if (user._id.toString() === newFriend._id.toString()) {
+      res.status(400).json({ error: 'You cannot add yourself as a friend' })
+    } else {
+      const newSentRequest = await new Request({
+        user: newFriend._id,
+        sentByUser: true,
+      }).save()
+      const newIncomingRequest = await new Request({
+        user: user._id,
+        sentByUser: false,
+      }).save()
+      user.requests.push(newSentRequest)
+      newFriend.requests.push(newIncomingRequest)
+      await user.save()
+      await newFriend.save()
+      res.sendStatus(200)
+    }
+  } catch (err) {
+    res.status(err?.response?.status || 500).json({ error: err.message })
+  }
+})
 
 router.delete('/friends', async (req, res) => {
   try {
@@ -133,8 +161,39 @@ router.delete('/friends', async (req, res) => {
 router.get('/requests', async (req, res) => {
   const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
     path: 'requests',
+    populate: { path: 'user' },
   })
-  res.send(user)
+  const splitRequests = (requests) => {
+    let sentByUser = []
+    let sentToUser = []
+    requests.forEach((request) => {
+      if (request.sentByUser === true) {
+        sentByUser.push(request)
+      } else {
+        sentToUser.push(request)
+      }
+    })
+    return [sentByUser, sentToUser]
+  }
+  const [sentByUser, sentToUser] = splitRequests(user.requests)
+  const requestsData = {
+    sentByUser: sentByUser.map((request) => {
+      return {
+        requestId: request._id,
+        userId: request.user._id,
+        username: request.user.spotifyId,
+      }
+    }),
+    sentToUser: sentToUser.map((request) => {
+      return {
+        requestId: request._id,
+        userId: request.user._id,
+        username: request.user.spotifyId,
+      }
+    }),
+  }
+
+  res.send(requestsData)
 })
 
 module.exports = router
