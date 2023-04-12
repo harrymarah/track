@@ -7,6 +7,7 @@ import {
   FriendsBtn,
   AddFriendModal,
   FriendsListModal,
+  ViewRequestsModal,
   Chat,
 } from 'features/chat'
 import useAxios from 'hooks/useAxios'
@@ -22,6 +23,7 @@ const BtnContainer = styled.div`
 const Messages = () => {
   const [messages, setMessages] = useState([])
   const [showAddFriends, toggleShowAddFriends] = useState(false)
+  const [showRequests, toggleShowRequests] = useState(false)
   const [showFriendsList, toggleShowFriendsList] = useState(false)
   const [showChat, toggleShowChat] = useState(false)
   const [chatData, setChatData] = useState({})
@@ -76,7 +78,14 @@ const Messages = () => {
             setShowModal={toggleShowFriendsList}
             showModal={showFriendsList}
           />
-          <FriendsBtn text={'requests'} />
+          <FriendsBtn
+            text={'requests'}
+            modal={
+              <ViewRequestsModal closeModal={() => toggleShowRequests(false)} />
+            }
+            setShowModal={toggleShowRequests}
+            showModal={showRequests}
+          />
         </BtnContainer>
       </PageHead>
       {showChat ? (

@@ -2,11 +2,14 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const RequestSchema = new Schema({
-  user: {
+  sentFrom: {
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
-  sentByUser: Boolean,
+  sentTo: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
 })
 
 module.exports = mongoose.model('Request', RequestSchema)

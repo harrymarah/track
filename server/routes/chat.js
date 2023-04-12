@@ -93,17 +93,14 @@ router.post('/friends', async (req, res) => {
       res.status(404).json({ error: 'User not found' })
     } else if (user._id.toString() === newFriend._id.toString()) {
       res.status(400).json({ error: 'You cannot add yourself as a friend' })
+      // add check to check if users are already friends
     } else {
-      const newSentRequest = await new Request({
-        user: newFriend._id,
-        sentByUser: true,
+      const newRequest = await new Request({
+        sentFrom: user._id,
+        sentTo: newFriend._id,
       }).save()
-      const newIncomingRequest = await new Request({
-        user: user._id,
-        sentByUser: false,
-      }).save()
-      user.requests.push(newSentRequest)
-      newFriend.requests.push(newIncomingRequest)
+      user.requests.push(newRequest)
+      newFriend.requests.push(newRequest)
       await user.save()
       await newFriend.save()
       res.sendStatus(200)
@@ -122,16 +119,12 @@ router.post('/friendstest', async (req, res) => {
     } else if (user._id.toString() === newFriend._id.toString()) {
       res.status(400).json({ error: 'You cannot add yourself as a friend' })
     } else {
-      const newSentRequest = await new Request({
-        user: newFriend._id,
-        sentByUser: true,
+      const newRequest = await new Request({
+        sentFrom: user._id,
+        sentTo: newFriend._id,
       }).save()
-      const newIncomingRequest = await new Request({
-        user: user._id,
-        sentByUser: false,
-      }).save()
-      user.requests.push(newSentRequest)
-      newFriend.requests.push(newIncomingRequest)
+      user.requests.push(newRequest)
+      newFriend.requests.push(newRequest)
       await user.save()
       await newFriend.save()
       res.sendStatus(200)
@@ -159,7 +152,7 @@ router.delete('/friends', async (req, res) => {
 })
 
 router.get('/requests', async (req, res) => {
-  const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
+  const user = await User.findById(req.user._id).populate({
     path: 'requests',
     populate: { path: 'user' },
   })
@@ -167,7 +160,7 @@ router.get('/requests', async (req, res) => {
     let sentByUser = []
     let sentToUser = []
     requests.forEach((request) => {
-      if (request.sentByUser === true) {
+      if (request.sendFrom._id.toString() === user._id.toString()) {
         sentByUser.push(request)
       } else {
         sentToUser.push(request)
@@ -180,7 +173,7 @@ router.get('/requests', async (req, res) => {
     sentByUser: sentByUser.map((request) => {
       return {
         requestId: request._id,
-        userId: request.user._id,
+        userId: request.sentFrom._id,
         username: request.user.spotifyId,
       }
     }),
@@ -195,5 +188,52 @@ router.get('/requests', async (req, res) => {
 
   res.send(requestsData)
 })
+router.get('/requeststest', async (req, res) => {
+  const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
+    path: 'requests',
+    // populate: { path: 'user' },
+  })
+  // const splitRequests = (requests) => {
+  //   let sentByUser = []
+  //   let sentToUser = []
+  //   requests.forEach((request) => {
+  //     if (request.sendFrom._id.toString() === user._id.toString()) {
+  //       sentByUser.push(request)
+  //     } else {
+  //       sentToUser.push(request)
+  //     }
+  //   })
+  //   return [sentByUser, sentToUser]
+  // }
+  // const [sentByUser, sentToUser] = splitRequests(user.requests)
+  // const requestsData = {
+  //   sentByUser: sentByUser.map((request) => {
+  //     return {
+  //       requestId: request._id,
+  //       userId: request.sentFrom._id,
+  //       username: request.user.spotifyId,
+  //     }
+  //   }),
+  //   sentToUser: sentToUser.map((request) => {
+  //     return {
+  //       requestId: request._id,
+  //       userId: request.user._id,
+  //       username: request.user.spotifyId,
+  //     }
+  //   }),
+  // }
+
+  res.json({
+    user,
+  })
+})
+
+router.post('/requests', async (req, res) => {
+  const { requestId, friendId } = req.body
+  const user = await User.findById(req.user._id)
+  const friend = await User.findById(friendId)
+})
+
+router.delete('/requests', async (req, res) => {})
 
 module.exports = router
