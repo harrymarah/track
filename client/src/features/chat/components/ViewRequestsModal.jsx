@@ -64,8 +64,8 @@ const ViewRequestsModal = ({ closeModal }) => {
               key={request.requestId}
               name={request.username}
               requestId={request.requestId}
-              userId={request.userId}
               sentToUser={false}
+              getRequests={getRequests}
             />
           )
         })
@@ -79,8 +79,8 @@ const ViewRequestsModal = ({ closeModal }) => {
               key={request.requestId}
               name={request.username}
               requestId={request.requestId}
-              userId={request.userId}
               sentToUser={true}
+              getRequests={getRequests}
             />
           )
         })
@@ -100,11 +100,11 @@ const ViewRequestsModal = ({ closeModal }) => {
       <RequestsContainer>
         <CloseBtn onClick={() => handleClose()} className="fa-solid fa-x" />
         <Heading>your requests</Heading>
-        {recievedRequests.length && (
+        {!!recievedRequests.length && (
           <SectionTitle>recieved requests</SectionTitle>
         )}
         <RequestListContainer>{recievedRequests}</RequestListContainer>
-        {sentRequests.length && <SectionTitle>sent requests</SectionTitle>}
+        {!!sentRequests.length && <SectionTitle>sent requests</SectionTitle>}
         <RequestListContainer>{sentRequests}</RequestListContainer>
       </RequestsContainer>
     </ModalContainer>

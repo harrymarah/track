@@ -1,6 +1,6 @@
-import { useRef } from 'react'
 import styled from 'styled-components'
 import useAxios from 'hooks/useAxios'
+import useChat from 'context/ChatContext'
 
 const FriendNameContainer = styled.li`
   list-style-type: none;
@@ -30,16 +30,36 @@ const Icon = styled.i`
   align-items: center;
 `
 
-const RequestBar = ({ name, sentToUser }) => {
+const RequestBar = ({ name, sentToUser, requestId, getRequests }) => {
+  const { backendApiCall } = useAxios()
+  const { setNewMessage } = useChat()
+  const acceptRequest = async (requestId) => {
+    await backendApiCall.post('/chat/requests', { requestId })
+    getRequests()
+    setNewMessage(true)
+  }
+  const denyRequest = async (requestId) => {
+    console.log(requestId)
+    await backendApiCall.delete('/chat/requests', { data: { requestId } })
+    getRequests()
+  }
   return (
     <FriendNameContainer>
       <Name>{name}</Name>
-      <Icon className="fa-solid fa-check fa-fw" color={'156,255,217'} />
       {sentToUser ? (
-        <Icon className="fa-solid fa-xmark fa-fw" color={'181,5,5'} />
+        <Icon
+          onClick={() => acceptRequest(requestId)}
+          className="fa-solid fa-check fa-fw"
+          color={'156,255,217'}
+        />
       ) : (
         ''
       )}
+      <Icon
+        onClick={() => denyRequest(requestId)}
+        className="fa-solid fa-xmark fa-fw"
+        color={'181,5,5'}
+      />
     </FriendNameContainer>
   )
 }

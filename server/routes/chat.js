@@ -22,7 +22,8 @@ router.get('/', async (req, res) => {
         id: chat._id,
         name: recipient[0].name,
         recipientId: recipient[0]._id,
-        newestMessage: chat.messages[chat.messages.length - 1].message,
+        newestMessage:
+          chat.messages[chat.messages.length - 1]?.message || 'no messages',
       }
     })
     res.json(chats)
@@ -109,6 +110,7 @@ router.post('/friends', async (req, res) => {
     res.status(err?.response?.status || 500).json({ error: err.message })
   }
 })
+
 router.post('/friendstest', async (req, res) => {
   try {
     const { username } = req.query
@@ -127,7 +129,7 @@ router.post('/friendstest', async (req, res) => {
       newFriend.requests.push(newRequest)
       await user.save()
       await newFriend.save()
-      res.sendStatus(200)
+      res.status(200).send('request sucessful')
     }
   } catch (err) {
     res.status(err?.response?.status || 500).json({ error: err.message })
@@ -154,13 +156,13 @@ router.delete('/friends', async (req, res) => {
 router.get('/requests', async (req, res) => {
   const user = await User.findById(req.user._id).populate({
     path: 'requests',
-    populate: { path: 'user' },
+    populate: [{ path: 'sentFrom' }, { path: 'sentTo' }],
   })
   const splitRequests = (requests) => {
     let sentByUser = []
     let sentToUser = []
     requests.forEach((request) => {
-      if (request.sendFrom._id.toString() === user._id.toString()) {
+      if (request.sentFrom._id.toString() === user._id.toString()) {
         sentByUser.push(request)
       } else {
         sentToUser.push(request)
@@ -173,67 +175,59 @@ router.get('/requests', async (req, res) => {
     sentByUser: sentByUser.map((request) => {
       return {
         requestId: request._id,
-        userId: request.sentFrom._id,
-        username: request.user.spotifyId,
+        userId: request.sentTo._id,
+        username: request.sentTo.spotifyId,
       }
     }),
     sentToUser: sentToUser.map((request) => {
       return {
         requestId: request._id,
-        userId: request.user._id,
-        username: request.user.spotifyId,
+        userId: request.sentFrom._id,
+        username: request.sentFrom.spotifyId,
       }
     }),
   }
 
   res.send(requestsData)
 })
-router.get('/requeststest', async (req, res) => {
-  const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
-    path: 'requests',
-    // populate: { path: 'user' },
-  })
-  // const splitRequests = (requests) => {
-  //   let sentByUser = []
-  //   let sentToUser = []
-  //   requests.forEach((request) => {
-  //     if (request.sendFrom._id.toString() === user._id.toString()) {
-  //       sentByUser.push(request)
-  //     } else {
-  //       sentToUser.push(request)
-  //     }
-  //   })
-  //   return [sentByUser, sentToUser]
-  // }
-  // const [sentByUser, sentToUser] = splitRequests(user.requests)
-  // const requestsData = {
-  //   sentByUser: sentByUser.map((request) => {
-  //     return {
-  //       requestId: request._id,
-  //       userId: request.sentFrom._id,
-  //       username: request.user.spotifyId,
-  //     }
-  //   }),
-  //   sentToUser: sentToUser.map((request) => {
-  //     return {
-  //       requestId: request._id,
-  //       userId: request.user._id,
-  //       username: request.user.spotifyId,
-  //     }
-  //   }),
-  // }
-
-  res.json({
-    user,
-  })
-})
 
 router.post('/requests', async (req, res) => {
-  const { requestId, friendId } = req.body
-  const user = await User.findById(req.user._id)
-  const friend = await User.findById(friendId)
+  try {
+    const { requestId } = req.body
+    const [user1, user2] = await User.find({ requests: requestId })
+    const chat = new Chat({
+      recipients: [user1, user2],
+      messages: [],
+    })
+    user1.friends.push(user2)
+    user2.friends.push(user1)
+    user1.chats.push(chat)
+    user2.chats.push(chat)
+    user1.requests.pull(requestId)
+    user2.requests.pull(requestId)
+    await user1.save()
+    await user2.save()
+    await chat.save()
+    await Request.findByIdAndDelete(requestId)
+    res.sendStatus(200)
+  } catch (err) {
+    res.status(err?.response?.status || 500).json({ error: err.message })
+    console.error(err)
+  }
 })
 
-router.delete('/requests', async (req, res) => {})
+router.delete('/requests', async (req, res) => {
+  try {
+    const { requestId } = req.body
+    const [user1, user2] = await User.find({ requests: requestId })
+    user1.requests.pull(requestId)
+    user2.requests.pull(requestId)
+    const request = await Request.findByIdAndDelete(requestId)
+    res.sendStatus(200)
+  } catch (err) {
+    res.status(err?.response?.status || 500).json({ error: err.message })
+    console.error(err)
+  }
+})
 
 module.exports = router
