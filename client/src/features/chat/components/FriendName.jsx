@@ -19,7 +19,9 @@ const Name = styled.div`
 `
 const Icon = styled.i`
   padding: 10px;
-  background-color: rgba(${(props) => props.color}, 0.6);
+  // background-color: rgba(${(props) => props.color}, 0.6);
+  color: rgb(${(props) => props.color});
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
   margin: 4px;
   display: flex;
@@ -126,7 +128,7 @@ const FriendName = ({
       <Icon
         ref={deleteIcon}
         onClick={(e) => handleDelete(e)}
-        className="fa-solid fa-trash"
+        className="fa-solid fa-trash-can"
         color={'181,5,5'}
       >
         <Warning ref={deleteWarningText}>are you sure?</Warning>

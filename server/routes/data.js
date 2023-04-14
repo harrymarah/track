@@ -136,8 +136,7 @@ router.get('/get-users-playlists', async (req, res) => {
 })
 
 router.get('/get-users-tracks', async (req, res) => {
-  const spotifyAccessToken =
-    'BQA5tE4z9F-bBqgl3BKVEVyx9qqkkbRLx-TiXndhHu0aAnWeNEpLiZ-pUIBjRcQNfPaOlj5M3f3W9FopmmcBmMIMjJpxmlgZOrDQU0SzAiBYYeUoykaOg1FCJ45yRP6FAyZ4dgRrAPpZ_6Ev63Et6aT5WvKNReRG7pgxD-MU9BuwNmrrQzeNfyonDkBoAbeeq2OOZxZ8hDb9IbMMkvkMmZ5i4RW-VwU00cwmlKz9y8z7hbgXq9F3nhFUhTprbM1cAfbsrX4HE7QJ1IrCdMulfNQbw52hjVB4t5BjvxWFMDWHNt0'
+  const { spotifyAccessToken } = req.user
   const config = {
     method: 'get',
     url: `https://api.spotify.com/v1/me/tracks`,

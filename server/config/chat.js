@@ -13,7 +13,7 @@ module.exports = initChatSocket = (server, passport) => {
   io.use(wrap(passport.initialize()))
   io.use(wrap(passport.session()))
   io.use((socket, next) => {
-    if (socket.request.session && socket.request.session.passport.user) {
+    if (socket.request.session && socket.request.session.passport?.user) {
       socket.user = socket.request.session.passport.user
       next()
     } else {

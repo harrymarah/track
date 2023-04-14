@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ModalContainer from 'components/ModalContainer'
 import RequestBar from 'features/chat/components/RequestBar'
 import styled from 'styled-components'

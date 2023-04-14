@@ -32,18 +32,18 @@ const Artist = styled.h3`
 
 const TrackList = styled.div`
   width: 95%;
-  background-color: rgba(255, 255, 255, 0.1);
   margin: auto;
   border-radius: 8px;
   margin-top: 8px;
 `
 const Track = styled.div`
   font-size: 1.1rem;
-  padding: 15px 10px;
-  border-bottom: 1px solid #fff;
-  &:nth-last-of-type(1) {
-    border-bottom: none;
-  }
+  padding: 10px 10px;
+  width: 95%;
+  background-color: rgba(230, 241, 255, 0.04);
+  margin: 5px auto;
+  border-radius: 8px;
+  overflow: hidden;
 `
 const Exit = styled.div`
   position: fixed;
