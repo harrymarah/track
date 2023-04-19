@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import getArtists from 'utils/getArtists'
 import useUpdatePlayerState from 'hooks/useUpdatePlayerState'
 import usePlaySong from 'hooks/usePlaySong'
+import useLongPress from 'hooks/useLongPress'
 
 const SingleResultContainer = styled.li`
   width: 95%;
@@ -42,20 +43,38 @@ const handleEvent = (e) => {
   }
 }
 
-const TrackResult = ({ searchResults }) => {
+const TrackResult = ({
+  searchResults,
+  showOptionsModal,
+  setSongOptionsData,
+}) => {
   const { playSong } = usePlaySong()
   const { updatePlayerState } = useUpdatePlayerState()
   const handleClick = async (uri, token) => {
     await playSong(uri, token)
     updatePlayerState()
   }
+  const handleLongPress = (searchResults) => {
+    setSongOptionsData({
+      name: searchResults.name,
+      artists: searchResults.artists,
+      album: searchResults.album.name,
+      artwork: searchResults.album.images[1].url,
+      uri: searchResults.uri,
+    })
+    showOptionsModal()
+  }
   const resultRef = useRef()
   return (
     <SingleResultContainer
       ref={resultRef}
-      onClick={(e) => handleClick(searchResults.uri)}
-      onMouseDown={handleEvent}
-      onMouseUp={handleEvent}
+      // onClick={(e) => handleClick(searchResults.uri)}
+      // onMouseDown={handleEvent}
+      // onMouseUp={handleEvent}
+      {...useLongPress(
+        () => handleClick(searchResults.uri),
+        () => handleLongPress(searchResults)
+      )}
     >
       <TrackName>{searchResults.name}</TrackName>
       <ArtistName>{getArtists(searchResults.artists)}</ArtistName>

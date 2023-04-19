@@ -9,6 +9,7 @@ import {
   MoreResults,
   SearchFilterButtons,
 } from 'features/search'
+import { SongOptionsModal } from 'features/explore'
 
 const Results = styled.ul`
   overflow-y: scroll;
@@ -42,6 +43,14 @@ const ResultsContainer = ({ searchResults }) => {
   const [showArtists, toggleShowArtists] = useState(true)
   const [showAlbums, toggleShowAlbums] = useState(true)
   const [showPlaylists, toggleShowPlaylists] = useState(true)
+  const [showSongOptions, setShowSongOptions] = useState(false)
+  const [songOptionsData, setSongOptionsData] = useState({
+    name: '',
+    artists: [],
+    album: '',
+    artwork: '',
+    uri: '',
+  })
   let allResults = {
     trackResults: [],
     artistResults: [],
@@ -57,7 +66,14 @@ const ResultsContainer = ({ searchResults }) => {
 
   if (searchResults.tracks && showTracks) {
     allResults.trackResults = searchResults.tracks.items.map((resultData) => {
-      return <TrackResult key={resultData.id} searchResults={resultData} />
+      return (
+        <TrackResult
+          key={resultData.id}
+          searchResults={resultData}
+          showOptionsModal={() => setShowSongOptions(true)}
+          setSongOptionsData={setSongOptionsData}
+        />
+      )
     })
   }
 
@@ -82,64 +98,75 @@ const ResultsContainer = ({ searchResults }) => {
   }
 
   return (
-    <Results>
-      <SearchFilterButtons
-        show={{ showTracks, showArtists, showAlbums, showPlaylists }}
-        toggle={{
-          toggleShowTracks,
-          toggleShowArtists,
-          toggleShowAlbums,
-          toggleShowPlaylists,
-        }}
-      />
-      {allResults.artistResults.length ? (
-        <>
-          <ResultsHeading>artists</ResultsHeading>
-          {allResults.artistResults.slice(0, noOfArtists)}
-          {allResults.artistResults.length > noOfArtists && (
-            <MoreResults onClick={() => setNoOfArtists(noOfArtists + 5)} />
-          )}
-        </>
-      ) : (
-        ''
+    <>
+      {showSongOptions && (
+        <SongOptionsModal
+          closeModal={() => setShowSongOptions(false)}
+          songData={songOptionsData}
+          setSongOptionsData={setSongOptionsData}
+        />
       )}
+      <Results>
+        <SearchFilterButtons
+          show={{ showTracks, showArtists, showAlbums, showPlaylists }}
+          toggle={{
+            toggleShowTracks,
+            toggleShowArtists,
+            toggleShowAlbums,
+            toggleShowPlaylists,
+          }}
+        />
+        {allResults.artistResults.length ? (
+          <>
+            <ResultsHeading>artists</ResultsHeading>
+            {allResults.artistResults.slice(0, noOfArtists)}
+            {allResults.artistResults.length > noOfArtists && (
+              <MoreResults onClick={() => setNoOfArtists(noOfArtists + 5)} />
+            )}
+          </>
+        ) : (
+          ''
+        )}
 
-      {allResults.trackResults.length ? (
-        <>
-          <ResultsHeading>tracks</ResultsHeading>
-          {allResults.trackResults.slice(0, noOfTracks)}
-          {allResults.trackResults.length > noOfTracks && (
-            <MoreResults onClick={() => setNoOfTracks(noOfTracks + 10)} />
-          )}
-        </>
-      ) : (
-        ''
-      )}
+        {allResults.trackResults.length ? (
+          <>
+            <ResultsHeading>tracks</ResultsHeading>
+            {allResults.trackResults.slice(0, noOfTracks)}
+            {allResults.trackResults.length > noOfTracks && (
+              <MoreResults onClick={() => setNoOfTracks(noOfTracks + 10)} />
+            )}
+          </>
+        ) : (
+          ''
+        )}
 
-      {allResults.albumResults.length ? (
-        <>
-          <ResultsHeading>albums</ResultsHeading>
-          {allResults.albumResults.slice(0, noOfAlbums)}
-          {allResults.albumResults.length > noOfAlbums && (
-            <MoreResults onClick={() => setNoOfAlbums(noOfAlbums + 5)} />
-          )}
-        </>
-      ) : (
-        ''
-      )}
+        {allResults.albumResults.length ? (
+          <>
+            <ResultsHeading>albums</ResultsHeading>
+            {allResults.albumResults.slice(0, noOfAlbums)}
+            {allResults.albumResults.length > noOfAlbums && (
+              <MoreResults onClick={() => setNoOfAlbums(noOfAlbums + 5)} />
+            )}
+          </>
+        ) : (
+          ''
+        )}
 
-      {allResults.playlistResults.length ? (
-        <>
-          <ResultsHeading>playlist</ResultsHeading>
-          {allResults.playlistResults.slice(0, noOfPlaylists)}
-          {allResults.playlistResults.length > noOfPlaylists && (
-            <MoreResults onClick={() => setNoOfPlaylists(noOfPlaylists + 5)} />
-          )}
-        </>
-      ) : (
-        ''
-      )}
-    </Results>
+        {allResults.playlistResults.length ? (
+          <>
+            <ResultsHeading>playlist</ResultsHeading>
+            {allResults.playlistResults.slice(0, noOfPlaylists)}
+            {allResults.playlistResults.length > noOfPlaylists && (
+              <MoreResults
+                onClick={() => setNoOfPlaylists(noOfPlaylists + 5)}
+              />
+            )}
+          </>
+        ) : (
+          ''
+        )}
+      </Results>
+    </>
   )
 }
 

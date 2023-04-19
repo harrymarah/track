@@ -67,4 +67,23 @@ router.post('/device-id', isAuth, async (req, res) => {
   }
 })
 
+router.put('/queue-song', async (req, res) => {
+  try {
+    const { spotifyAccessToken, deviceId } = req.user
+    const { uri } = req.body
+    const config = {
+      method: 'post',
+      url: `https://api.spotify.com/v1/me/player/queue?uri=${uri}&device_id=${deviceId}`,
+      headers: {
+        Authorization: `Bearer ${spotifyAccessToken}`,
+        'Content-Type': 'application/json',
+      },
+    }
+    const response = await axios(config)
+    return res.sendStatus(response.status)
+  } catch (err) {
+    res.status(err?.response.status || 500).json({ error: err.message })
+  }
+})
+
 module.exports = router
