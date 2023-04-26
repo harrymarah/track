@@ -54,6 +54,7 @@ const seedData = async () => {
       const message = {
         message: messages[randomNumber(messages)].message,
         sender: randomlyChooseSender(harrymarah._id, users[i]._id),
+        isSong: false,
       }
       chatMessages.push(message)
     }

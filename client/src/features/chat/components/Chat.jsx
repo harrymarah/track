@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { TextInput } from 'features/chat'
 import useAxios from 'hooks/useAxios'
 import useChat from 'context/ChatContext'
+import { SongInChat } from 'features/chat'
 
 const Container = styled.div`
   position: fixed;
@@ -120,6 +121,7 @@ const Chat = ({ chatData, toggleShowChat, setChatData }) => {
             <MsgToUser>{msg.message}</MsgToUser>
           )
         })}
+        <SongInChat />
         <Anchor ref={anchorDiv} />
       </MessageArea>
       <TextInput

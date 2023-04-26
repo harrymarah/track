@@ -26,6 +26,7 @@ router.get(
       'playlist-modify-private',
       'playlist-modify-public',
     ],
+    showDialog: true,
   })
 )
 

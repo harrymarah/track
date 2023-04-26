@@ -13,6 +13,15 @@ const ChatSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
       },
+      isSong: {
+        type: Boolean,
+        default: false,
+      },
+      songName: String,
+      artist: String,
+      album: String,
+      artworkUrl: String,
+      uri: String,
     },
   ],
 })

@@ -42,6 +42,7 @@ router.get('/full-chat', async (req, res) => {
       return {
         message: msg.message,
         sendByUser: msg.sender.toString() == user._id.toString(),
+        isSong: msg.isSong,
       }
     })
     res.json(messages)
@@ -54,11 +55,32 @@ router.post('/', async (req, res) => {
   try {
     const { _id } = req.user
     const { chatId } = req.query
-    const { message } = req.body
+    const {
+      message,
+      isSong = false,
+      songName,
+      artists,
+      album,
+      artworkUrl,
+      uri,
+    } = req.body
     const chat = await Chat.findById(chatId)
-    const chatMsg = {
-      message: message,
-      sender: _id,
+    if (isSong) {
+      const chatMsg = {
+        sender: _id,
+        isSong: true,
+        songName,
+        artists,
+        album,
+        artworkUrl,
+        uri,
+      }
+    } else {
+      const chatMsg = {
+        message: message,
+        sender: _id,
+        isSong: isSong,
+      }
     }
     chat.messages.push(chatMsg)
     await chat.save()

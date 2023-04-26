@@ -30,7 +30,6 @@ module.exports = (passport) => {
         if (existingUser) {
           existingUser.spotifyAccessToken = accessToken
           existingUser.spotifyRefreshToken = refreshToken
-          existingUser.accessTokenExpiresIn = Date.now() + expires_in * 1000
           await existingUser.save()
           return done(null, existingUser)
         }
@@ -41,7 +40,6 @@ module.exports = (passport) => {
           email,
           spotifyAccessToken: accessToken,
           spotifyRefreshToken: refreshToken,
-          accessTokenExpiresIn: Date.now() + expires_in * 1000,
         }).save()
 
         done(null, user)

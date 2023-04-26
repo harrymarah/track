@@ -38,7 +38,7 @@ app.use('/data', data)
 app.use('/chat', chat)
 
 app.get('/', (req, res) => {
-  res.send('hello from the server bbz ')
+  res.send('hello from the server')
 })
 
 app.use((err, req, res, next) => {
