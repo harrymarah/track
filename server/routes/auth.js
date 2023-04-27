@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
-const axios = require('axios')
-const qs = require('qs')
-const User = require('../models/user')
-const { findOneAndUpdate } = require('../models/user')
 const { spotify, client, auth } = require('../config/config')
 const { isAuth } = require('../middleware')
+const {
+  verifyUser,
+  sendSpotifyToken,
+  logUserOut,
+} = require('../controller/auth')
 
 router.get(
   '/spotify',
@@ -30,26 +31,6 @@ router.get(
   })
 )
 
-router.get('/verifyuser', isAuth, (req, res) => {
-  return res.json({
-    authenticated: req.isAuthenticated(),
-    username: req.user.spotifyId,
-  })
-})
-
-router.get('/spotifytoken', isAuth, async (req, res) => {
-  if (!req.user) return res.sendStatus(401)
-  try {
-    const { spotifyId } = req.user
-    const user = await User.findOne({ spotifyId: spotifyId })
-    res.json({
-      spotifyAccessToken: user.spotifyAccessToken,
-    })
-  } catch (err) {
-    res.status(err?.response.status || 500).json({ error: err.message })
-  }
-})
-
 router.get(
   '/spotify/callback',
   passport.authenticate('spotify', {
@@ -72,23 +53,10 @@ router.get(
   }
 )
 
-router.post('/logout', async (req, res, next) => {
-  const { user } = req
-  if (user) {
-    user.spotifyAccessToken = null
-    user.spotifyRefreshToken = null
-    user.accessTokenExpiresIn = null
-    user.deviceId = null
-    user.save()
-  }
-  req.session.destroy()
-  res.clearCookie('isAuthenticated')
-  req.logout((e) => {
-    if (e) return next(e)
-    res.status(200).json({
-      logout: 'successful',
-    })
-  })
-})
+router.get('/verifyuser', isAuth, verifyUser)
+
+router.get('/spotifytoken', isAuth, sendSpotifyToken)
+
+router.post('/logout', logUserOut)
 
 module.exports = router

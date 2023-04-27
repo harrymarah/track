@@ -39,7 +39,6 @@ const RequestBar = ({ name, sentToUser, requestId, getRequests }) => {
     setNewMessage(true)
   }
   const denyRequest = async (requestId) => {
-    console.log(requestId)
     await backendApiCall.delete('/chat/requests', { data: { requestId } })
     getRequests()
   }
