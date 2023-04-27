@@ -28,7 +28,7 @@ const Messages = () => {
   const [showChat, toggleShowChat] = useState(false)
   const [chatData, setChatData] = useState({})
   const { backendApiCall } = useAxios()
-  const { newMessage, setNewMessage } = useChat()
+  const { newMessage, setNewMessage, setFriendsList } = useChat()
   const populateChats = async () => {
     const config = {
       url: '/chat',
@@ -47,6 +47,11 @@ const Messages = () => {
             setChatData={setChatData}
           />
         )
+      })
+    )
+    setFriendsList(
+      data.map((msg) => {
+        return { name: msg.name, chatId: msg.id }
       })
     )
   }

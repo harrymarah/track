@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import ModalContainer from 'components/ModalContainer'
 import styled from 'styled-components'
 import getArtists from 'utils/getArtists'
-import useAxios from 'hooks/useAxios'
+import { ShareSong, useQueueSong } from 'features/explore'
 
 const Title = styled.div`
   font-size: 1.6rem;
@@ -18,7 +18,7 @@ const CloseBtn = styled.i`
 `
 const SongOptionsBox = styled.div`
   width: 88%;
-  height: 250px;
+  height: ${(props) => props.height};
   background-color: var(--dark-blue);
   border-radius: 10px;
   display: flex;
@@ -49,7 +49,6 @@ const SongInfo = styled.div`
   font-size: 1.15rem;
   justify-content: space-evenly;
   margin-left: 10px;
-  // gap: 10px;
   .title {
     font-weight: 600;
   }
@@ -86,7 +85,9 @@ const ShareBtn = styled.div`
 const QueueBtn = styled(ShareBtn)``
 
 const SongOptionsModal = ({ closeModal, songData, setSongOptionsData }) => {
-  const { backendApiCall } = useAxios()
+  const [showShareOptions, setShowShareOptions] = useState(false)
+  const [modalHeight, setModalHeight] = useState('250px')
+  const { queueSong } = useQueueSong()
   const { name, artists, album, artwork, uri } = songData
   const handleClose = () => {
     setSongOptionsData({
@@ -98,19 +99,15 @@ const SongOptionsModal = ({ closeModal, songData, setSongOptionsData }) => {
     })
     closeModal()
   }
-  const queueSong = async (uri) => {
-    const config = {
-      url: '/player/queue-song',
-      method: 'put',
-      data: {
-        uri: uri,
-      },
-    }
-    await backendApiCall(config)
+
+  const openShareOptions = () => {
+    setModalHeight('300px')
+    setShowShareOptions(true)
   }
+
   return (
     <ModalContainer onClick={() => handleClose()}>
-      <SongOptionsBox>
+      <SongOptionsBox height={modalHeight}>
         <CloseBtn className="fa-solid fa-x" onClick={() => handleClose()} />
         <Title>song options</Title>
         <SongTile>
@@ -122,13 +119,21 @@ const SongOptionsModal = ({ closeModal, songData, setSongOptionsData }) => {
           </SongInfo>
         </SongTile>
         <Buttons>
-          <ShareBtn>
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>share track
+          <ShareBtn onClick={() => openShareOptions()}>
+            <i className="fa-solid fa-arrow-up-right-from-square"></i>share
+            track
           </ShareBtn>
           <QueueBtn onClick={() => queueSong(uri)}>
             <i className="fa-solid fa-plus"></i>add to queue
           </QueueBtn>
         </Buttons>
+        {showShareOptions && (
+          <ShareSong
+            songData={songData}
+            setShowShareOptions={setShowShareOptions}
+            setModalHeight={setModalHeight}
+          />
+        )}
       </SongOptionsBox>
     </ModalContainer>
   )

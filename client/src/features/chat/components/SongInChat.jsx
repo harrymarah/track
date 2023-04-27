@@ -1,8 +1,10 @@
-import React from 'react'
 import styled from 'styled-components'
+import { useQueueSong } from 'features/explore'
+import usePlaySong from 'hooks/usePlaySong'
 
 const Container = styled.div`
-  background-color: rgba(230, 241, 255, 0.1);
+  background-color: ${(props) =>
+    props.sendByUser ? 'rgba(156, 255, 217, 0.3)' : 'rgba(255, 255, 255, 0.1)'};
   margin: 10px auto;
   padding: 0.6rem;
   border-radius: 8px;
@@ -54,26 +56,23 @@ const Buttons = styled.div`
   margin-top: 10px;
 `
 
-const SongInChat = () => {
+const SongInChat = ({ songData }) => {
+  const { songName, artist, album, artworkUrl, sendByUser, uri } = songData
+  const { queueSong } = useQueueSong()
+  const { playSong } = usePlaySong()
   return (
-    <Container>
+    <Container sendByUser={sendByUser}>
       <SongInfoArea>
-        <Artwork
-          imgSrc={
-            'https://i.scdn.co/image/ab67616d0000b2736b3fa88bdd4af566fbbf2bbf'
-          }
-        />
+        <Artwork imgSrc={artworkUrl} />
         <SongInfo>
-          <div className="songName">I Bet You Look Good On The Dancefloor</div>
-          <div className="artists">Arctic Monkeys</div>
-          <div className="albumTitle">
-            Whatever People Say I Am, That's What I'm Not
-          </div>
+          <div className="songName">{songName}</div>
+          <div className="artists">{artist}</div>
+          <div className="albumTitle">{album}</div>
         </SongInfo>
       </SongInfoArea>
       <Buttons>
-        <ActionButton>play</ActionButton>
-        <ActionButton>queue</ActionButton>
+        <ActionButton onClick={() => playSong(uri)}>play</ActionButton>
+        <ActionButton onClick={() => queueSong(uri)}>queue</ActionButton>
         <ActionButton>like</ActionButton>
       </Buttons>
     </Container>

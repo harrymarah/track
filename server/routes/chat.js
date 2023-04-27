@@ -43,6 +43,11 @@ router.get('/full-chat', async (req, res) => {
         message: msg.message,
         sendByUser: msg.sender.toString() == user._id.toString(),
         isSong: msg.isSong,
+        songName: msg.songName,
+        artist: msg.artist,
+        album: msg.album,
+        artworkUrl: msg.artworkUrl,
+        uri: msg.uri,
       }
     })
     res.json(messages)
@@ -55,35 +60,38 @@ router.post('/', async (req, res) => {
   try {
     const { _id } = req.user
     const { chatId } = req.query
-    const {
-      message,
-      isSong = false,
-      songName,
-      artists,
-      album,
-      artworkUrl,
-      uri,
-    } = req.body
+    const { message, isSong = false } = req.body
     const chat = await Chat.findById(chatId)
-    if (isSong) {
-      const chatMsg = {
-        sender: _id,
-        isSong: true,
-        songName,
-        artists,
-        album,
-        artworkUrl,
-        uri,
-      }
-    } else {
-      const chatMsg = {
-        message: message,
-        sender: _id,
-        isSong: isSong,
-      }
+    const chatMsg = {
+      message: message,
+      sender: _id,
+      isSong: isSong,
     }
     chat.messages.push(chatMsg)
     await chat.save()
+  } catch (err) {
+    console.error(err)
+  }
+})
+
+router.post('/share-song', async (req, res) => {
+  try {
+    const { _id, name } = req.user
+    const { songName, artists, album, artworkUrl, songUri, chatId } = req.body
+    const chat = await Chat.findById(chatId)
+    const songMsg = {
+      message: `${name} shared ${songName} by ${artists}`,
+      sender: _id,
+      isSong: true,
+      songName: songName,
+      artist: artists,
+      album: album,
+      artworkUrl: artworkUrl,
+      uri: songUri,
+    }
+    chat.messages.push(songMsg)
+    await chat.save()
+    res.sendStatus(200)
   } catch (err) {
     console.error(err)
   }

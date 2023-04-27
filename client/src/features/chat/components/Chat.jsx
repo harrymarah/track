@@ -114,14 +114,19 @@ const Chat = ({ chatData, toggleShowChat, setChatData }) => {
         <ChatName>{name}</ChatName>
       </TopNav>
       <MessageArea>
-        {messages.map((msg) => {
+        {/* {messages.map((msg) => {
           return msg.sendByUser ? (
             <MsgFromUser>{msg.message}</MsgFromUser>
           ) : (
             <MsgToUser>{msg.message}</MsgToUser>
           )
+        })} */}
+        {messages.map((msg) => {
+          if (msg.isSong) return <SongInChat songData={msg} />
+          if (msg.sendByUser) return <MsgFromUser>{msg.message}</MsgFromUser>
+          if (!msg.sendByUser) return <MsgToUser>{msg.message}</MsgToUser>
         })}
-        <SongInChat />
+        {/* <SongInChat /> */}
         <Anchor ref={anchorDiv} />
       </MessageArea>
       <TextInput
