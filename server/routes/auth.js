@@ -27,6 +27,7 @@ router.get(
       'playlist-modify-private',
       'playlist-modify-public',
       'ugc-image-upload',
+      'user-read-recently-played',
     ],
     showDialog: true,
   })

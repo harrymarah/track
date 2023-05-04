@@ -6,4 +6,5 @@ export { default as SongOptionsModal } from 'features/explore/components/SongOpt
 export { default as ShareSong } from 'features/explore/components/ShareSong'
 export { default as TopTracksSelector } from 'features/explore/components/TopTracksSelector'
 export { default as ShowTopTracks } from 'features/explore/components/ShowTopTracks'
+export { default as FeaturedContentContainer } from 'features/explore/components/FeaturedContentDisplay'
 export { default as useQueueSong } from 'features/explore/hooks/useQueueSong'

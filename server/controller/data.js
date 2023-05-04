@@ -160,3 +160,56 @@ module.exports.sendUsersTopTracks = async (req, res) => {
     trackData: topTracksData,
   })
 }
+
+module.exports.sendTopEightTracks = async (req, res) => {
+  const { spotifyAccessToken } = req.user
+  const config = {
+    method: 'get',
+    url: `https://api.spotify.com/v1/me/top/tracks`,
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    },
+    params: {
+      time_range: 'short_term',
+      limit: 8,
+    },
+  }
+  const { data } = await axios(config)
+  const topEightData = data.items.map((song) => {
+    return {
+      trackName: song.name,
+      artists: song.artists,
+      album: song.album,
+      uri: song.uri,
+    }
+  })
+  res.send(topEightData)
+}
+
+module.exports.sendRecentlyPlayed = async (req, res) => {
+  const { spotifyAccessToken } = req.user
+  const config = {
+    method: 'get',
+    url: `https://api.spotify.com/v1/me/player/recently-played`,
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    },
+    params: {
+      limit: 8,
+    },
+  }
+  const { data } = await axios(config)
+  const recentlyPlayedTracks = data.items.map((song) => {
+    return {
+      trackName: song.track.name,
+      artists: song.track.artists,
+      album: song.track.album,
+      uri: song.track.uri,
+    }
+  })
+  res.send(recentlyPlayedTracks)
+}
+
+module.exports.sendFeaturedPlaylists = async (req, res) => {}
+
+module.exports.sendRecommendations = async (req, res) => {}

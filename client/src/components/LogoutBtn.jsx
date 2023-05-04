@@ -20,13 +20,7 @@ const Button = styled.button`
 
 const LogoutBtn = () => {
   const [cookies, setCookie] = useCookies(['isAuthenticated'])
-  const {
-    updateAccessToken,
-    updateRefreshToken,
-    updateUsername,
-    logUserOut,
-    setIsLoading,
-  } = useAuth()
+  const { updateUsername, logUserOut, setIsLoading } = useAuth()
   const { webPlayer, setWebPlayer } = usePlayer()
   const { backendApiCall } = useAxios()
   const navigate = useNavigate()
@@ -44,8 +38,6 @@ const LogoutBtn = () => {
           path: '/',
         })
         sessionStorage.clear()
-        updateAccessToken(null)
-        updateRefreshToken(null)
         updateUsername(null)
         webPlayer && webPlayer.disconnect()
         setWebPlayer(undefined)
