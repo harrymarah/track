@@ -26,6 +26,7 @@ router.get(
       'playlist-read-private',
       'playlist-modify-private',
       'playlist-modify-public',
+      'ugc-image-upload',
     ],
     showDialog: true,
   })

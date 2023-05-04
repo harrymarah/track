@@ -9,7 +9,7 @@ const SingleResultContainer = styled.li`
   width: 95%;
   min-height: 60px;
   background-color: rgba(230, 241, 255, 0.04);
-  margin: 5px auto;
+  margin: 8px auto;
   padding: 0.3rem 0.5rem;
   border-radius: 8px;
   overflow: hidden;

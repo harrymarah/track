@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { PlaylistResult } from 'features/search'
+import { TopTracksSelector } from 'features/explore'
 import useAxios from 'hooks/useAxios'
 import { useEffect, useState } from 'react'
 
@@ -13,6 +14,7 @@ const Container = styled.ul`
 
 const PlaylistList = () => {
   const [playlists, setPlaylists] = useState([])
+  const [topTracksData, setTopTracksData] = useState(null)
   const { backendApiCall } = useAxios()
   const getPlaylists = async () => {
     const config = {
@@ -26,11 +28,30 @@ const PlaylistList = () => {
       })
     )
   }
+  const getTopTracksData = async () => {
+    const config = {
+      method: 'get',
+      url: '/data/get-users-tracks',
+    }
+    const { data } = await backendApiCall(config)
+    setTopTracksData(data)
+  }
   useEffect(() => {
     getPlaylists()
+    getTopTracksData()
   }, [])
 
-  return <Container>{playlists}</Container>
+  return (
+    <Container>
+      {topTracksData && (
+        <TopTracksSelector
+          topTracksData={topTracksData}
+          setTopTracksData={setTopTracksData}
+        />
+      )}
+      {playlists}
+    </Container>
+  )
 }
 
 export default PlaylistList

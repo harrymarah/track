@@ -146,8 +146,17 @@ module.exports.sendUsersTopTracks = async (req, res) => {
     },
   }
   const { data } = await axios(config)
-  const names = data.items.map(({ track }) => {
-    return track.name
+  const topTracksData = data.items.map(({ track }) => {
+    return {
+      name: track.name,
+      artists: track.artists,
+      album: track.album,
+      artwork: track.album.images,
+      uri: track.uri,
+    }
   })
-  res.send(names)
+  res.json({
+    noOfTracks: data.total,
+    trackData: topTracksData,
+  })
 }

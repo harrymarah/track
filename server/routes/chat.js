@@ -13,6 +13,11 @@ const {
 } = require('../controller/chat')
 const router = express.Router()
 
+// DELETE ME
+const User = require('../models/user')
+const Chat = require('../models/chat')
+const Request = require('../models/request')
+
 router.route('/').get(sendChatsOverview).post(addMessageToChat)
 
 router.get('/full-chat', sendFullChat)
@@ -47,6 +52,33 @@ router.post('/friendstest', async (req, res) => {
     }
   } catch (err) {
     res.status(err?.response?.status || 500).json({ error: err.message })
+  }
+})
+
+router.post('/requeststest', async (req, res) => {
+  try {
+    const { requestId } = req.body
+    const friendRequest = await Request.findById(requestId)
+    const [user1, user2] = await User.find({ requests: requestId })
+    const chat = new Chat({
+      recipients: [user1, user2],
+      sharedPlaylist: friendRequest.playlistId,
+      messages: [],
+    })
+    user1.friends.push(user2)
+    user2.friends.push(user1)
+    user1.chats.push(chat)
+    user2.chats.push(chat)
+    user1.requests.pull(requestId)
+    user2.requests.pull(requestId)
+    await user1.save()
+    await user2.save()
+    await chat.save()
+    await Request.findByIdAndDelete(requestId)
+    res.sendStatus(200)
+  } catch (err) {
+    res.status(err?.response?.status || 500).json({ error: err.message })
+    console.error(err)
   }
 })
 

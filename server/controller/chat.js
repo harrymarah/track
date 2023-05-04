@@ -2,7 +2,11 @@ const axios = require('axios')
 const User = require('../models/user')
 const Chat = require('../models/chat')
 const Request = require('../models/request')
-const ExpressError = require('../')
+const fs = require('fs')
+const encodedImage = fs.readFileSync(
+  './assets/track-collab-playlist.jpg',
+  'base64'
+)
 
 module.exports.sendChatsOverview = async (req, res) => {
   try {
@@ -72,9 +76,27 @@ module.exports.addMessageToChat = async (req, res) => {
   }
 }
 
+const addSongToSharedPlaylist = async (chat, songUri, spotifyAccessToken) => {
+  if (!chat.sharedPlaylist) return
+  const data = JSON.stringify({
+    uris: [songUri],
+    position: 0,
+  })
+  const config = {
+    url: `https://api.spotify.com/v1/playlists/${chat.sharedPlaylist}/tracks`,
+    method: 'post',
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  }
+  return await axios(config)
+}
+
 module.exports.addSongToChat = async (req, res) => {
   try {
-    const { _id, name } = req.user
+    const { _id, name, spotifyAccessToken } = req.user
     const { songName, artists, album, artworkUrl, songUri, chatId } = req.body
     const chat = await Chat.findById(chatId)
     const songMsg = {
@@ -89,6 +111,7 @@ module.exports.addSongToChat = async (req, res) => {
     }
     chat.messages.push(songMsg)
     await chat.save()
+    await addSongToSharedPlaylist(chat, songUri, spotifyAccessToken)
     res.sendStatus(200)
   } catch (err) {
     console.error(err)
@@ -112,6 +135,19 @@ module.exports.sendFriendsList = async (req, res) => {
   )
   res.send(friendsData)
 }
+const addPlaylistArtwork = async (playlistId, accessToken) => {
+  const data = encodedImage
+  const config = {
+    url: `https://api.spotify.com/v1/playlists/${playlistId}/images`,
+    method: 'put',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'image/jpeg',
+    },
+    data: data,
+  }
+  await axios(config)
+}
 
 const createCollaborativePlaylist = async (user, newFriend, friendRequest) => {
   const data = JSON.stringify({
@@ -133,6 +169,7 @@ const createCollaborativePlaylist = async (user, newFriend, friendRequest) => {
   const playlistId = response.data.id
   friendRequest.playlistId = playlistId
   await friendRequest.save()
+  await addPlaylistArtwork(playlistId, user.spotifyAccessToken)
 }
 
 module.exports.createFriendRequest = async (req, res) => {
@@ -158,6 +195,7 @@ module.exports.createFriendRequest = async (req, res) => {
       res.sendStatus(200)
     }
   } catch (err) {
+    console.error(err)
     res.status(err?.response?.status || 500).json({ error: err.message })
   }
 }
@@ -217,12 +255,32 @@ module.exports.sendPendingRequests = async (req, res) => {
   res.send(requestsData)
 }
 
+const followCollaborativePlaylist = async (
+  friendRequest,
+  spotifyAccessToken,
+  requestId
+) => {
+  const { playlistId } = friendRequest
+  const config = {
+    url: `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
+    method: 'put',
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+      'Content-Type': 'application/json',
+    },
+  }
+  const response = await axios(config)
+}
+
 module.exports.acceptFriendRequest = async (req, res) => {
   try {
     const { requestId } = req.body
+    const { spotifyAccessToken } = req.user
+    const friendRequest = await Request.findById(requestId)
     const [user1, user2] = await User.find({ requests: requestId })
     const chat = new Chat({
       recipients: [user1, user2],
+      sharedPlaylist: friendRequest.playlistId,
       messages: [],
     })
     user1.friends.push(user2)
@@ -231,6 +289,11 @@ module.exports.acceptFriendRequest = async (req, res) => {
     user2.chats.push(chat)
     user1.requests.pull(requestId)
     user2.requests.pull(requestId)
+    await followCollaborativePlaylist(
+      friendRequest,
+      spotifyAccessToken,
+      requestId
+    )
     await user1.save()
     await user2.save()
     await chat.save()

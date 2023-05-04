@@ -4,4 +4,6 @@ export { default as ShowPlaylist } from 'features/explore/components/ShowPlaylis
 export { default as PlaylistList } from 'features/explore/components/PlaylistList'
 export { default as SongOptionsModal } from 'features/explore/components/SongOptionsModal'
 export { default as ShareSong } from 'features/explore/components/ShareSong'
+export { default as TopTracksSelector } from 'features/explore/components/TopTracksSelector'
+export { default as ShowTopTracks } from 'features/explore/components/ShowTopTracks'
 export { default as useQueueSong } from 'features/explore/hooks/useQueueSong'
