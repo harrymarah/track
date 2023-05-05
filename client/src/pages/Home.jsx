@@ -8,8 +8,13 @@ import useAxios from 'hooks/useAxios'
 import styled from 'styled-components'
 import 'wdyr'
 import FeaturedContentDisplay from 'features/explore/components/FeaturedContentDisplay'
+import { SongOptionsModal } from 'features/explore'
+import { ShowPlaylist } from 'features/explore'
 
-const MainContainer = styled.div``
+const MainContainer = styled.div`
+  overflow-y: scroll;
+  padding-bottom: 100px;
+`
 const FeaturedContentContainer = styled.div``
 const Heading = styled.div`
   font-size: 1.3rem;
@@ -22,6 +27,10 @@ const Home = () => {
   const [topEightLoading, setTopEightLoading] = useState(true)
   const [recentlyPlayedTracks, setRecentlyPlayedTracks] = useState(null)
   const [recentlyPlayedLoading, setRecentlyPlayedLoading] = useState(true)
+  const [featuredPlaylists, setFeaturedPlaylists] = useState(null)
+  const [featuredPlaylistsLoading, setFeaturedPlaylistsLoading] = useState(true)
+  const [showPlaylist, setShowPlaylist] = useState(false)
+  const [playlistData, setPlaylistData] = useState(null)
   const getTopEightTracks = async () => {
     const config = {
       url: '/data/get-user-top-eight',
@@ -38,10 +47,19 @@ const Home = () => {
       method: 'get',
     }
     const { data } = await backendApiCall(config)
-    console.log(data)
     setRecentlyPlayedTracks(data)
     setRecentlyPlayedLoading(false)
   }
+  const getFeaturedPlaylists = async () => {
+    const config = {
+      url: '/data/get-featured-playlists',
+      method: 'get',
+    }
+    const { data } = await backendApiCall(config)
+    setFeaturedPlaylists(data)
+    setFeaturedPlaylistsLoading(false)
+  }
+  const handlePlaylistSelect = () => {}
   useAuthentication()
   const spotifyWebPlayer = useSpotify()
   const { setWebPlayer } = usePlayer()
@@ -54,6 +72,7 @@ const Home = () => {
   useEffect(() => {
     getTopEightTracks()
     getRecentlyPlayed()
+    getFeaturedPlaylists()
   }, [])
 
   return (
@@ -61,17 +80,31 @@ const Home = () => {
       <PageHead heading={'Home'} />
       <MainContainer>
         <FeaturedContentContainer>
-          <Heading>your top 8 tracks</Heading>
+          <Heading>your top 6 tracks</Heading>
           <FeaturedContentDisplay
             contentType="songs"
             featuredContent={topEightTracks}
             contentIsLoading={topEightLoading}
           />
+          {showPlaylist && (
+            <ShowPlaylist
+              searchResults={playlistData}
+              toggleShowFullPlaylist={setShowPlaylist}
+            />
+          )}
           <Heading>recently played</Heading>
           <FeaturedContentDisplay
             contentType="songs"
             featuredContent={recentlyPlayedTracks}
             contentIsLoading={recentlyPlayedLoading}
+            setData={setPlaylistData}
+            openComponent={() => setShowPlaylist(true)}
+          />
+          <Heading>featured playlists</Heading>
+          <FeaturedContentDisplay
+            contentType="playlists"
+            featuredContent={featuredPlaylists}
+            contentIsLoading={featuredPlaylistsLoading}
           />
         </FeaturedContentContainer>
       </MainContainer>

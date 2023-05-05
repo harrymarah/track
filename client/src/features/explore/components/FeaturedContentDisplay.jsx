@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import Loading from 'components/Loading'
+import usePlaySong from 'hooks/usePlaySong'
+import useLongPress from 'hooks/useLongPress'
 
 const ContentContainer = styled.div`
   width: 100%;
@@ -14,7 +16,7 @@ const ContentContainer = styled.div`
   margin-bottom: 20px;
 `
 const FeaturedContent = styled.div`
-  width: 75px;
+  width: 29%;
   background-color: var(--dark-blue);
   border-radius: 5px;
   margin: 5px;
@@ -24,18 +26,22 @@ const FeaturedContent = styled.div`
   justify-content: space-between;
 `
 const Artwork = styled.div`
-  height: 70px;
-  width: 70px;
+  width: 95%;
   background-image: url(${(props) => props.artworkUrl});
   margin: auto;
   background-size: cover;
   margin-bottom: 3px;
   align-self: flex-start;
+  &:after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
 `
 const Title = styled.div`
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  width: 70px;
+  width: 95%;
   margin: auto;
   height: 3em;
 `
@@ -51,8 +57,23 @@ const FeaturedContentDisplay = ({
   contentType,
   featuredContent,
   contentIsLoading,
+  setData,
+  openComponent,
 }) => {
+  const { playSong } = usePlaySong()
+  const handleClick = async (uri, token) => {
+    await playSong(uri, token)
+  }
+  const handleLongPress = (data) => {
+    setData(data)
+    openComponent()
+  }
+  // {...useLongPress(
+  //   () => handleClick(trackData.uri),
+  //   () => handleLongPress(trackData)
+  // )}
   const renderTracks = (trackData) => {
+    if (!trackData) return
     const trackDetails = trackData.map((track) => {
       return (
         <FeaturedContent>
@@ -64,7 +85,18 @@ const FeaturedContentDisplay = ({
     })
     return trackDetails
   }
-  const renderPlaylists = (playlistData) => {}
+  const renderPlaylists = (playlistData) => {
+    if (!playlistData) return
+    const playlists = playlistData.map((playlist) => {
+      return (
+        <FeaturedContent>
+          <Artwork artworkUrl={playlist.artwork} />
+          <Title>{playlist.playlistName}</Title>
+        </FeaturedContent>
+      )
+    })
+    return playlists
+  }
   return (
     <ContentContainer>
       {contentIsLoading && <Loading />}

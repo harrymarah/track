@@ -3,9 +3,10 @@ const { Schema } = mongoose
 
 const ChatSchema = new Schema({
   recipients: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  sharedPlaylist: {
-    type: String,
-    default: undefined,
+  sharedPlaylist: String,
+  lastUpdated: {
+    type: Date,
+    default: Date.now(),
   },
   messages: [
     {

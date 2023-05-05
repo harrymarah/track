@@ -171,7 +171,7 @@ module.exports.sendTopEightTracks = async (req, res) => {
     },
     params: {
       time_range: 'short_term',
-      limit: 8,
+      limit: 6,
     },
   }
   const { data } = await axios(config)
@@ -195,7 +195,7 @@ module.exports.sendRecentlyPlayed = async (req, res) => {
       Authorization: `Bearer ${spotifyAccessToken}`,
     },
     params: {
-      limit: 8,
+      limit: 6,
     },
   }
   const { data } = await axios(config)
@@ -210,6 +210,50 @@ module.exports.sendRecentlyPlayed = async (req, res) => {
   res.send(recentlyPlayedTracks)
 }
 
-module.exports.sendFeaturedPlaylists = async (req, res) => {}
+module.exports.sendFeaturedPlaylists = async (req, res) => {
+  const { spotifyAccessToken } = req.user
+  const config = {
+    url: 'https://api.spotify.com/v1/browse/featured-playlists',
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    },
+    params: {
+      limit: 6,
+    },
+  }
+  const { data } = await axios(config)
+  const playlists = data.playlists.items.map((playlist) => {
+    return {
+      playlistName: playlist.name,
+      artwork: playlist.images[0].url,
+      id: playlist.id,
+      uri: playlist.uri,
+    }
+  })
+  res.send(playlists)
+}
 
-module.exports.sendRecommendations = async (req, res) => {}
+module.exports.sendRecommendations = async (req, res) => {
+  const { spotifyAccessToken } = req.user
+  const config = {
+    url: 'https://api.spotify.com/v1/browse/featured-playlists',
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${spotifyAccessToken}`,
+    },
+    params: {
+      limit: 6,
+    },
+  }
+  const { data } = await axios(config)
+  const playlists = data.playlists.items.map((playlist) => {
+    return {
+      playlistName: playlist.name,
+      artwork: playlist.images[0].url,
+      id: playlist.id,
+      uri: playlist.uri,
+    }
+  })
+  res.send(playlists)
+}

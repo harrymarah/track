@@ -1,4 +1,6 @@
 const express = require('express')
+const catchAsync = require('../utils/catchAsync')
+
 const router = express.Router()
 const {
   sendAlbumTracks,
@@ -13,24 +15,24 @@ const {
   sendRecommendations,
 } = require('../controller/data')
 
-router.get('/get-album-tracks', sendAlbumTracks)
+router.get('/get-album-tracks', catchAsync(sendAlbumTracks))
 
-router.get('/get-playlist-tracks', sendPlaylistTracks)
+router.get('/get-playlist-tracks', catchAsync(sendPlaylistTracks))
 
-router.get('/get-artist-top-tracks', sendArtistTopTracks)
+router.get('/get-artist-top-tracks', catchAsync(sendArtistTopTracks))
 
-router.get('/get-artist-albums', sendAlbumsByArtist)
+router.get('/get-artist-albums', catchAsync(sendAlbumsByArtist))
 
-router.get('/get-users-playlists', sendUsersPlaylists)
+router.get('/get-users-playlists', catchAsync(sendUsersPlaylists))
 
-router.get('/get-users-tracks', sendUsersTopTracks)
+router.get('/get-users-tracks', catchAsync(sendUsersTopTracks))
 
-router.get('/get-user-top-eight', sendTopEightTracks)
+router.get('/get-user-top-eight', catchAsync(sendTopEightTracks))
 
-router.get('/get-recently-played', sendRecentlyPlayed)
+router.get('/get-recently-played', catchAsync(sendRecentlyPlayed))
 
-router.get('/get-featured-playlists', sendFeaturedPlaylists)
+router.get('/get-featured-playlists', catchAsync(sendFeaturedPlaylists))
 
-router.get('/get-recommendations', sendRecommendations)
+router.get('/get-recommendations', catchAsync(sendRecommendations))
 
 module.exports = router

@@ -14,6 +14,9 @@ module.exports.sendChatsOverview = async (req, res) => {
     const user = await User.findById(_id).populate({
       path: 'chats',
       model: Chat,
+      options: {
+        sort: { lastUpdated: -1 },
+      },
       populate: { path: 'recipients' },
     })
     const chats = user.chats.map((chat) => {
@@ -70,6 +73,7 @@ module.exports.addMessageToChat = async (req, res) => {
       isSong: isSong,
     }
     chat.messages.push(chatMsg)
+    chat.lastUpdated = Date.now()
     await chat.save()
   } catch (err) {
     console.error(err)
@@ -110,6 +114,7 @@ module.exports.addSongToChat = async (req, res) => {
       uri: songUri,
     }
     chat.messages.push(songMsg)
+    chat.lastUpdated = Date.now()
     await chat.save()
     await addSongToSharedPlaylist(chat, songUri, spotifyAccessToken)
     res.sendStatus(200)

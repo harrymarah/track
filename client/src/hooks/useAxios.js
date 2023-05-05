@@ -16,15 +16,15 @@ const useAxios = () => {
     (err) => {
       if (err.response.status === 401) {
         try {
-          backendApiCall.post('/auth/logout', {
-            crossDomain: true,
-          })
           sessionStorage.clear()
           updateUsername(null)
           webPlayer && webPlayer.disconnect()
           setWebPlayer(undefined)
           logUserOut()
           setIsLoading(false)
+          backendApiCall.post('/auth/logout', {
+            crossDomain: true,
+          })
         } catch (err) {
           console.error(err)
         } finally {
