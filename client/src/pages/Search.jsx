@@ -4,12 +4,19 @@ import { PageHead } from 'layouts'
 
 const Search = () => {
   const [searchResults, updateSearchResults] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
   return (
     <>
       <PageHead heading={'Search'}>
-        <SearchBar updateSearchResults={updateSearchResults} />
+        <SearchBar
+          updateSearchResults={updateSearchResults}
+          setIsSearching={setIsSearching}
+        />
       </PageHead>
-      <ResultsContainer searchResults={searchResults} />
+      <ResultsContainer
+        isSearching={isSearching}
+        searchResults={searchResults}
+      />
     </>
   )
 }

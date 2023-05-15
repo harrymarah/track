@@ -10,6 +10,7 @@ import {
   SearchFilterButtons,
 } from 'features/search'
 import { SongOptionsModal } from 'features/explore'
+import Loading from 'components/Loading'
 
 const Results = styled.ul`
   overflow-y: scroll;
@@ -34,7 +35,7 @@ const ResultsHeading = styled.div`
   z-index: 5;
 `
 
-const ResultsContainer = ({ searchResults }) => {
+const ResultsContainer = ({ searchResults, isSearching }) => {
   const [noOfTracks, setNoOfTracks] = useState(10)
   const [noOfArtists, setNoOfArtists] = useState(1)
   const [noOfAlbums, setNoOfAlbums] = useState(5)
@@ -116,6 +117,10 @@ const ResultsContainer = ({ searchResults }) => {
             toggleShowPlaylists,
           }}
         />
+        {isSearching && (
+          <Loading loading={isSearching} customCss={{ minHeight: '50%' }} />
+        )}
+
         {allResults.artistResults.length ? (
           <>
             <ResultsHeading>artists</ResultsHeading>

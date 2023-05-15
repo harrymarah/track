@@ -4,6 +4,7 @@ import { PlaylistResult } from 'features/search'
 import { TopTracksSelector } from 'features/explore'
 import useAxios from 'hooks/useAxios'
 import { useEffect, useState } from 'react'
+import Loading from 'components/Loading'
 
 const Container = styled.ul`
   height: 100%;
@@ -15,6 +16,7 @@ const Container = styled.ul`
 const PlaylistList = () => {
   const [playlists, setPlaylists] = useState([])
   const [topTracksData, setTopTracksData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
   const { backendApiCall } = useAxios()
   const getPlaylists = async () => {
     const config = {
@@ -22,6 +24,7 @@ const PlaylistList = () => {
       url: '/data/get-users-playlists',
     }
     const { data } = await backendApiCall(config)
+    setIsLoading(false)
     setPlaylists(
       data.map((playlist) => {
         return <PlaylistResult key={playlist.id} searchResults={playlist} />
@@ -34,6 +37,7 @@ const PlaylistList = () => {
       url: '/data/get-users-tracks',
     }
     const { data } = await backendApiCall(config)
+    setIsLoading(false)
     setTopTracksData(data)
   }
   useEffect(() => {
@@ -43,6 +47,9 @@ const PlaylistList = () => {
 
   return (
     <Container>
+      {isLoading && (
+        <Loading loading={isLoading} customCss={{ minHeight: '50%' }} />
+      )}
       {topTracksData && (
         <TopTracksSelector
           topTracksData={topTracksData}

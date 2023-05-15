@@ -15,13 +15,15 @@ const Input = styled.input`
   cursor: pointer;
 `
 
-const SearchBar = ({ updateSearchResults }) => {
+const SearchBar = ({ updateSearchResults, setIsSearching }) => {
   const [searchTerm, updateSearchTerm] = useState('')
   const { spotifySearch } = useSpotifySearch()
 
   const handleSearch = async (e) => {
+    setIsSearching(true)
     e.preventDefault()
     const results = await spotifySearch(searchTerm)
+    setIsSearching(false)
     updateSearchResults(results)
   }
 

@@ -1,5 +1,6 @@
 const axios = require('axios')
 const User = require('../models/user')
+const { catchExpiredToken } = require('../utils/catchExpiredToken')
 
 module.exports.sendAlbumTracks = async (req, res) => {
   try {
@@ -15,7 +16,7 @@ module.exports.sendAlbumTracks = async (req, res) => {
         limit: 50,
       },
     }
-    const { data } = await axios(config)
+    const { data } = await catchExpiredToken(config)
     const trackList = data.items.map((track) => ({
       trackName: track.name,
       trackUri: track.uri,
@@ -171,7 +172,7 @@ module.exports.sendTopEightTracks = async (req, res) => {
     },
     params: {
       time_range: 'short_term',
-      limit: 6,
+      limit: 4,
     },
   }
   const { data } = await axios(config)
@@ -195,7 +196,7 @@ module.exports.sendRecentlyPlayed = async (req, res) => {
       Authorization: `Bearer ${spotifyAccessToken}`,
     },
     params: {
-      limit: 6,
+      limit: 4,
     },
   }
   const { data } = await axios(config)
@@ -219,7 +220,7 @@ module.exports.sendFeaturedPlaylists = async (req, res) => {
       Authorization: `Bearer ${spotifyAccessToken}`,
     },
     params: {
-      limit: 6,
+      limit: 4,
     },
   }
   const { data } = await axios(config)
@@ -243,7 +244,7 @@ module.exports.sendRecommendations = async (req, res) => {
       Authorization: `Bearer ${spotifyAccessToken}`,
     },
     params: {
-      limit: 6,
+      limit: 4,
     },
   }
   const { data } = await axios(config)

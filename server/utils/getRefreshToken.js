@@ -22,8 +22,8 @@ module.exports = getRefreshToken = async (loggedInUser) => {
     data: data,
   }
   try {
-    const response = await axios(config)
-    const { access_token, expires_in } = response.data
+    const { data } = await axios(config)
+    const { access_token, expires_in } = data
     user.spotifyAccessToken = access_token
     user.accessTokenExpiresIn = Date.now() + expires_in * 1000
     await user.save()

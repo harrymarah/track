@@ -16,7 +16,7 @@ const ContentContainer = styled.div`
   margin-bottom: 20px;
 `
 const FeaturedContent = styled.div`
-  width: 29%;
+  width: 20.5%;
   background-color: var(--dark-blue);
   border-radius: 5px;
   margin: 5px;
@@ -39,7 +39,7 @@ const Artwork = styled.div`
   }
 `
 const Title = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   width: 95%;
   margin: auto;

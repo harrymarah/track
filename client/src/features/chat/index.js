@@ -7,3 +7,4 @@ export { default as AddFriendModal } from 'features/chat/components/AddFriendMod
 export { default as FriendsListModal } from 'features/chat/components/FriendsListModal'
 export { default as ViewRequestsModal } from 'features/chat/components/ViewRequestsModal'
 export { default as SongInChat } from 'features/chat/components/SongInChat'
+export { default as UnreadMessages } from 'features/chat/components/UnreadMessages'

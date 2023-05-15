@@ -10,6 +10,7 @@ import 'wdyr'
 import FeaturedContentDisplay from 'features/explore/components/FeaturedContentDisplay'
 import { SongOptionsModal } from 'features/explore'
 import { ShowPlaylist } from 'features/explore'
+import { UnreadMessages } from 'features/chat'
 
 const MainContainer = styled.div`
   overflow-y: scroll;
@@ -19,6 +20,18 @@ const FeaturedContentContainer = styled.div``
 const Heading = styled.div`
   font-size: 1.3rem;
   margin-bottom: 8px;
+`
+const NotificationIcon = styled.span`
+  background-color: var(--bright);
+  color: var(--dark-blue);
+  font-size: 0.9rem;
+  font-weight: 600;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 3px;
+  padding: 2.5px;
+  display: inline-block;
+  text-align: center;
 `
 
 const Home = () => {
@@ -80,7 +93,11 @@ const Home = () => {
       <PageHead heading={'Home'} />
       <MainContainer>
         <FeaturedContentContainer>
-          <Heading>your top 6 tracks</Heading>
+          <Heading>
+            unread messages <NotificationIcon>3</NotificationIcon>
+          </Heading>
+          <UnreadMessages></UnreadMessages>
+          <Heading>your current favourites</Heading>
           <FeaturedContentDisplay
             contentType="songs"
             featuredContent={topEightTracks}

@@ -1,14 +1,15 @@
 import React from 'react'
 import ClipLoader from 'react-spinners/ClipLoader'
 
-const Loading = ({ loading }) => {
+const Loading = ({ loading, customCss }) => {
   return (
     <div
       style={{
         display: 'flex',
         width: '100%',
         justifyContent: 'center',
-        margin: '0 1rem',
+        alignItems: 'center',
+        ...customCss,
       }}
     >
       <ClipLoader

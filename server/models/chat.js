@@ -18,6 +18,7 @@ const ChatSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
       },
+      readByReciever: Boolean,
       isSong: {
         type: Boolean,
         default: false,

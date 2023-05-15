@@ -12,6 +12,7 @@ import {
 } from 'features/chat'
 import useAxios from 'hooks/useAxios'
 import useChat from 'context/ChatContext'
+import Loading from 'components/Loading'
 
 const BtnContainer = styled.div`
   display: flex;
@@ -27,6 +28,7 @@ const Messages = () => {
   const [showFriendsList, toggleShowFriendsList] = useState(false)
   const [showChat, toggleShowChat] = useState(false)
   const [chatData, setChatData] = useState({})
+  const [messagesLoading, setMessagesLoading] = useState(true)
   const { backendApiCall } = useAxios()
   const { newMessage, setNewMessage, setFriendsList } = useChat()
   const populateChats = async () => {
@@ -35,10 +37,12 @@ const Messages = () => {
       method: 'get',
     }
     const { data } = await backendApiCall(config)
+    setMessagesLoading(false)
     setMessages(
       data.map((msg) => {
         return (
           <ChatDisplayBar
+            key={msg.id}
             name={msg.name}
             message={msg.newestMessage}
             chatId={msg.id}
@@ -93,6 +97,9 @@ const Messages = () => {
           />
         </BtnContainer>
       </PageHead>
+      {messagesLoading && (
+        <Loading loading={messagesLoading} customCss={{ minHeight: '50%' }} />
+      )}
       {showChat ? (
         <Chat
           chatData={chatData}
@@ -102,6 +109,7 @@ const Messages = () => {
       ) : (
         ''
       )}
+
       <AllMessagesContainer>
         {messages.length > 0 ? messages : ''}
       </AllMessagesContainer>
