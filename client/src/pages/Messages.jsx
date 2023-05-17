@@ -42,6 +42,7 @@ const Messages = () => {
       data.map((msg) => {
         return (
           <ChatDisplayBar
+            unread={msg.unread}
             key={msg.id}
             name={msg.name}
             message={msg.newestMessage}
@@ -62,7 +63,7 @@ const Messages = () => {
   useEffect(() => {
     populateChats()
     setNewMessage(false)
-  }, [newMessage])
+  }, [, newMessage])
   return (
     <>
       <PageHead heading={'Messages'}>

@@ -29,7 +29,7 @@ router.get(
       'ugc-image-upload',
       'user-read-recently-played',
     ],
-    showDialog: true,
+    // showDialog: true,
   })
 )
 

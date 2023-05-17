@@ -24,7 +24,7 @@ const httpServer = createServer(app)
 
 app.use(sessionMiddleware)
 
-app.use(cors())
+app.use(cors({ origin: client.url, credentials: true }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())

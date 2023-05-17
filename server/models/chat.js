@@ -8,6 +8,7 @@ const ChatSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  seenBy: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   messages: [
     {
       message: {
@@ -18,7 +19,6 @@ const ChatSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
       },
-      readByReciever: Boolean,
       isSong: {
         type: Boolean,
         default: false,

@@ -27,6 +27,7 @@ module.exports.sendChatsOverview = async (req, res) => {
         id: chat._id,
         name: recipient[0].name,
         recipientId: recipient[0]._id,
+        unread: chat.seenBy.length < 2 && !chat.seenBy[0]._id.equals(user._id),
         newestMessage:
           chat.messages[chat.messages.length - 1]?.message || 'no messages',
       }
@@ -43,6 +44,13 @@ module.exports.sendFullChat = async (req, res) => {
     const { chatId } = req.query
     const user = await User.findById(_id)
     const fullChat = await Chat.findById(chatId)
+    if (
+      fullChat.seenBy.length < 2 &&
+      !fullChat.seenBy[0]._id.equals(user._id)
+    ) {
+      fullChat.seenBy.push(user)
+      await fullChat.save()
+    }
     const messages = fullChat.messages.map((msg) => {
       return {
         message: msg.message,
@@ -61,11 +69,67 @@ module.exports.sendFullChat = async (req, res) => {
   }
 }
 
+module.exports.sendUnreadMessages = async (req, res) => {
+  const { _id } = req.user
+  const user = await User.findById(_id).populate({
+    path: 'chats',
+    options: {
+      sort: { lastUpdated: -1 },
+    },
+    populate: { path: 'seenBy' },
+  })
+  const unseenChats = user.chats.filter(
+    (chat) => chat.seenBy.length < 2 && !chat.seenBy[0].equals(user)
+  )
+  if (unseenChats.length > 0) {
+    const unseenChatSummary = unseenChats.map((chat) => {
+      return {
+        id: chat._id,
+        sender: chat.seenBy[0].name,
+        senderId: chat.seenBy[0]._id,
+        message: chat.messages[chat.messages.length - 1].message,
+      }
+    })
+    res.send(unseenChatSummary)
+  } else {
+    res.status(200)
+  }
+}
+module.exports.testUnreadMessages = async (req, res) => {
+  const user = await User.findOne({ spotifyId: 'harrymarah' }).populate({
+    path: 'chats',
+    options: {
+      sort: { lastUpdated: -1 },
+    },
+    populate: { path: 'seenBy' },
+  })
+  const unseenChats = user.chats.filter(
+    // (chat) => chat.seenBy.length < 2 && !chat.seenBy[0].equals(user)
+    (chat) => chat.seenBy.length < 2 && !chat.seenBy[0].equals(user)
+  )
+  if (unseenChats.length > 0) {
+    const unseenChatSummary = unseenChats.map((chat) => {
+      return {
+        id: chat._id,
+        sender: chat.seenBy[0].name,
+        seenByLength: chat.seenBy.length,
+        senderId: chat.seenBy[0]._id,
+        message: chat.messages[chat.messages.length - 1].message,
+      }
+    })
+    unseenChatSummary.unshift({ unseenChatsTotal: unseenChatSummary.length })
+    res.send(unseenChatSummary)
+  } else {
+    res.status(200)
+  }
+}
+
 module.exports.addMessageToChat = async (req, res) => {
   try {
     const { _id } = req.user
     const { chatId } = req.query
     const { message, isSong = false } = req.body
+    const user = await User.findById(_id)
     const chat = await Chat.findById(chatId)
     const chatMsg = {
       message: message,
@@ -73,6 +137,7 @@ module.exports.addMessageToChat = async (req, res) => {
       isSong: isSong,
     }
     chat.messages.push(chatMsg)
+    chat.seenBy = [user]
     chat.lastUpdated = Date.now()
     await chat.save()
   } catch (err) {

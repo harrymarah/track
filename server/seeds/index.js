@@ -58,8 +58,10 @@ const seedData = async () => {
       }
       chatMessages.push(message)
     }
+    const lastSender = chatMessages[chatMessages.length - 1].sender
     const chat = new Chat({
       recipients: [harrymarah._id, users[i]._id],
+      seenBy: [lastSender],
       messages: chatMessages,
     })
     harrymarah.chats.push(chat)

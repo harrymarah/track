@@ -10,6 +10,8 @@ const {
   sendPendingRequests,
   acceptFriendRequest,
   rejectFriendRequest,
+  sendUnreadMessages,
+  testUnreadMessages,
 } = require('../controller/chat')
 const router = express.Router()
 
@@ -21,6 +23,10 @@ const Request = require('../models/request')
 router.route('/').get(sendChatsOverview).post(addMessageToChat)
 
 router.get('/full-chat', sendFullChat)
+
+router.get('/unread-chats', sendUnreadMessages)
+
+router.get('/test-unread-chats', testUnreadMessages)
 
 router.post('/share-song', addSongToChat)
 

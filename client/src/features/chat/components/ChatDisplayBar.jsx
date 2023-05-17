@@ -11,6 +11,10 @@ const Container = styled.li`
   border-radius: 8px;
   overflow: hidden;
   padding: 0.6rem;
+  &.unread {
+    font-weight: 600;
+    color: var(--bright);
+  }
 `
 const Name = styled.div`
   font-size: 1.1rem;
@@ -33,6 +37,7 @@ const ChatDisplayBar = ({
   recipient,
   toggleShowChat,
   setChatData,
+  unread,
 }) => {
   // const [showChat, toggleShowChat] = useState(false)
   const handleClick = () => {
@@ -55,7 +60,11 @@ const ChatDisplayBar = ({
       ) : (
         ''
       )} */}
-      <Container key={chatId} onClick={() => handleClick()}>
+      <Container
+        className={unread ? 'unread' : ''}
+        key={chatId}
+        onClick={() => handleClick()}
+      >
         <Name>{name}</Name>
         <Message>{message}</Message>
       </Container>

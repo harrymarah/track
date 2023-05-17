@@ -10,7 +10,22 @@ const useAxios = () => {
   const { webPlayer, setWebPlayer } = usePlayer()
   const navigate = useNavigate()
 
-  const backendApiCall = axios.create()
+  // const backendApiCall = axios.create()
+  const backendApiCall = axios.create({
+    withCredentials: true,
+    changeOrigin: true,
+    baseURL: process.env.REACT_APP_SERVER_URL,
+    accesscontrolalloworigin: '*',
+    accesscontrolallowMethods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+  })
+  backendApiCall.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+  backendApiCall.defaults.headers.common[
+    'Access-Control-Allow-Credentials'
+  ] = true
+  backendApiCall.defaults.headers.common['Access-Control-Allow-Methods'] =
+    'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+  backendApiCall.defaults.headers.common['Content-Type'] =
+    'application/json;charset=utf-8'
   backendApiCall.interceptors.response.use(
     (response) => response,
     (err) => {

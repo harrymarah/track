@@ -44,13 +44,14 @@ const Home = () => {
   const [featuredPlaylistsLoading, setFeaturedPlaylistsLoading] = useState(true)
   const [showPlaylist, setShowPlaylist] = useState(false)
   const [playlistData, setPlaylistData] = useState(null)
+  const [unreadMessages, setUnreadMessages] = useState([])
+  const [unreadMessagesLoading, setUnreadMessagesLoading] = useState(true)
   const getTopEightTracks = async () => {
     const config = {
       url: '/data/get-user-top-eight',
       method: 'get',
     }
     const { data } = await backendApiCall(config)
-    console.log(data)
     setTopEightTracks(data)
     setTopEightLoading(false)
   }
@@ -72,6 +73,16 @@ const Home = () => {
     setFeaturedPlaylists(data)
     setFeaturedPlaylistsLoading(false)
   }
+  const getUnreadChats = async () => {
+    console.log('getUnreadChats')
+    const config = {
+      url: '/chat/unread-chats',
+      method: 'get',
+    }
+    const { data } = await backendApiCall(config)
+    setUnreadMessages(data)
+    setUnreadMessagesLoading(false)
+  }
   const handlePlaylistSelect = () => {}
   useAuthentication()
   const spotifyWebPlayer = useSpotify()
@@ -86,6 +97,7 @@ const Home = () => {
     getTopEightTracks()
     getRecentlyPlayed()
     getFeaturedPlaylists()
+    getUnreadChats()
   }, [])
 
   return (
@@ -94,9 +106,12 @@ const Home = () => {
       <MainContainer>
         <FeaturedContentContainer>
           <Heading>
-            unread messages <NotificationIcon>3</NotificationIcon>
+            unread messages{' '}
+            {!!unreadMessages.length && (
+              <NotificationIcon>{unreadMessages.length}</NotificationIcon>
+            )}
           </Heading>
-          <UnreadMessages></UnreadMessages>
+          <UnreadMessages unreadMessages={unreadMessages} />
           <Heading>your current favourites</Heading>
           <FeaturedContentDisplay
             contentType="songs"
